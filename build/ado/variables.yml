@@ -1,0 +1,39 @@
+variables:
+  # Versioning
+  - name: version_major
+    value: 0
+  - name: version_minor
+    value: 1
+  - name: version_revision
+    value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
+  - name: version_semver
+    value: "$(version_major).$(version_minor).$(version_revision)"
+
+  # Terraform state storage
+  - name: tf_state_key
+    value: fabric
+  - name: tf_state_rg
+    value: stacks-terraform-state
+  - name: tf_state_storage
+    value: stacksstatehjfis
+  - name: tf_state_container
+    value: tfstate
+
+  # Dependency versions
+  - name: TaskctlVersion
+    value: 2.0.4
+  - name: EnsonoBuildVersion
+    value: 1.1.37
+  - name: DockerPushRMVersion
+    value: 1.9.0
+  - name: YqVersion
+    value: 4.45.1
+
+  - name: pool_vm_image
+    value: ubuntu-24.04
+
+  - name: name_company
+    value: ensono
+
+  - name: name_project
+    value: azfabric

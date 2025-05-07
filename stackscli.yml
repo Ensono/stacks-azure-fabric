@@ -1,0 +1,14 @@
+# Pipeline files
+pipeline:
+  - type: azdo
+    files:
+      - name: build
+        path: build/ado/pipeline.yml
+      - name: variable
+        path: build/ado/pipeline-vars.yml
+
+  - type: gha
+
+setup:
+  operations:
+    - action: copy

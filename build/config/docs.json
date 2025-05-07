@@ -1,0 +1,38 @@
+{
+  "title": "Stacks Azure Fabric - {{ BUILDNUMBER }}",
+  "output": "{{ basepath }}/outputs/docs/{{ format }}",
+  "trunkBranch": "main",
+  "path": "{{ basepath }}/docs/index.adoc",
+  "libs": ["asciidoctor-diagram"],
+  "attributes": {
+    "asciidoctor": ["base_doc_dir=/workspace/.taskctl/docs/"]
+  },
+  "pdf": {
+    "attributes": {
+      "asciidoctor": [
+        "pdf-theme={{ basepath }}/docs/conf/styles/theme.yml",
+        "pdf-fontsdir=\"{{ basepath }}/docs/conf/styles/fonts;GEM_FONTS_DIR\"",
+        "skip-front-matter",
+        "allow-uri-read",
+        "base_doc_dir=\"/workspace/.taskctl/docs/\""
+      ]
+    }
+  },
+  "html": {
+    "attributes": {
+      "asciidoctor": [
+        "stylesheet={{ basepath }}/conf/html/style.css",
+        "allow-uri-read",
+        "toc=left",
+        "java=/usr/bin/java",
+        "graphvizdot=/usr/bin/dot",
+        "stackscli_version={{ BUILDNUMBER }}"
+      ]
+    }
+  },
+  "docx": {
+    "attributes": {
+      "pandoc": ["--reference-doc={{ basepath }}/conf/word/reference.docx"]
+    }
+  }
+}
