@@ -1,0 +1,57 @@
+tasks:
+  lint:yaml:
+    context: powershell
+    description: Perform YAML linting
+    command:
+      - Invoke-YamlLint -FailOnWarnings $False
+
+  lint:terraform:format:
+    context: powershell
+    description: Perform Terraform format check
+    command:
+      - Invoke-Terraform -Format -Path $env:TF_FILE_LOCATION -Debug
+
+  # Infrastructure tasks
+  infra:init:
+    context: powershell
+    description: Initialise Terraform for Azure
+    command: |
+      Invoke-Terraform -Init -Arguments $env:TF_BACKEND_INIT -Path $env:TF_FILE_LOCATION -Debug
+      Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION -Debug
+
+  infra:vars:
+    context: powershell
+    description: Create Terraform variables file
+    command:
+      - /workspace/.taskctl/build/scripts/Set-TFVars.ps1 | Out-File -Path  "${env:TF_FILE_LOCATION}/terraform.tfvars"
+
+  infra:plan:
+    context: powershell
+    description: Plan Terraform
+    command:
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=`"deploy.tfplan`""
+
+  infra:apply:
+    context: powershell
+    description: Apply Terraform Plan
+    command: |
+      Push-Location $env:TF_FILE_LOCATION
+      Invoke-Terraform -Apply -Path deploy.tfplan -Debug
+
+  infra:destroy:plan:
+    context: powershell
+    description: Destroy Environment.ShortName
+    command:
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-destroy,-input=false,-out=`"destroy.tfplan`"" -debug
+
+  infra:destroy:apply:
+    context: powershell
+    description: Destroy Environment.ShortName
+    command:
+      - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path destroy.tfplan -Debug
+
+  _docs:
+    description: Build Docs for Project
+    context: docsenv
+    command:
+      - Build-Documentation -Format pdf -Config /workspace/.taskctl/build/ado/config/docs.json -basepath /workspace/.taskctl

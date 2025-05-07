@@ -1,0 +1,21 @@
+contexts:
+  powershell:
+    container:
+      name: ensono/eir-infrastructure
+      shell: pwsh
+      shell_args:
+        - -Command
+    envfile:
+      exclude:
+        - sourceversionmessage
+        - posh_azure_subscription
+
+  infra:
+    container:
+      name: ensonostacks/eir-infrastructure
+      shell: pwsh
+      shell_args:
+        - -Command
+    envfile:
+      exclude:
+        - sourceversionmessage
