@@ -355,7 +355,7 @@ reportgenerator
 # Other tools
 .terraform
 **/terraform.tfvars
-.terraform.lock.hcl
+terraform.tfstate
 *tfplan
 
 # Environments

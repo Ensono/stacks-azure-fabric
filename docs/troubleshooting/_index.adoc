@@ -1,0 +1,5 @@
+== Troubleshooting
+
+This section provides solutions to issues that may arise when using the templates to deploy the Fabric environments.
+
+include::*.adoc[]
