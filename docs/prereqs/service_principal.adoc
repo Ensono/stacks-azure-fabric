@@ -1,0 +1,21 @@
+=== Service Principal
+
+In order for Terraform to be able to authenticate against Azure and deploy resources, a Service Principal (SP) needs to be created.
+
+==== Fabric Permissions
+
+The Terraform deployment uses the `fabric_capacity` data resource from the Fabric Provider for Terraform. This is used to retrieive the GUID of the Fabric Capacity which is required when creating a Fabric workspace.
+
+In order to allow the SP to access Azure Fabric, the "Service principals can use Fabric APIs" needs to be enabled, this is done in the Fabric Admin Portal.
+
+.Fabric Admin portal Service Principal Settings
+image::images/fabric-admin-sp-api.png[]
+
+There are two options to enable the Service Principal to access Fabric APIs:
+
+* **The entire organisation** - This will allow all Service Principals in the org EntraID to access Fabric APIs
+* **Specific security groups** - This option allows only the Service Principals that are in the selected security groups to access the Fabric APIs.
+
+NOTE: Creating a https://learn.microsoft.com/en-us/power-bi/developer/embedded/embed-service-principal?tabs=azure-portal#step-2---create-a-microsoft-entra-security-group[security group] requires access to the Microsoft Graph API.
+
+In addition the Service Principal needs to be able to create workspaces in Fabric.

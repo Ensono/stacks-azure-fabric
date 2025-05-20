@@ -1,3 +1,7 @@
 # Stacks Azure Data
 
-NOTE: This document describes the layout of the project and what each folder etc is for. Once the project has been added to and updated this file can be safely deleted.
+include::prereqs/_index.adoc[]
+
+
+
+include::troubleshooting/_index.adoc[]

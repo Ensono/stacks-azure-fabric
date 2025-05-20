@@ -12,7 +12,7 @@ contexts:
 
   infra:
     container:
-      name: ensonostacks/eir-infrastructure
+      name: ensono/eir-infrastructure
       shell: pwsh
       shell_args:
         - -Command

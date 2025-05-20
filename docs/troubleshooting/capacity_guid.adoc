@@ -1,0 +1,8 @@
+=== Fabric Capacity GUID
+
+When creating a Fabric Workspace, the GUID of the Fabric Capacity is required. This is not exposed by the `azurerm_fabric_capacity` resource as and output.
+
+There is a data resource, called `fabric_capacity`, however an error is generated stating that the SP does not have access to the resource, even though it has been explicitly set on the resource.
+
+.Unauthorised error when reading the Azure Fabric Capacity data
+image::images/issue_fabric_capacity.png[]
