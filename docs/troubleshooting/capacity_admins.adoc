@@ -1,0 +1,12 @@
+=== Fabric Capacity Adminstrators
+
+Capacity Administrators are assigned using the User Principal Name (UPN) of the user, which is in the format of an email address, e.g. <name>@<domain>.
+
+The Terraform resource, `azurerm_fabric_capacity`, is case insensitive to this and will accept the UPN in any case. However, when it comes to refreshing the capacity, e.g. when the Terraform is run again, the UPN as defined in Entra ID will be returned. If this is in a different case to the one that was used in the Terraform deployment, a change will be forced on the resource.
+
+In the following example, the UPN was set to `russell.seymour@ensono.com`, but when it was returned from Entra ID it was `Russell.Seymour@ensono.com`.
+
+.Resource change based on UPN case
+image::images/resource-change-on-upn.png[]
+
+The way to prevent this is to use the UPN as seen in Entra ID, so that when the two are compared they match.

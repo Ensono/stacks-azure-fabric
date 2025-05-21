@@ -28,5 +28,51 @@ locals {
     fabric_capacity_name = azurerm_fabric_capacity.afc.name
     workspaces           = flatten([for ws in fabric_workspace.ws : [ws.id]])
     lakehouses           = flatten([for lh in fabric_lakehouse.afl : [lh.id]])
+    capacity_admins      = local.admin_members
   }
+
+  # Create an array of the users that need to have admin access on the Fabric Capacity
+  #fabric_capacity_admins = [
+  #  for admin in split(",", var.fabric_capacity_admins) : [
+  #    trimspace(admin)
+  #  ]
+  #]
+  # admin_members = flatten(concat(local.fabric_capacity_admins, [data.azurerm_client_config.current.object_id]))
+
+  # Create an object that contains all of the required permissions that have been defined
+  perms = flatten([
+    for permission in split(",", var.permissions) : [
+      for detail in split(":", permission) : {
+        fabric_admin = split(":", permission)[1] == "true" ? (split(":", permission)[0] == "" ? split(":", permission)[2] : split(":", permission)[0]) : ""
+        workspace = {
+          id   = split(":", permission)[2]
+          role = split(":", permission)[3]
+          type = split(":", permission)[0] == "" ? "ServicePrincipal" : "User"
+        }
+      }
+    ]
+  ])
+
+  # Create the list of admin_members from the perms object and ensure that the current SP has
+  # is assigned as an admin of the fabric capacity
+  admin_members = distinct(concat(flatten([
+    for permission in local.perms : [
+      for detail in permission : [
+        permission.fabric_admin
+      ]
+    ]
+  ]), [data.azurerm_client_config.current.object_id]))
+
+  # Create an object that combines the local workspaces and the workspace permissions to that
+  # a workspace_roles object can be created
+  workspace_roles = distinct(flatten([
+    for ws in local.workspaces : [
+      for permission in local.perms : {
+        wsname = ws
+        id     = permission.workspace.id
+        role   = permission.workspace.role
+        type   = permission.workspace.type
+      } if permission.workspace.role != "" && lower(permission.workspace.role) != "none"
+    ]
+  ]))
 }

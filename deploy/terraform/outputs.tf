@@ -19,6 +19,14 @@ output "environments" {
   value = local.environments_all
 }
 
+output "admin_members" {
+  value = local.admin_members
+}
+
+output "workspace_roles" {
+  value = local.workspace_roles
+}
+
 output "fabric_capacity" {
   value = data.fabric_capacity.afc
 }
