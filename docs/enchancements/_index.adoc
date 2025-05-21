@@ -1,0 +1,5 @@
+== Enhancements
+
+This section provides a list of future enchancements that can be made to make the deployment of the environment easier.
+
+include::*.adoc[]

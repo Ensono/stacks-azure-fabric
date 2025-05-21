@@ -35,3 +35,9 @@ variable "deploy_all_environments" {
   default     = false
   description = "If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod"
 }
+
+variable "permissions" {
+  description = "Comma separated list of users to be added as administrators to the fabric capacity"
+  type        = string
+  default     = ""
+}
