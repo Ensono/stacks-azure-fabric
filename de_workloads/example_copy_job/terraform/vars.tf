@@ -1,17 +1,36 @@
 variable "processing_workspace_id" {
   type        = string
-  default     = "8794a888-b6c6-4fe5-8f69-6eb0467f5246"
+  default     = ""
   description = "The processing workspace ID for the data pipeline."
 }
 
 variable "bronze_storage_workspace_id" {
   type        = string
-  default     = "168a5923-e2bc-4ba8-a291-e9b77b93598c"
-  description = "The bronze workspace ID"
+  default     = ""
+  description = "The bronze storage workspace ID"
+}
+
+variable "bronze_storage_artifact_id" {
+  type        = string
+  default     = ""
+  description = "The bronze storage artifact ID"
 }
 
 variable "silver_storage_workspace_id" {
   type        = string
-  default     = "168a5923-e2bc-4ba8-a291-e9b77b93598c"
-  description = "The bronze workspace ID"
+  default     = ""
+  description = "The silver storage workspace ID"
 }
+
+variable "silver_storage_artifact_id" {
+  type = string
+  default = ""
+  description = "The silver storage artifact id"
+}
+
+variable "data_pipeline_objectid" {
+  type        = string
+  default     = ""
+  description = "The data pipeline objectid"
+}
+

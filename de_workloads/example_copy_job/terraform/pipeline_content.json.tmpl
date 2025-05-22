@@ -1,7 +1,7 @@
 
 {
-  "name": "example_ingest_pipeline_gc",
-  "objectId": "b4167a93-dc2b-475a-a364-17994094e74d",
+  "name": "example_ingest_pipeline",
+  "objectId": "{{ .data_pipeline_objectid }}",
   "properties": {
     "description": "Example data pipeline with a copy activity",
     "activities": [
@@ -39,7 +39,7 @@
                         "type": "Lakehouse",
                         "typeProperties": {
                           "workspaceId": "{{ .bronze_storage_workspace_id }}",
-                          "artifactId": "598c73d0-3dc4-4832-8391-be168728c63f",
+                          "artifactId": "{{ .bronze_storage_artifact_id }}",
                           "rootFolder": "Tables"
                         }
                       }
@@ -67,7 +67,7 @@
                         "type": "Lakehouse",
                         "typeProperties": {
                           "workspaceId": "{{ .silver_storage_workspace_id }}",
-                          "artifactId": "08d36aeb-0278-4700-b2fa-dbaac339793c",
+                          "artifactId": "{{ .silver_storage_artifact_id }}",
                           "rootFolder": "Tables"
                         }
                       }
