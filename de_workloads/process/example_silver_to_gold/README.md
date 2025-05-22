@@ -1,3 +1,9 @@
+# Prerequisites
+
+Currently it is required that the Python module example_spark_job.py is available in the lakehouse Files in the processing workspace.
+
+❗️ TODO: 2894 Uploading Python file should be ensured within the deployment pipeline User Story
+
 # Required environment variables
 
 ## Terraform
