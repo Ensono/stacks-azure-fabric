@@ -1,0 +1,11 @@
+{
+    "executableFile":"abfss://{{ .processingWorkspaceId }}@onelake.dfs.fabric.microsoft.com/{{ .processingLakehouseId }}/Files/example_spark_job.py",
+    "defaultLakehouseArtifactId":"{{ .silverLakehouseId }}",
+    "mainClass":"",
+    "additionalLakehouseIds":[],
+    "retryPolicy":null,
+    "commandLineArguments":"{{ .silverWorkspaceId }} {{ .silverLakehouseId }} {{ .goldWorkspaceId }} {{ .goldLakehouseId }}",
+    "additionalLibraryUris":[],
+    "language":"Python",
+    "environmentArtifactId":null
+}

@@ -1,0 +1,23 @@
+{
+    "name": "motyl_sample_spark_pipeline_1",
+    "properties": {
+        "activities": [
+            {
+                "name": "MotylSampleSparkJob",
+                "type": "FabricSparkJobDefinition",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "sparkJobDefinitionId": "{{ .sparkJobDefinitionId }}",
+                    "workspaceId": "{{ .processingWorkspaceId }}"
+                }
+            }
+        ]
+    }
+}
