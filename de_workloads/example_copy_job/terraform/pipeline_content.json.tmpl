@@ -1,0 +1,114 @@
+
+{
+  "name": "example_ingest_pipeline",
+  "objectId": "{{ .data_pipeline_objectid }}",
+  "properties": {
+    "description": "Example data pipeline with a copy activity",
+    "activities": [
+      {
+        "name": "ForEach Table",
+        "type": "ForEach",
+        "dependsOn": [],
+        "typeProperties": {
+          "items": {
+            "value": "@pipeline().parameters.tables_to_ingest",
+            "type": "Expression"
+          },
+          "isSequential": false,
+          "activities": [
+            {
+              "name": "Copy Table",
+              "type": "Copy",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureOutput": false,
+                "secureInput": false
+              },
+              "typeProperties": {
+                "source": {
+                  "type": "LakehouseTableSource",
+                  "datasetSettings": {
+                    "annotations": [],
+                    "linkedService": {
+                      "name": "bronze_layer_data",
+                      "properties": {
+                        "annotations": [],
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "workspaceId": "{{ .bronze_storage_workspace_id }}",
+                          "artifactId": "{{ .bronze_storage_artifact_id }}",
+                          "rootFolder": "Tables"
+                        }
+                      }
+                    },
+                    "type": "LakehouseTable",
+                    "schema": [],
+                    "typeProperties": {
+                      "table": {
+                        "value": "@trim(item())",
+                        "type": "Expression"
+                      }
+                    }
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "annotations": [],
+                    "linkedService": {
+                      "name": "silver_layer_data",
+                      "properties": {
+                        "annotations": [],
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "workspaceId": "{{ .silver_storage_workspace_id }}",
+                          "artifactId": "{{ .silver_storage_artifact_id }}",
+                          "rootFolder": "Tables"
+                        }
+                      }
+                    },
+                    "type": "LakehouseTable",
+                    "schema": [],
+                    "typeProperties": {
+                      "table": {
+                        "value": "@trim(item())",
+                        "type": "Expression"
+                      }
+                    }
+                  }
+                },
+                "enableStaging": false,
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "parameters": {
+      "tables_to_ingest": {
+        "type": "array",
+        "defaultValue": [
+          "green_tripdata_2017",
+          "green_tripdata_2018",
+          "green_tripdata_2019",
+          "green_tripdata_2020",
+          "green_tripdata_2021",
+          "green_tripdata_2022"
+        ]
+      }
+    }
+  }
+}
