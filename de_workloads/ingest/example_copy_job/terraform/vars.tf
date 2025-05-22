@@ -4,33 +4,27 @@ variable "processing_workspace_id" {
   description = "The processing workspace ID for the data pipeline."
 }
 
-variable "bronze_storage_workspace_id" {
+variable "bronze_workspace_id" {
   type        = string
   default     = ""
-  description = "The bronze storage workspace ID"
+  description = "The bronze workspace ID"
 }
 
-variable "bronze_storage_artifact_id" {
+variable "bronze_lakehouse_id" {
   type        = string
   default     = ""
-  description = "The bronze storage artifact ID"
+  description = "The bronze lakehouse Id"
 }
 
-variable "silver_storage_workspace_id" {
+variable "silver_workspace_id" {
   type        = string
   default     = ""
-  description = "The silver storage workspace ID"
+  description = "The silver workspace ID"
 }
 
-variable "silver_storage_artifact_id" {
+variable "silver_lakehouse_id" {
   type = string
   default = ""
-  description = "The silver storage artifact id"
-}
-
-variable "data_pipeline_objectid" {
-  type        = string
-  default     = ""
-  description = "The data pipeline objectid"
+  description = "The silver lakehouse id"
 }
 

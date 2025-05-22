@@ -7,12 +7,10 @@ resource "fabric_data_pipeline" "example_ingest_pipeline" {
     "pipeline-content.json" = {
       source = "${path.module}/pipeline_content.json.tmpl",
       tokens = {
-          bronze_storage_workspace_id = var.bronze_storage_workspace_id
-          bronze_storage_artifact_id = var.bronze_storage_artifact_id
-          silver_storage_workspace_id = var.silver_storage_workspace_id
-          silver_storage_artifact_id = var.silver_storage_artifact_id
-          data_pipeline_objectid = var.data_pipeline_objectid
-
+          bronze_workspace_id = var.bronze_workspace_id
+          bronze_lakehouse_id = var.bronze_lakehouse_id
+          silver_workspace_id = var.silver_workspace_id
+          silver_lakehouse_id = var.silver_lakehouse_id
         }
     }
   }

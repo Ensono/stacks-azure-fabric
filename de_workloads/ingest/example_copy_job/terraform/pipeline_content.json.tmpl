@@ -1,7 +1,6 @@
 
 {
   "name": "example_ingest_pipeline",
-  "objectId": "{{ .data_pipeline_objectid }}",
   "properties": {
     "description": "Example data pipeline with a copy activity",
     "activities": [
@@ -38,8 +37,8 @@
                         "annotations": [],
                         "type": "Lakehouse",
                         "typeProperties": {
-                          "workspaceId": "{{ .bronze_storage_workspace_id }}",
-                          "artifactId": "{{ .bronze_storage_artifact_id }}",
+                          "workspaceId": "{{ .bronze_workspace_id }}",
+                          "artifactId": "{{ .bronze_lakehouse_id }}",
                           "rootFolder": "Tables"
                         }
                       }
@@ -66,8 +65,8 @@
                         "annotations": [],
                         "type": "Lakehouse",
                         "typeProperties": {
-                          "workspaceId": "{{ .silver_storage_workspace_id }}",
-                          "artifactId": "{{ .silver_storage_artifact_id }}",
+                          "workspaceId": "{{ .silver_workspace_id }}",
+                          "artifactId": "{{ .silver_lakehouse_id }}",
                           "rootFolder": "Tables"
                         }
                       }
