@@ -6,7 +6,7 @@
     "description": "Example data pipeline with a copy activity",
     "activities": [
       {
-        "name": "ForEach1",
+        "name": "ForEach Table",
         "type": "ForEach",
         "dependsOn": [],
         "typeProperties": {
@@ -17,7 +17,7 @@
           "isSequential": false,
           "activities": [
             {
-              "name": "Copy data2",
+              "name": "Copy Table",
               "type": "Copy",
               "dependsOn": [],
               "policy": {
