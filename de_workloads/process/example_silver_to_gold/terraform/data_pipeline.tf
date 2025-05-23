@@ -5,7 +5,7 @@ resource "fabric_spark_job_definition" "example_spark_job" {
   format                    = "SparkJobDefinitionV1"
   definition = {
     "SparkJobDefinitionV1.json" = {
-      source = "${path.module}/../definition/ExampleSparkJobDefinition.json.tmpl"
+      source = "${path.module}/../definition/example_spark_job_definition.json.tmpl"
       tokens = {
         "processingWorkspaceId" = var.processing_workspace_id
         "processingLakehouseId" = var.processing_lakehouse_id
@@ -25,7 +25,7 @@ resource "fabric_data_pipeline" "example_spark_pipeline" {
   format       = "Default"
   definition = {
     "pipeline-content.json" = {
-      source = "${path.module}/../definition/ExampleSparkPipeline.json.tmpl"
+      source = "${path.module}/../definition/example_spark_pipeline.json.tmpl"
       tokens = {
         "sparkJobDefinitionId" = fabric_spark_job_definition.example_spark_job.id
         "processingWorkspaceId" = var.processing_workspace_id
