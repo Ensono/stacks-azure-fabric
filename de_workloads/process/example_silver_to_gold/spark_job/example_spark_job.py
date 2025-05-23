@@ -5,50 +5,47 @@ It creates a Delta table with sample data, saves it to a Silver lakehouse, and t
 """
 import argparse
 import logging
-import colorlog
 
 import pyspark.sql.functions as F
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
 
-def setup_logger(name: str = "", log_level: int = logging.INFO) -> logging.Logger:
-    """Set up a colored logger with customizable log level and formatting.
+def add_handler(fmt: str, logger: logging.Logger) -> None:
+    """Add a new StreamHandler with the specified format to the provided logger.
 
     Args:
-        name: The name of the logger. Defaults to an empty string.
-        log_level: The desired log level for the logger. Should be one of the constants
-            defined in the 'logging' module (e.g., logging.DEBUG, logging.INFO). Defaults to logging.INFO.
+        fmt: The format string to be used by the logging formatter.
+        logger: The logger instance to which the handler will be added.
+    """
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter(datefmt="%Y-%m-%d %H:%M:%S", fmt=fmt)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+
+def get_logger(name: str) -> logging.Logger:
+    """Creates a base logger.
+
+    Args:
+        name: The name of the logger.
 
     Returns:
-        A configured logger instance ready to use.
+        Logger instance.
     """
-    formatter = colorlog.ColoredFormatter(
-        fmt="%(log_color)s%(asctime)s %(levelname)s%(reset)s%(blue)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        reset=True,
-        log_colors={
-            "DEBUG": "cyan",
-            "INFO": "green",
-            "WARNING": "yellow",
-            "ERROR": "red",
-            "CRITICAL": "red,bg_white",
-        },
-        secondary_log_colors={},
-        style="%",
-    )
+    fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
-    handler = colorlog.StreamHandler()
-    handler.setFormatter(formatter)
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.INFO)
 
-    logger = colorlog.getLogger(name)
-    logger.addHandler(handler)
-    logger.setLevel(log_level)
+    if not logger.handlers:
+        add_handler(fmt, logger)
 
     return logger
 
 
-logger = setup_logger("example_spark_job", logging.INFO)
+logger = get_logger("example_spark_job")
 
 
 def get_delta_table_path(workspace_id: str, lakehouse_id: str, table_name: str) -> str:
@@ -107,6 +104,4 @@ if __name__ == "__main__":
     spark = SparkSession.builder.appName("TestSparkApp").getOrCreate()
     create_delta_table(spark, silver_table_path)
     transform_and_save(spark, silver_table_path, gold_table_path)
-    logger.warning("This is a sample warning message.")
-    logger.error("This is a sample error message.")
     logger.info("Spark job completed successfully.")
