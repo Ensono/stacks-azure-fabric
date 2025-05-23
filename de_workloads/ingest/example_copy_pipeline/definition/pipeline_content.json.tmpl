@@ -1,0 +1,120 @@
+{
+  "name": "example_ingest_pipeline",
+  "properties": {
+    "description": "Example data pipeline with a copy activity",
+    "activities": [
+      {
+        "name": "ForEach Table",
+        "type": "ForEach",
+        "dependsOn": [],
+        "typeProperties": {
+          "items": {
+            "value": "@pipeline().parameters.tables_to_ingest",
+            "type": "Expression"
+          },
+          "isSequential": false,
+          "activities": [
+            {
+              "name": "Copy Table",
+              "type": "Copy",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.00:30:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureOutput": false,
+                "secureInput": false
+              },
+              "typeProperties": {
+                "source": {
+                  "type": "LakehouseTableSource",
+                  "datasetSettings": {
+                    "annotations": [],
+                    "linkedService": {
+                      "name": "bronze_lake",
+                      "properties": {
+                        "annotations": [],
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "workspaceId": "{{ .bronze_workspace_id }}",
+                          "artifactId": "{{ .bronze_lakehouse_id }}",
+                          "rootFolder": "Tables"
+                        }
+                      }
+                    },
+                    "type": "LakehouseTable",
+                    "schema": [],
+                    "typeProperties": {
+                      "schema": {
+                        "value": "@substring(item(), 0, indexOf(item(), '.'))",
+                        "type": "Expression"
+                      },
+                      "table": {
+                        "value": "@substring(item(), add(indexOf(item(), '.'), 1), sub(length(item()), add(indexOf(item(), '.'), 1)))",
+                        "type": "Expression"
+                      }
+                    }
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "annotations": [],
+                    "linkedService": {
+                      "name": "silver_lake",
+                      "properties": {
+                        "annotations": [],
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "workspaceId": "{{ .silver_workspace_id }}",
+                          "artifactId": "{{ .silver_lakehouse_id }}",
+                          "rootFolder": "Tables"
+                        }
+                      }
+                    },
+                    "type": "LakehouseTable",
+                    "schema": [],
+                    "typeProperties": {
+                      "schema": {
+                        "value": "@substring(item(), 0, indexOf(item(), '.'))",
+                        "type": "Expression"
+                      },
+                      "table": {
+                        "value": "@substring(item(), add(indexOf(item(), '.'), 1), sub(length(item()), add(indexOf(item(), '.'), 1)))",
+                        "type": "Expression"
+                      }
+                    }
+                  }
+                },
+                "enableStaging": false,
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "parameters": {
+      "tables_to_ingest": {
+        "type": "array",
+        "defaultValue": [
+          "year_2017.green_tripdata_2017",
+          "year_2018.green_tripdata_2018",
+          "year_2019.green_tripdata_2019",
+          "year_2020.green_tripdata_2020",
+          "year_2021.green_tripdata_2021",
+          "year_2022.green_tripdata_2022"
+        ]
+      }
+    }
+  }
+}
