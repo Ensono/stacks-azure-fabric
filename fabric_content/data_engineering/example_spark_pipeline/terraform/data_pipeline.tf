@@ -1,14 +1,14 @@
 resource "fabric_spark_job_definition" "example_spark_job" {
   display_name              = "example_spark_job"
   description               = "Example Spark Job"
-  workspace_id              = var.processing_workspace_id
+  workspace_id              = var.engineering_workspace_id
   format                    = "SparkJobDefinitionV1"
   definition = {
     "SparkJobDefinitionV1.json" = {
       source = "${path.module}/../definition/example_spark_job_definition.json.tmpl"
       tokens = {
-        "processingWorkspaceId" = var.processing_workspace_id
-        "processingLakehouseId" = var.processing_lakehouse_id
+        "engineeringWorkspaceId" = var.engineering_workspace_id
+        "engineeringLakehouseId" = var.engineering_lakehouse_id
         "silverWorkspaceId" = var.silver_workspace_id
         "silverLakehouseId" = var.silver_lakehouse_id
         "goldWorkspaceId" = var.gold_workspace_id

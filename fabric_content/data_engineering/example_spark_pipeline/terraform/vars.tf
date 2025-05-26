@@ -1,13 +1,13 @@
-variable "processing_workspace_id" {
+variable "engineering_workspace_id" {
    type        = string
    default     = ""
-   description = "The processing workspace ID."
+   description = "The engineering workspace ID."
  }
 
- variable "processing_lakehouse_id" {
+ variable "engineering_lakehouse_id" {
    type        = string
    default     = ""
-   description = "The processing lakehouse ID."
+   description = "The engineering lakehouse ID."
  }
 
  variable "silver_workspace_id" {
