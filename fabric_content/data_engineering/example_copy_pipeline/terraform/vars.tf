@@ -1,7 +1,7 @@
-variable "processing_workspace_id" {
+variable "engineering_workspace_id" {
   type        = string
   default     = ""
-  description = "The processing workspace ID for the data pipeline."
+  description = "The engineering workspace ID for the data pipeline."
 }
 
 variable "bronze_workspace_id" {
@@ -27,4 +27,3 @@ variable "silver_lakehouse_id" {
   default = ""
   description = "The silver lakehouse id"
 }
-
