@@ -373,3 +373,5 @@ support
 coverage
 .sonarqube
 .taskctl
+
+outputs
