@@ -1,0 +1,103 @@
+name: "$(Build.SourceBranchName)-init"
+
+trigger:
+  paths:
+    include:
+      - fabric_content/data_engineering/example_copy_pipeline/*
+  branches:
+    include:
+      - main
+
+variables:
+  # TODO - Use template
+  # Terraform state storage
+  - name: tf_state_key
+    value: example_copy_pipeline
+  - name: tf_state_rg
+    # TODO - take from variable group?
+    value: stacks-terraform-state
+  - name: tf_state_storage
+    # TODO - take from variable group?
+    value: stacksstatehjfis
+  - name: tf_state_container
+    value: tfstate-data_engineering
+
+  # Dependency versions
+  - name: TaskctlVersion
+    value: 2.0.4
+  # - name: EnsonoBuildVersion
+  #   value: 1.1.37
+  # - name: DockerPushRMVersion
+  #   value: 1.9.0
+  # - name: YqVersion
+  #   value: 4.45.1
+
+  - name: pool_vm_image
+    value: ubuntu-24.04
+
+stages:
+  - stage: prelim
+    displayName: Preliminaries
+
+    jobs:
+      - job: version_number
+        displayName: Set Build Number
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - template: templates/setup.yml
+            parameters:
+              TaskctlVersion: $(TaskctlVersion)
+
+          # Update the build number
+          - task: Bash@3
+            displayName: Set Build Number
+            inputs:
+              targetType: inline
+              script: |
+                taskctl build:number
+
+  - stage: DEV
+    dependsOn:
+      - prelim
+    variables:
+      # TODO - Adjust the variable group names as needed
+      - group: <VarGroupName containing Terraform variables>
+      - group: <Any other variable group>
+
+    jobs:
+      - job: deploy
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          # Create a tfvars file for the values
+          # This is so that variables can be set and reused as required
+          - task: Bash@3
+            displayName: Create Terraform variables file
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:vars
+            env:
+              # TODO - adjust TF_FILE_LOCATION
+              TF_FILE_LOCATION: /app/fabric_content/data_engineering/example_copy_pipeline
+              TF_VAR_pe_subnet_name: $(pe_subnet_name)
+              TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
+              TF_VAR_engineering_workspace_id: ${engineering_workspace_id}
+              TF_VAR_bronze_workspace_id: ${bronze_workspace_id}
+              TF_VAR_bronze_lakehouse_id: ${bronze_lakehouse_id}
+              TF_VAR_silver_workspace_id: ${silver_workspace_id}
+              TF_VAR_silver_lakehouse_id: ${silver_lakehouse_id}
+
+          - task: Bash@3
+            displayName: "Taskctl: Infrastructure"
+            inputs:
+              targetType: inline
+              script: taskctl infrastructure
+              informationPreference: continue
+            env:
+              ENV_NAME: ${{ stage.environment_shortname }}
+              TF_FILE_LOCATION: /app/deploy/azure/infra
+              TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
