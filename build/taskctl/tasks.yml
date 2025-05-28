@@ -52,6 +52,7 @@ tasks:
 
   _docs:
     description: Build Docs for Project
-    context: docsenv
-    command:
-      - Build-Documentation -Format pdf -Config /workspace/.taskctl/build/ado/config/docs.json -basepath /workspace/.taskctl
+    context: docs
+    command: |
+      $cmd = "Build-Documentation -Config /eirctl/build/config/docs.json"
+      write-host $cmd
