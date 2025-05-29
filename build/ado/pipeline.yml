@@ -102,6 +102,7 @@ stages:
           - prelim
         variables:
           - group: azure-sp-creds
+          - group: azure-fabric-${{ sub }}-permissions
           - name: FABRIC_TENANT_ID
             value: $(ARM_TENANT_ID)
           - name: FABRIC_CLIENT_ID
@@ -142,7 +143,7 @@ stages:
                   script: |
                     eirctl infra:vars
                 env:
-                  TF_VAR_permissions: $(keyvault_permissions)
+                  TF_VAR_permissions: $(fabric_permissions)
                   ${{ if ne(trim(parameters.environments), '')}}:
                     TF_VAR_environments: $(environments)
                   ${{ if ne(trim(parameters.env_types), '')}}:
