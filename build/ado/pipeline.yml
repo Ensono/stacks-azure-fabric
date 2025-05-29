@@ -1,6 +1,16 @@
 name: "0.0$(Rev:.r)"
 
 parameters:
+  - name: deploy_infrastructure
+    type: boolean
+    default: true
+    displayName: Deploy Infrastructure
+
+  - name: destroy_infrastructure
+    type: boolean
+    default: false
+    displayName: Destroy Infrastructure [DANGEROUS]
+
   - name: generate_docs
     type: boolean
     default: false
@@ -156,18 +166,34 @@ stages:
                       path: $(Build.SourcesDirectory)/deploy/terraform/terraform.tfvars
                       stage: infra
 
-              - task: Bash@3
-                displayName: Terraform Plan
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:plan
-                env:
-                  TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+              - ${{ if eq(parameters.destroy_infrastructure, true) }}:
+                  - task: Bash@3
+                    displayName: Terraform Destroy Plan
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:destroy:plan
 
-              - task: Bash@3
-                displayName: Terraform Apply
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:apply
+                  - task: Bash@3
+                    displayName: Terraform Destroy Apply
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:destroy:apply
+
+              - ${{ if eq(parameters.deploy_infrastructure, true) }}:
+                  - task: Bash@3
+                    displayName: Terraform Plan
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:plan
+                    env:
+                      TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+
+                  - task: Bash@3
+                    displayName: Terraform Apply
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:apply
