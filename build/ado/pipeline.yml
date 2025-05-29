@@ -1,4 +1,4 @@
-name: "$(Build.SourceBranchName)-init"
+name: "0.0$(Rev:.r)"
 
 parameters:
   - name: generate_docs
