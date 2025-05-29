@@ -46,7 +46,7 @@ stages:
           vmImage: $(pool_vm_image)
 
         steps:
-          - template: ../../../build/ado/templates/setup.yml
+          - template: ../../../../build/ado/templates/setup.yml
             parameters:
               TaskctlVersion: $(TaskctlVersion)
 
