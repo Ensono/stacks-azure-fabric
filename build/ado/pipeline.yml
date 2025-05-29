@@ -1,5 +1,30 @@
 name: "$(Build.SourceBranchName)-init"
 
+parameters:
+  - name: generate_docs
+    type: boolean
+    default: false
+    displayName: Generate Documentation
+
+  - name: sub_types
+    displayName: Subscription Types
+    type: object
+    default:
+      - nonprod
+
+  - name: environments
+    displayName: Environments
+    default: ""
+
+  - name: env_types
+    displayName: Environment Types
+    default: ""
+
+  - name: debug
+    displayName: Enable Debugging
+    type: boolean
+    default: false
+
 pr:
   - main
 
@@ -13,27 +38,6 @@ trigger:
 
 variables:
   - template: variables.yml
-
-parameters:
-  - name: generate_docs
-    type: boolean
-    default: true
-    displayName: Generate Documentation
-  - name: sub_types
-    displayName: Subscription Types
-    type: object
-    default:
-      - nonprod
-  - name: environments
-    displayName: Environments
-    default: ""
-  - name: env_types
-    displayName: Environment Types
-    default: ""
-  - name: debug
-    displayName: Enable Debugging
-    type: boolean
-    default: false
 
 stages:
   - stage: prelim
