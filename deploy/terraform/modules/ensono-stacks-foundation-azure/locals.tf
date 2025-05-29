@@ -59,6 +59,13 @@ locals {
           regex("^.{2}", lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique),
           "afl"
         )
+      },
+      "key_vault_v2" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique),
+          "kv"
+        )
       }
     }
   }

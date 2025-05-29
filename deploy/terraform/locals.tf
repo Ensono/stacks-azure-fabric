@@ -24,11 +24,14 @@ locals {
   ])
 
   outputs = {
-    resource_group_name  = azurerm_resource_group.rg.name
-    fabric_capacity_name = azurerm_fabric_capacity.afc.name
-    workspaces           = flatten([for ws in fabric_workspace.ws : [ws.id]])
-    lakehouses           = flatten([for lh in fabric_lakehouse.afl : [lh.id]])
-    capacity_admins      = local.admin_members
+    resource_group_name   = azurerm_resource_group.rg.name
+    fabric_capacity_name  = azurerm_fabric_capacity.afc.name
+    workspaces            = flatten([for ws in fabric_workspace.ws : [ws.id]])
+    lakehouses            = flatten([for lh in fabric_lakehouse.afl : [lh.id]])
+    capacity_admins       = local.admin_members
+    key_vault_name        = module.key-vault.name
+    key_vault_resource_id = module.key-vault.resource_id
+
   }
 
   # Create an array of the users that need to have admin access on the Fabric Capacity

@@ -3,7 +3,7 @@ tasks:
     context: powershell
     description: Update the build number
     command:
-      - Update-BuildNumber
+      - Update-BuildNumber -BuildNumber $env:BUILD_BUILDNUMBER
 
   lint:yaml:
     context: powershell
