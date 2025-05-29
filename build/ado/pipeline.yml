@@ -145,7 +145,7 @@ stages:
                   TF_VAR_permissions: $(keyvault_permissions)
                   ${{ if neq(trim(parameters.environments), '')}}:
                     TF_VAR_environments: $(environments)
-                  ${{ if neq(trim(parameters.env_types, ''))}}:
+                  ${{ if neq(trim(parameters.env_types), '')}}:
                     TF_VAR_env_types: $(env_types)
 
               # If the debug option has been enabled, upload the vars file that has been created
