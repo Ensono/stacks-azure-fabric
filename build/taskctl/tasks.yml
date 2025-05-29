@@ -1,4 +1,10 @@
 tasks:
+  build:number:
+    context: powershell
+    description: Update the build number
+    command:
+      - Update-BuildNumber
+
   lint:yaml:
     context: powershell
     description: Perform YAML linting
@@ -54,5 +60,4 @@ tasks:
     description: Build Docs for Project
     context: docs
     command: |
-      $cmd = "Build-Documentation -Config /eirctl/build/config/docs.json"
-      write-host $cmd
+      Build-Documentation -Config /eirctl/build/config/docs.json -Type pdf
