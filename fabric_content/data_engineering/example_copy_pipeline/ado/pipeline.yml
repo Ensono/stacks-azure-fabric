@@ -83,8 +83,6 @@ stages:
             env:
               # TODO - adjust TF_FILE_LOCATION
               TF_FILE_LOCATION: /app/fabric_content/data_engineering/example_copy_pipeline
-              TF_VAR_pe_subnet_name: $(pe_subnet_name)
-              TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
               TF_VAR_engineering_workspace_id: ${engineering_workspace_id}
               TF_VAR_bronze_workspace_id: ${bronze_workspace_id}
               TF_VAR_bronze_lakehouse_id: ${bronze_lakehouse_id}
