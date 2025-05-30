@@ -91,7 +91,7 @@ stages:
             vmImage: $(pool_vm_image)
 
           steps:
-            - template: templates/setup.yml
+            - template: ../../../../build/ado/templates/setup.yml
               parameters:
                 EirctlVersion: $(EirctlVersion)
 
