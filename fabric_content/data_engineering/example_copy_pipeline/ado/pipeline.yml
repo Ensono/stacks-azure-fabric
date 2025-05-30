@@ -54,7 +54,7 @@ stages:
         steps:
           - template: ../../../../build/ado/templates/setup.yml
             parameters:
-              TaskctlVersion: $(EirctlVersion)
+              EirctlVersion: $(EirctlVersion)
 
           # Update the build number
           - task: Bash@3
