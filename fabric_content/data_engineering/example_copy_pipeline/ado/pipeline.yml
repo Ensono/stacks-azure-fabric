@@ -1,4 +1,4 @@
-name: "$(Build.SourceBranchName)-init"
+name: "0.0.$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)"
 
 trigger:
   paths:
@@ -8,8 +8,14 @@ trigger:
     include:
       - main
 
+parameters:
+  - name: sub_types
+    displayName: Subscription Types
+    type: object
+    default:
+      - nonprod
+
 variables:
-  # TODO - Use template
   # Terraform state storage
   - name: tf_state_key
     value: example_copy_pipeline
@@ -20,11 +26,11 @@ variables:
     # TODO - take from variable group?
     value: stacksstatehjfis
   - name: tf_state_container
-    value: tfstate-data_engineering
+    value: tfstate-data-engineering
 
   # Dependency versions
-  - name: TaskctlVersion
-    value: 2.0.4
+  - name: EirctlVersion
+    value: 0.5.7
   # - name: EnsonoBuildVersion
   #   value: 1.1.37
   # - name: DockerPushRMVersion
@@ -48,7 +54,7 @@ stages:
         steps:
           - template: ../../../../build/ado/templates/setup.yml
             parameters:
-              TaskctlVersion: $(TaskctlVersion)
+              TaskctlVersion: $(EirctlVersion)
 
           # Update the build number
           - task: Bash@3
@@ -56,46 +62,74 @@ stages:
             inputs:
               targetType: inline
               script: |
-                taskctl build:number
+                eirctl build:number
 
-  - stage: DEV
-    dependsOn:
-      - prelim
-    variables:
-      # TODO - Adjust the variable group names as needed
-      - group: <VarGroupName containing Terraform variables>
-      - group: <Any other variable group>
+  - ${{ each sub in parameters.sub_types }}:
+    - stage: Deploy
+      displayName: Deploy - ${{ sub }}
+      dependsOn:
+        - prelim
+      variables:
+        - group: azure-sp-creds
+        - group: azure-fabric-${{ sub }}-permissions
+        # - group: <ADD group with workspace and lakehouse IDs>
+        - name: FABRIC_TENANT_ID
+          value: $(ARM_TENANT_ID)
+        - name: FABRIC_CLIENT_ID
+          value: $(ARM_CLIENT_ID)
+        - name: FABRIC_CLIENT_SECRET
+          value: $(ARM_CLIENT_SECRET)
+        - name: TF_FILE_LOCATION
+          value: fabric_content/data_engineering/example_copy_pipeline/terraform
+        # - name: ENV_NAME
+        #   value: ${{ sub }}
 
-    jobs:
-      - job: deploy
-        pool:
-          vmImage: $(pool_vm_image)
+      jobs:
+        - job: deploy_terraform
+          displayName: Terraform Stages
+          pool:
+            vmImage: $(pool_vm_image)
 
-        steps:
-          # Create a tfvars file for the values
-          # This is so that variables can be set and reused as required
-          - task: Bash@3
-            displayName: Create Terraform variables file
-            inputs:
-              targetType: inline
-              script: |
-                taskctl infra:vars
-            env:
-              # TODO - adjust TF_FILE_LOCATION
-              TF_FILE_LOCATION: /app/fabric_content/data_engineering/example_copy_pipeline
-              TF_VAR_engineering_workspace_id: ${engineering_workspace_id}
-              TF_VAR_bronze_workspace_id: ${bronze_workspace_id}
-              TF_VAR_bronze_lakehouse_id: ${bronze_lakehouse_id}
-              TF_VAR_silver_workspace_id: ${silver_workspace_id}
-              TF_VAR_silver_lakehouse_id: ${silver_lakehouse_id}
+          steps:
+            - template: templates/setup.yml
+              parameters:
+                EirctlVersion: $(EirctlVersion)
 
-          - task: Bash@3
-            displayName: "Taskctl: Infrastructure"
-            inputs:
-              targetType: inline
-              script: taskctl infrastructure
-              informationPreference: continue
-            env:
-              ENV_NAME: ${{ stage.environment_shortname }}
-              TF_FILE_LOCATION: /app/deploy/azure/infra
-              TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+            - task: Bash@3
+              displayName: Terraform Init
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:init
+              env:
+                TF_BACKEND_INIT: key=${tf_state_key}_${sub},container_name=${tf_state_container},storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
+
+            # Configure the variables for Terraform
+            - task: Bash@3
+              displayName: Terraform Variables
+              inputs:
+                targetType: inline
+                script: |
+                  taskctl infra:vars
+              env:
+                TF_VAR_engineering_workspace_id: 8794a888-b6c6-4fe5-8f69-6eb0467f5246 # ${engineering_workspace_id}
+                TF_VAR_bronze_workspace_id: 168a5923-e2bc-4ba8-a291-e9b77b93598c # ${bronze_workspace_id}
+                TF_VAR_bronze_lakehouse_id: 82d3658c-b789-4602-ae6e-acb57b81cddc # ${bronze_lakehouse_id}
+                TF_VAR_silver_workspace_id: a8e2dd0e-b0fc-43fd-bdf4-c63a008b6e10 # ${silver_workspace_id}
+                TF_VAR_silver_lakehouse_id: b1f97591-e73b-4577-adb4-8ec51cc17e71 # ${silver_lakehouse_id}
+
+            - task: Bash@3
+              displayName: Terraform Plan
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:plan
+              env:
+                TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+
+            - task: Bash@3
+              displayName: Terraform Apply
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:apply
