@@ -1,4 +1,4 @@
-name: "0.0.$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)"
+name: "0.0.$(Rev:.r)-$(Year:yyyy).$(Month).$(DayOfMonth)"
 
 trigger:
   paths:
