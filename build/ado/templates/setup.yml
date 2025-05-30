@@ -6,7 +6,7 @@ steps:
 
   # Install Taskfile so that the tests can be run
   - task: Bash@3
-    displayName: "Install: Taskctl"
+    displayName: "Install: Eirctl"
     inputs:
       targetType: inline
       script: |
