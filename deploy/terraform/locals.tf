@@ -25,7 +25,7 @@ locals {
 
   outputs = {
     resource_group_name   = azurerm_resource_group.rg.name
-    fabric_capacity_name  = azurerm_fabric_capacity.afc.name
+    fabric_capacity_name  = local.fabric_capacity_name
     workspaces            = flatten([for ws in fabric_workspace.ws : [ws.id]])
     lakehouses            = flatten([for lh in fabric_lakehouse.afl : [lh.id]])
     capacity_admins       = local.admin_members
@@ -78,4 +78,6 @@ locals {
       } if permission.workspace.role != "" && lower(permission.workspace.role) != "none"
     ]
   ]))
+
+  fabric_capacity_name = var.create_fabric_capacity ? azurerm_fabric_capacity.afc[0].name : var.fabric_capacity_name
 }
