@@ -356,7 +356,6 @@ reportgenerator
 # Other tools
 .terraform
 **/terraform.tfvars
-terraform.tfstate
 *tfplan
 
 # Environments
