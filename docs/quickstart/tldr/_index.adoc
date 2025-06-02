@@ -1,0 +1,5 @@
+=== TL;DR
+
+The Tool Long; Didn't Read (TL;DR) section is a list of all the steps that are required with just the commands to run. Any description or comments will be linked in the relevant section.
+
+include::tldr*.adoc[]

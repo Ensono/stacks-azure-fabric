@@ -1,0 +1,10 @@
+[#get_id_of_ad_user]
+=== Find ID of AD User
+
+In order to be able to administer a Fabric capacity, the IDs of the users need to be provided. Currently this is done by passing in a comma separated list of the users IDs.
+
+It would be more efficient to be able to pass in the email of the user and the have Terraform find the ID of the user in the EntraID Directory.
+
+The https://registry.terraform.io/providers/hashicorp/azuread/latest/docs[Azure AD Provider] from Hashicorp would need to be added to the Terraform deployment.
+
+Additionally the service principal that is used would have to have read permissions in the directory to be able to find the user ID.
