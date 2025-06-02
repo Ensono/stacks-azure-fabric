@@ -1,4 +1,10 @@
 tasks:
+  build:number:
+    context: powershell
+    description: Update the build number
+    command:
+      - Update-BuildNumber -BuildNumber $env:BUILD_BUILDNUMBER
+
   lint:yaml:
     context: powershell
     description: Perform YAML linting
@@ -23,7 +29,7 @@ tasks:
     context: powershell
     description: Create Terraform variables file
     command:
-      - /workspace/.taskctl/build/scripts/Set-TFVars.ps1 | Out-File -Path  "${env:TF_FILE_LOCATION}/terraform.tfvars"
+      - /eirctl/build/scripts/Set-TFVars.ps1 | Out-File -Path  "${env:TF_FILE_LOCATION}/terraform.tfvars"
 
   infra:plan:
     context: powershell
@@ -52,6 +58,6 @@ tasks:
 
   _docs:
     description: Build Docs for Project
-    context: docsenv
-    command:
-      - Build-Documentation -Format pdf -Config /workspace/.taskctl/build/ado/config/docs.json -basepath /workspace/.taskctl
+    context: docs
+    command: |
+      Build-Documentation -Config /eirctl/build/config/docs.json -Type pdf

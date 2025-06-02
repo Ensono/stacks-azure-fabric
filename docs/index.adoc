@@ -1,3 +1,26 @@
-# Stacks Azure Data
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: rouge
+:rouge-style: monokai
+:listing-caption: Listing
 
-NOTE: This document describes the layout of the project and what each folder etc is for. Once the project has been added to and updated this file can be safely deleted.
+# Stacks Azure Fabric
+:toc:
+
+include::prereqs/_index.adoc[]
+
+<<<
+
+include::quickstart/_index.adoc[]
+
+<<<
+
+include::deployment/_index.adoc[]
+
+<<<
+
+include::troubleshooting/_index.adoc[]
+
+<<<
+
+include::enchancements/_index.adoc[]

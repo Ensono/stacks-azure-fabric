@@ -10,12 +10,14 @@ contexts:
         - sourceversionmessage
         - posh_azure_subscription
 
-  infra:
+  docs:
     container:
-      name: ensonostacks/eir-infrastructure
+      name: ensono/eir-asciidoctor
       shell: pwsh
       shell_args:
         - -Command
+      container_args:
+        - -v /mnt/c/Users/rseymour/workspaces/stacks/independent-runner/src/modules:/modules
     envfile:
       exclude:
         - sourceversionmessage
