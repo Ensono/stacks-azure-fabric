@@ -1,4 +1,4 @@
-resource "fabric_data_pipeline" "example_ingest_pipeline_test" {
+resource "fabric_data_pipeline" "example_ingest_pipeline" {
   display_name = "example_ingest_pipeline"
   description  = "Example data pipeline with a copy activity"
   workspace_id = var.engineering_workspace_id
