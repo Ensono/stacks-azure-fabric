@@ -1,3 +1,36 @@
+<#
+
+    .SYNOPSIS
+    Read prefixed variables from the environment and output them in a key value form
+
+    .DESCRIPTION
+    Terraform can read variables that are prefixed with `TF_VAR_`. Whenever a Terraform
+    command is run, this needs to be set.
+
+    To avoid having to set these variables each time, this script will read any variable
+    that is prefixed with `TF_VAR_` and output them in a key value form.
+
+    SO that other prefixes can be used, that may have been created by other scripts,
+    the prefix can be changed.
+
+    If an environment contained the following variables:
+
+        NAME="fred"
+        TF_VAR_location="westeurope"
+        TF_VAR_resource_group="rg-fred"
+
+    The resultant file would be:
+
+        location = "westeurope"
+        resource_group = "rg-fred"
+
+    .EXAMPLE
+
+    PS> .\Set-TFVars.ps1 | Set-Content -Path ./vars.tfvars
+
+    Check the environment for TF_VAR variables and set in a file called vars.tfvars
+#>
+
 [CmdletBinding()]
 param (
 
