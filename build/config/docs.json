@@ -3,9 +3,16 @@
   "output": "{{ basepath }}/outputs/docs/{{ format }}",
   "trunkBranch": "main",
   "path": "{{ basepath }}/docs/index.adoc",
-  "libs": ["asciidoctor-diagram"],
+  "libs": [
+    "asciidoctor-diagram",
+    "asciidoctor-mathematical",
+    "/usr/local/ensono/lib/glob-include-processor.rb",
+    "/eirctl/docs/lib/generate-banner-image.rb",
+    "/eirctl/docs/lib/source-code-label.rb",
+    "/eirctl/docs/lib/custom-title-page.rb"
+  ],
   "attributes": {
-    "asciidoctor": ["base_doc_dir=/workspace/.taskctl/docs/"]
+    "asciidoctor": ["base_doc_dir=/eirctl/docs"]
   },
   "pdf": {
     "attributes": {
@@ -14,7 +21,7 @@
         "pdf-fontsdir=\"{{ basepath }}/docs/conf/styles/fonts;GEM_FONTS_DIR\"",
         "skip-front-matter",
         "allow-uri-read",
-        "base_doc_dir=\"/workspace/.taskctl/docs/\""
+        "base_doc_dir=\"/eirctl/docs/\""
       ]
     }
   },

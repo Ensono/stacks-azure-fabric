@@ -1,9 +1,26 @@
-# Stacks Azure Data
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: rouge
+:rouge-style: monokai
+:listing-caption: Listing
+
+# Stacks Azure Fabric
+:toc:
 
 include::prereqs/_index.adoc[]
 
+<<<
 
+include::quickstart/_index.adoc[]
+
+<<<
+
+include::deployment/_index.adoc[]
+
+<<<
 
 include::troubleshooting/_index.adoc[]
+
+<<<
 
 include::enchancements/_index.adoc[]
