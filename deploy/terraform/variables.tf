@@ -9,6 +9,19 @@ variable "project" {
   default     = "fabric"
 }
 
+
+variable "create_fabric_capacity" {
+  description = "Whether to create the Azure Fabric Capacity resource"
+  type        = bool
+  default     = false
+}
+
+variable "fabric_capacity_name" {
+  description = "Name of the existing Fabric Capacity to look up"
+  type        = string
+  default     = null
+}
+
 variable "fabric_sku" {
   description = "The SKU of the fabric capacity to be created"
   default     = "F2"
