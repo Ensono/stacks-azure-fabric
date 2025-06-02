@@ -9,9 +9,15 @@ data "azurerm_subscription" "current" {}
 
 # Retrieve the details of the fabric capacity so the id can be used when
 # creating a fabric workspace
+# data "fabric_capacity" "afc" {
+#   display_name = azurerm_fabric_capacity.afc[0].name
+# }
+
+
 data "fabric_capacity" "afc" {
-  display_name = azurerm_fabric_capacity.afc.name
+  display_name = local.fabric_capacity_name
 }
+
 
 # data "azapi_resource" "afc" {
 #   type      = "Microsoft.Fabric/capacities@2023-11-01"
