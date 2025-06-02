@@ -1,0 +1,4 @@
+[#tools]
+=== Tools
+
+Ensure that the https://github.com/ensono/eirctl[Ensono Independent Runner Control Tool, `eirctl`] is installed.

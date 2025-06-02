@@ -356,7 +356,6 @@ reportgenerator
 # Other tools
 .terraform
 **/terraform.tfvars
-.terraform.lock.hcl
 *tfplan
 
 # Environments
@@ -374,3 +373,5 @@ support
 coverage
 .sonarqube
 .taskctl
+
+outputs

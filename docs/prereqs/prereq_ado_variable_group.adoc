@@ -1,0 +1,20 @@
+// Set parameters that allow the document to be tailored to specific values
+:upn: dumnmy.user@ensono.com
+:guid: a1d95d46-5fee-423a-8fd6-0203f69e0105
+
+=== Azure DevOps Variable Group
+
+Although the Terraform templates in this repository will create variable groups based on the outputs, some information pertaining to the permissions need to be setup manually before deployment.
+
+The variable group can be created in a variety of ways, the following example shows how to use the command line to create a variable group in the correct project.
+
+[source, bash]
+----
+az pipelines variable-group create --name "fabric-permissions" \
+  --variables "perms={{ upn }}:true:{{ guid }}:Contributor" \
+  --authorize true \
+  --org ensonodigitaluk \
+  --project Stacks
+----
+
+For more information on the format of this string please refer to the <<permissions>> section.

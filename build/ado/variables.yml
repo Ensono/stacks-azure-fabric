@@ -20,8 +20,8 @@ variables:
     value: tfstate
 
   # Dependency versions
-  - name: TaskctlVersion
-    value: 2.0.4
+  - name: EirctlVersion
+    value: 0.5.7
   - name: EnsonoBuildVersion
     value: 1.1.37
   - name: DockerPushRMVersion
