@@ -20,10 +20,8 @@ variables:
   - name: tf_state_key
     value: example_copy_pipeline
   - name: tf_state_rg
-    # TODO - take from variable group?
     value: stacks-terraform-state
   - name: tf_state_storage
-    # TODO - take from variable group?
     value: stacksstatehjfis
   - name: tf_state_container
     value: tfstate
@@ -98,7 +96,6 @@ stages:
               env:
                 TF_BACKEND_INIT: key=${tf_state_key}_${sub},container_name=${tf_state_container},storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
 
-            # TODO Configure the variables for Terraform to use library variable groups
             - task: Bash@3
               displayName: Terraform Plan
               inputs:
@@ -107,6 +104,7 @@ stages:
                   eirctl infra:plan
               env:
                 TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+                # TODO Configure the variables for Terraform to use library variable groups
                 TF_VAR_engineering_workspace_id: 8794a888-b6c6-4fe5-8f69-6eb0467f5246 # ${engineering_workspace_id}
                 TF_VAR_bronze_workspace_id: 168a5923-e2bc-4ba8-a291-e9b77b93598c # ${bronze_workspace_id}
                 TF_VAR_bronze_lakehouse_id: 82d3658c-b789-4602-ae6e-acb57b81cddc # ${bronze_lakehouse_id}
