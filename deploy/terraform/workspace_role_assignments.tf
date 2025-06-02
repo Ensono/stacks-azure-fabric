@@ -8,8 +8,6 @@ resource "fabric_workspace_role_assignment" "ws_ra" {
   workspace_id = fabric_workspace.ws[each.value.wsname].id
 
   principal = {
-    # id   = "b1db9c19-4aad-4cec-8c56-d3d2bb682e5c"
-    # type = "User"
     id   = each.value.id
     type = each.value.type
   }

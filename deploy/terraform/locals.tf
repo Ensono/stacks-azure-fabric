@@ -34,14 +34,6 @@ locals {
 
   }
 
-  # Create an array of the users that need to have admin access on the Fabric Capacity
-  #fabric_capacity_admins = [
-  #  for admin in split(",", var.fabric_capacity_admins) : [
-  #    trimspace(admin)
-  #  ]
-  #]
-  # admin_members = flatten(concat(local.fabric_capacity_admins, [data.azurerm_client_config.current.object_id]))
-
   # Create an object that contains all of the required permissions that have been defined
   perms = flatten([
     for permission in split(",", var.permissions) : [
