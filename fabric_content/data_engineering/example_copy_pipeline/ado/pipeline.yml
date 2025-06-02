@@ -81,8 +81,8 @@ stages:
           value: $(ARM_CLIENT_SECRET)
         - name: TF_FILE_LOCATION
           value: fabric_content/data_engineering/example_copy_pipeline/terraform
-        # - name: ENV_NAME
-        #   value: ${{ sub }}
+        - name: ENV_NAME
+          value: ${{ sub }}
 
       jobs:
         - job: deploy_terraform
@@ -103,11 +103,6 @@ stages:
                   eirctl infra:init
               env:
                 TF_BACKEND_INIT: key=${tf_state_key}_${sub},container_name=${tf_state_container},storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
-                TF_VAR_engineering_workspace_id: 8794a888-b6c6-4fe5-8f69-6eb0467f5246 # ${engineering_workspace_id}
-                TF_VAR_bronze_workspace_id: 168a5923-e2bc-4ba8-a291-e9b77b93598c # ${bronze_workspace_id}
-                TF_VAR_bronze_lakehouse_id: 82d3658c-b789-4602-ae6e-acb57b81cddc # ${bronze_lakehouse_id}
-                TF_VAR_silver_workspace_id: a8e2dd0e-b0fc-43fd-bdf4-c63a008b6e10 # ${silver_workspace_id}
-                TF_VAR_silver_lakehouse_id: b1f97591-e73b-4577-adb4-8ec51cc17e71 # ${silver_lakehouse_id}
 
             # Configure the variables for Terraform
             - task: Bash@3
