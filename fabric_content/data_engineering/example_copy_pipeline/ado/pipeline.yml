@@ -26,7 +26,7 @@ variables:
     # TODO - take from variable group?
     value: stacksstatehjfis
   - name: tf_state_container
-    value: tfstate-data-engineering
+    value: tfstate
 
   # Dependency versions
   - name: EirctlVersion
