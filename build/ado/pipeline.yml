@@ -153,6 +153,7 @@ stages:
                   script: |
                     eirctl infra:vars
                 env:
+                  TF_VAR_create_capacity: true
                   TF_VAR_permissions: $(fabric_permissions)
                   ${{ if ne(trim(parameters.environments), '')}}:
                     TF_VAR_environments: $(environments)
