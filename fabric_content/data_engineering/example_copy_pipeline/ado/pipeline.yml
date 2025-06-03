@@ -223,11 +223,11 @@ stages:
                       eirctl infra:destroy:plan
 
                 - task: Bash@3
-                displayName: Terraform Destroy Apply
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:destroy:apply
+                  displayName: Terraform Destroy Apply
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:destroy:apply
 
               - ${{ if eq(parameters.deploy, true) }}:
                 - task: Bash@3
