@@ -94,7 +94,7 @@ stages:
                   script: |
                     eirctl infra:init
                 env:
-                  TF_BACKEND_INIT: key=$(tf_state_key)_$(sub),container_name=$(tf_state_container),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
+                  TF_BACKEND_INIT: key=$(tf_state_key)_${{ sub }},container_name=$(tf_state_container),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
 
               - task: Bash@3
                 displayName: Terraform Plan
