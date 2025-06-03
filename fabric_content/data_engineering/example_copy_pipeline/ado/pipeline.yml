@@ -131,7 +131,7 @@ stages:
         displayName: Deploy - ${{ subscription.subscription_type }} - ${{ environment }}
         dependsOn:
           - prelim
-        condition: and(succeeded(), eq(variables.isPR, true))
+        condition: and(succeeded(), eq(variables.isMainBranch, true))
         variables:
           - group: azure-sp-creds
           # - group: <ADD group with workspace and lakehouse IDs>
