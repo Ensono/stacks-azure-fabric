@@ -10,10 +10,9 @@ terraform {
       source  = "microsoft/fabric"
       version = "~> 1.1"
     }
-
-    azapi = {
-      source  = "azure/azapi"
-      version = "~> 2.4"
+    azuredevops = {
+      source  = "microsoft/azuredevops"
+      version = ">=0.1.0"
     }
 
   }
@@ -28,4 +27,6 @@ provider "azurerm" {
 provider "fabric" {
 }
 
-provider "azapi" {}
+provider "azuredevops" {
+  org_service_url = var.azuredevops_org_service_url
+}

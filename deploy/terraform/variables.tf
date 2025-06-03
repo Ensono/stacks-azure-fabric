@@ -50,6 +50,16 @@ variable "deploy_all_environments" {
 }
 
 #######################################################
+# Azure DevOps Settings
+#######################################################
+
+variable "azuredevops_org_service_url" {
+  description = "The URL of the Azure DevOps organization service"
+  type        = string
+}
+
+
+#######################################################
 # Azure Fabric Settings
 #######################################################
 variable "permissions" {
