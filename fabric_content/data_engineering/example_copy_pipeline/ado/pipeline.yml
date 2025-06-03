@@ -91,6 +91,8 @@ stages:
         value: $(ARM_CLIENT_SECRET)
       - name: TF_FILE_LOCATION
         value: fabric_content/data_engineering/example_copy_pipeline/terraform
+      - name: ENV_NAME
+        value: ${{ parameters.feature_env_name }}
 
     jobs:
       - job: deploy_terraform
