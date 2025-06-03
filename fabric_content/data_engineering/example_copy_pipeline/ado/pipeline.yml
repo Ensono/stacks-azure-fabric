@@ -9,6 +9,14 @@ trigger:
       - main
 
 parameters:
+  - name: deploy
+    type: boolean
+    default: true
+    displayName: Deploy Pipeline
+  - name: destroy
+    type: boolean
+    default: false
+    displayName: Destroy Pipeline [DANGEROUS]
   - name: subscription_environments
     displayName: List of Subscriptions with Environments
     type: object
@@ -102,14 +110,14 @@ stages:
             env:
               TF_BACKEND_INIT: key=$(tf_state_key)_$(ENV_NAME),container_name=$(tf_state_container),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
 
+          # Configure the variables for Terraform
           - task: Bash@3
-            displayName: Terraform Plan
+            displayName: Terraform Variables
             inputs:
               targetType: inline
               script: |
-                eirctl infra:plan
+                eirctl infra:vars
             env:
-              TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
               # TODO Configure the variables for Terraform to use library variable groups
               TF_VAR_engineering_workspace_id: 8794a888-b6c6-4fe5-8f69-6eb0467f5246 # ${engineering_workspace_id}
               TF_VAR_bronze_workspace_id: 168a5923-e2bc-4ba8-a291-e9b77b93598c # ${bronze_workspace_id}
@@ -117,12 +125,36 @@ stages:
               TF_VAR_silver_workspace_id: a8e2dd0e-b0fc-43fd-bdf4-c63a008b6e10 # ${silver_workspace_id}
               TF_VAR_silver_lakehouse_id: b1f97591-e73b-4577-adb4-8ec51cc17e71 # ${silver_lakehouse_id}
 
-          - task: Bash@3
-            displayName: Terraform Apply
+          - ${{ if eq(parameters.destroy, true) }}:
+            - task: Bash@3
+              displayName: Terraform Destroy Plan
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:destroy:plan
+
+            - task: Bash@3
+            displayName: Terraform Destroy Apply
             inputs:
               targetType: inline
               script: |
-                eirctl infra:apply
+                eirctl infra:destroy:apply
+
+          - ${{ if eq(parameters.deploy, true) }}:
+            - task: Bash@3
+              displayName: Terraform Plan
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:plan
+              env:
+                TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+            - task: Bash@3
+              displayName: Terraform Apply
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:apply
 
 
   - ${{ each subscription in parameters.subscription_environments }}:
@@ -166,14 +198,14 @@ stages:
                 env:
                   TF_BACKEND_INIT: key=$(tf_state_key)_$(ENV_NAME),container_name=$(tf_state_container),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
 
+              # Configure the variables for Terraform
               - task: Bash@3
-                displayName: Terraform Plan
+                displayName: Terraform Variables
                 inputs:
                   targetType: inline
                   script: |
-                    eirctl infra:plan
+                    eirctl infra:vars
                 env:
-                  TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
                   # TODO Configure the variables for Terraform to use library variable groups
                   # provided bronze workspace as engineering to avoid conflicts with deploy_to_feature_dev till the values are hardcoded
                   TF_VAR_engineering_workspace_id: 168a5923-e2bc-4ba8-a291-e9b77b93598c # ${engineering_workspace_id}
@@ -182,9 +214,33 @@ stages:
                   TF_VAR_silver_workspace_id: a8e2dd0e-b0fc-43fd-bdf4-c63a008b6e10 # ${silver_workspace_id}
                   TF_VAR_silver_lakehouse_id: b1f97591-e73b-4577-adb4-8ec51cc17e71 # ${silver_lakehouse_id}
 
-              - task: Bash@3
-                displayName: Terraform Apply
+              - ${{ if eq(parameters.destroy, true) }}:
+                - task: Bash@3
+                  displayName: Terraform Destroy Plan
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:destroy:plan
+
+                - task: Bash@3
+                displayName: Terraform Destroy Apply
                 inputs:
                   targetType: inline
                   script: |
-                    eirctl infra:apply
+                    eirctl infra:destroy:apply
+
+              - ${{ if eq(parameters.deploy, true) }}:
+                - task: Bash@3
+                  displayName: Terraform Plan
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:plan
+                  env:
+                    TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+                - task: Bash@3
+                  displayName: Terraform Apply
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:apply
