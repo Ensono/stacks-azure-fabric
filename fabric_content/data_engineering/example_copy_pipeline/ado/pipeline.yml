@@ -78,7 +78,6 @@ stages:
     condition: and(succeeded(), eq(variables.isPR, true))
     variables:
       - group: azure-sp-creds
-      # - group: <ADD group with workspace and lakehouse IDs>
       - name: FABRIC_TENANT_ID
         value: $(ARM_TENANT_ID)
       - name: FABRIC_CLIENT_ID
@@ -88,6 +87,7 @@ stages:
       - name: TF_FILE_LOCATION
         value: fabric_content/data_engineering/example_copy_pipeline/terraform
       - name: ENV_NAME
+        # Optionally can be customized to avoid terraform state conflicts with other feature branches
         value: dev
 
     jobs:
@@ -118,7 +118,7 @@ stages:
               script: |
                 eirctl infra:vars
             env:
-              # TODO Configure the variables for Terraform to use library variable groups
+              # For feature development, these values need to be updated manually in the feature branch
               TF_VAR_engineering_workspace_id: 8794a888-b6c6-4fe5-8f69-6eb0467f5246 # ${engineering_workspace_id}
               TF_VAR_bronze_workspace_id: 168a5923-e2bc-4ba8-a291-e9b77b93598c # ${bronze_workspace_id}
               TF_VAR_bronze_lakehouse_id: 82d3658c-b789-4602-ae6e-acb57b81cddc # ${bronze_lakehouse_id}
@@ -147,8 +147,7 @@ stages:
                 targetType: inline
                 script: |
                   eirctl infra:plan
-              env:
-                TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+
             - task: Bash@3
               displayName: Terraform Apply
               inputs:
@@ -236,8 +235,7 @@ stages:
                     targetType: inline
                     script: |
                       eirctl infra:plan
-                  env:
-                    TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+
                 - task: Bash@3
                   displayName: Terraform Apply
                   inputs:
