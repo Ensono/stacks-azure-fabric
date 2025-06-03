@@ -82,7 +82,7 @@ stages:
     condition: and(succeeded(), eq(variables.isPR, true))
     variables:
       - group: azure-sp-creds
-      - group: artifact-ids-{{ parameters.feature_env_name }}
+      - group: artifact-ids-${{ parameters.feature_env_name }}
       - name: FABRIC_TENANT_ID
         value: $(ARM_TENANT_ID)
       - name: FABRIC_CLIENT_ID
