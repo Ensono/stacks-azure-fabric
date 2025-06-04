@@ -85,7 +85,7 @@ stages:
     displayName: Deploy to Feature Development Workspace
     dependsOn:
       - prelim
-    condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true))
+    condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
     variables:
       - group: azure-sp-creds
       - group: artifact-ids-${{ parameters.feature_env_name }}
