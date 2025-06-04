@@ -17,13 +17,13 @@ parameters:
     type: boolean
     default: false
     displayName: Destroy Pipeline [DANGEROUS]
-  - name: subscription_environments
-    displayName: List of Subscriptions with Environments
+  - name: capacity_environments
+    displayName: List of Capacities with Environments
     type: object
     default:
-      - subscription_type: nonprod
+      - capacity_type: nonprod
         environments: [test]
-      # - subscription_type: prod
+      # - capacity_type: prod
       #   environments: [uat, prod]
   - name: feature_env_name
     displayName: Feature Environment Name
@@ -160,10 +160,10 @@ stages:
                   eirctl infra:apply
 
 
-  - ${{ each subscription in parameters.subscription_environments }}:
-    - ${{ each environment in subscription.environments }}:
+  - ${{ each capacity in parameters.capacity_environments }}:
+    - ${{ each environment in capacity.environments }}:
       - stage: Deploy
-        displayName: Deploy - ${{ subscription.subscription_type }} - ${{ environment }}
+        displayName: Deploy - ${{ capacity.capacity_type }} - ${{ environment }}
         dependsOn:
           - prelim
         condition: and(succeeded(), eq(variables.isMainBranch, true))
