@@ -29,12 +29,18 @@ parameters:
     displayName: Feature Environment Name
     type: string
     default: dev
+  - name: deploy_to_feature_env
+    displayName: Deploy to Feature Development Environment
+    type: boolean
+    default: false
 
 variables:
   - name: isPR
     value: $[eq(variables['Build.Reason'], 'PullRequest')]
   - name: isMainBranch
     value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: isManual
+    value: $[eq(variables['Build.Reason'], 'Manual')]
   # Terraform state storage
   - name: tf_state_key
     value: example_copy_pipeline
@@ -79,7 +85,7 @@ stages:
     displayName: Deploy to Feature Development Workspace
     dependsOn:
       - prelim
-    condition: and(succeeded(), eq(variables.isPR, true))
+    condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true))
     variables:
       - group: azure-sp-creds
       - group: artifact-ids-${{ parameters.feature_env_name }}
@@ -166,7 +172,7 @@ stages:
         displayName: Deploy - ${{ capacity.capacity_type }} - ${{ environment }}
         dependsOn:
           - prelim
-        condition: and(succeeded(), eq(variables.isMainBranch, true))
+        condition: and(succeeded(), or(eq(variables.isMainBranch, true), eq(variables.isManual, true)))
         variables:
           - group: azure-sp-creds
           - group: artifact-ids-${{ environment }}
