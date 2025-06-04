@@ -168,7 +168,7 @@ stages:
         displayName: Deploy - ${{ capacity.capacity_type }} - ${{ environment }}
         dependsOn:
           - prelim
-        condition: and(succeeded(), or(eq(variables.isMainBranch, true), eq(variables.isManual, true)))
+        condition: and(succeeded(), eq(variables.isMainBranch, true))
         variables:
           - group: azure-sp-creds
           - group: artifact-ids-${{ environment }}
