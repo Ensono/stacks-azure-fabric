@@ -29,10 +29,6 @@ parameters:
     displayName: Feature Environment Name
     type: string
     default: dev
-  - name: deploy_to_feature_env
-    displayName: Deploy to Feature Development Environment
-    type: boolean
-    default: false
 
 variables:
   - name: isPR
