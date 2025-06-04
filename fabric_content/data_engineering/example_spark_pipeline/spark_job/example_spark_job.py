@@ -17,6 +17,7 @@ def add_handler(fmt: str, logger: logging.Logger) -> None:
     Args:
         fmt: The format string to be used by the logging formatter.
         logger: The logger instance to which the handler will be added.
+
     """
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
@@ -33,6 +34,7 @@ def get_logger(name: str) -> logging.Logger:
 
     Returns:
         Logger instance.
+
     """
     fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
