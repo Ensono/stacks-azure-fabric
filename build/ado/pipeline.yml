@@ -201,7 +201,7 @@ stages:
                       script: |
                         eirctl infra:plan
                     env:
-                      TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan,--var-file=./workspace_variables/test_terraform.tfvars'
+                      TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan,--var-file=./deploy/terraform/workspace_variables/test_terraform.tfvars'
 
                   - task: Bash@3
                     displayName: Terraform Apply
