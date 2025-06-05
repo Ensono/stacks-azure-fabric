@@ -173,7 +173,7 @@ stages:
       condition: and(succeeded(), eq(variables.isMainBranch, true))
       variables:
         - group: azure-sp-creds
-        - group: artifact-ids-${{ environment }}
+        - group: fabric-${{ environment }}
         - name: FABRIC_TENANT_ID
           value: $(ARM_TENANT_ID)
         - name: FABRIC_CLIENT_ID
