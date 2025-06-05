@@ -166,7 +166,7 @@ stages:
 
 
   - ${{ each environment in parameters.environments }}:
-    - stage: Deploy ${{ environment }}
+    - stage: Deploy_${{ environment }}
       displayName: Deploy ${{ environment }}
       dependsOn:
         - prelim
