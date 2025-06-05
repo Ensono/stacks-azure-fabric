@@ -22,6 +22,17 @@ parameters:
     default:
       - nonprod
 
+  # - name: environments
+  #   displayName: Environments
+  #   type: object
+  #   default:
+  #     - name: test
+  #       dependsOn: prelim
+  #     - environment_type: uat
+  #       dependsOn: test
+  #     - environment_type: prod
+  #       dependsOn: uat
+
   - name: environments
     displayName: Environments
     default: " "
@@ -190,7 +201,7 @@ stages:
                       script: |
                         eirctl infra:plan
                     env:
-                      TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+                      TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan,--var-file=./workspace_variables/test_terraform.tfvars'
 
                   - task: Bash@3
                     displayName: Terraform Apply
