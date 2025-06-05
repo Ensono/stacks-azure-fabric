@@ -84,7 +84,7 @@ stages:
                 eirctl build:number
 
   - stage: deploy_to_feature_dev
-    displayName: Deploy to Feature Development Workspace
+    displayName: Deploy dev
     dependsOn:
       - prelim
     condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
