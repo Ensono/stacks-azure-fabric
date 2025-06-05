@@ -18,12 +18,15 @@ parameters:
     default: false
     displayName: Destroy Pipeline [DANGEROUS]
   - name: environments
-    displayName: List of Environments
+    displayName: List of Environments with their deployment dependencies
     type: object
     default:
-      - test
-      - uat
-      - prod
+      - environment_type: test
+        dependsOn: prelim
+      - environment_type: uat
+        dependsOn: test
+      - environment_type: prod
+        dependsOn: uat
   - name: feature_env_name
     displayName: Feature Environment Name
     type: string
@@ -166,14 +169,14 @@ stages:
 
 
   - ${{ each environment in parameters.environments }}:
-    - stage: Deploy_${{ environment }}
-      displayName: Deploy ${{ environment }}
+    - stage: ${{ environment.environment_type }}
+      displayName: Deploy ${{ environment.environment_type }}
       dependsOn:
-        - prelim
+        - ${{ environment.dependsOn }}
       condition: and(succeeded(), eq(variables.isMainBranch, true))
       variables:
         - group: azure-sp-creds
-        - group: fabric_${{ environment }}
+        - group: fabric_${{ environment.environment_type }}
         - name: FABRIC_TENANT_ID
           value: $(ARM_TENANT_ID)
         - name: FABRIC_CLIENT_ID
@@ -183,7 +186,7 @@ stages:
         - name: TF_FILE_LOCATION
           value: fabric_content/$(workspace_type)/$(pipeline_name)/terraform
         - name: ENV_NAME
-          value: ${{ environment }}
+          value: ${{ environment.environment_type }}
 
       jobs:
         - job: deploy_terraform
