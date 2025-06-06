@@ -108,5 +108,5 @@ stages:
           - template: ../../../../de_build/de-workload-testing.yml
             parameters:
               pythonVersion: "3.12"
-              workingDirectory: "./../../"
+              workingDirectory: "./"
               unitTestLocation: "./$(test_unit_src)"
