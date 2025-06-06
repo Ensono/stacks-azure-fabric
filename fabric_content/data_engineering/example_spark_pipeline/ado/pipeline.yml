@@ -111,6 +111,31 @@ stages:
         value: ${{ parameters.feature_env_name }}
 
     jobs:
+      - job: upload
+        displayName: Upload Python Script
+        pool:
+          vmImage: ubuntu-24.04
+        steps:
+          - task: Bash@3
+            displayName: 'Login to Azure'
+            inputs:
+              targetType: inline
+              script: |
+                az login --service-principal \
+                  -u "$FABRIC_CLIENT_ID" \
+                  -p "$FABRIC_CLIENT_SECRET" \
+                  --tenant "$FABRIC_TENANT_ID"
+
+          # - task: Bash@3
+          #   displayName: 'Upload to Lakehouse'
+          #   inputs:
+          #     targetType: inline
+          #     script: |
+          #       ACCESS_TOKEN=$(az account get-access-token --resource=https://api.fabric.microsoft.com --query accessToken -o tsv)
+          #       curl -X PUT "https://onelake.dfs.fabric.microsoft.com/${FABRIC_WORKSPACE_ID}/${FABRIC_LAKEHOUSE_ID}/${DEST_PATH}?resource=file" \
+          #         -H "Authorization: Bearer $ACCESS_TOKEN" \
+          #         --upload-file "${PY_SCRIPT_PATH}"
+
       - job: deploy_terraform
         displayName: Terraform Stages
         pool:
