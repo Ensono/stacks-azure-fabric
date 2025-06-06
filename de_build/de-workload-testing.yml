@@ -15,10 +15,6 @@ steps:
     inputs:
       targetType: inline
       script: |
-        echo ${{ parameters.unitTestLocation }}
-        echo ${{ parameters.workingDirectory }}
-        pwd
-        ls
         pip install poetry
         poetry self add poetry-dotenv-plugin
         poetry install
@@ -29,7 +25,14 @@ steps:
     inputs:
       targetType: inline
       script: |
-        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}"
+        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}" --junitxml=test-results/unit-tests.xml
       workingDirectory: "${{ parameters.workingDirectory }}"
     env:
       UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
+
+  - task: PublishTestResults@2
+    displayName: "Publish Test Results"
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/test-results/unit-tests.xml'
+      failTaskOnFailedTests: true
