@@ -127,22 +127,12 @@ stages:
                   --tenant "$FABRIC_TENANT_ID"
 
           - task: Bash@3
-            displayName: 'Show working directory'
-            inputs:
-              targetType: inline
-              script: |
-                echo "Current working directory: $(pwd)"
-                pwd
-                echo "Contents:"
-                ls -al
-
-          - task: Bash@3
             displayName: 'Upload to Lakehouse'
             inputs:
               targetType: inline
               script: |
                 set -e
-                ACCESS_TOKEN=$(az account get-access-token --resource=https://api.fabric.microsoft.com --query accessToken -o tsv)
+                ACCESS_TOKEN=$(az account get-access-token --resource=https://onelake.dfs.fabric.microsoft.com --query accessToken -o tsv)
                 for file in fabric_content/$(workspace_type)/$(pipeline_name)/spark_job/*.py; do
                   fname=$(basename "$file")
                   echo "Uploading $file as $fname"
