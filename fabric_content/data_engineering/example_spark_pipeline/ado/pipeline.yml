@@ -127,6 +127,16 @@ stages:
                   --tenant "$FABRIC_TENANT_ID"
 
           - task: Bash@3
+            displayName: 'Show working directory'
+            inputs:
+              targetType: inline
+              script: |
+                echo "Current working directory: $(pwd)"
+                pwd
+                echo "Contents:"
+                ls -al
+
+          - task: Bash@3
             displayName: 'Upload to Lakehouse'
             inputs:
               targetType: inline
