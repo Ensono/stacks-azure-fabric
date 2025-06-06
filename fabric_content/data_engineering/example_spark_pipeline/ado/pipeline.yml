@@ -47,7 +47,7 @@ variables:
   - name: tf_state_container
     value: tfstate
   - name: test_unit_src
-    value: "data_engineering/$(tf_state_key)/spark-job/tests/unit/"
+    value: "data_engineering/$(tf_state_key)/spark_job/tests/unit/"
 
   # Dependency versions
   - name: EirctlVersion
@@ -108,5 +108,5 @@ stages:
           - template: ../../../../de_build/de-workload-testing.yml
             parameters:
               pythonVersion: "3.12"
-              workingDirectory: "./"
+              workingDirectory: "./fabric_content"
               unitTestLocation: "./$(test_unit_src)"
