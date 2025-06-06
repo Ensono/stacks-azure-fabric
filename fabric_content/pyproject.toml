@@ -7,8 +7,7 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
-dependencies = [
-]
+dependencies = []
 
 [tool.poetry]
 package-mode = false
@@ -19,6 +18,7 @@ azure-identity = "^1.23.0"
 delta-spark = "^3.3.1"
 deltalake = "^0.25.5"
 pytest = "^8.3.5"
+pytest-mock = ">=3.14.1,<4.0.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
