@@ -16,6 +16,7 @@ steps:
       targetType: inline
       script: |
         pwd
+        ls
         pip install poetry
         poetry self add poetry-dotenv-plugin
         poetry install
