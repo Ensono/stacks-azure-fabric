@@ -21,11 +21,11 @@ parameters:
     displayName: List of Environments with their deployment dependencies
     type: object
     default:
-      - environment_type: test
+      - name: test
         dependsOn: prelim
-      - environment_type: uat
+      - name: uat
         dependsOn: test
-      - environment_type: prod
+      - name: prod
         dependsOn: uat
   - name: feature_env_name
     displayName: Feature Environment Name
@@ -169,14 +169,14 @@ stages:
 
 
   - ${{ each environment in parameters.environments }}:
-    - stage: ${{ environment.environment_type }}
-      displayName: Deploy ${{ environment.environment_type }}
+    - stage: ${{ environment.name }}
+      displayName: Deploy ${{ environment.name }}
       dependsOn:
         - ${{ environment.dependsOn }}
       condition: and(succeeded(), eq(variables.isMainBranch, true))
       variables:
         - group: azure-sp-creds
-        - group: fabric_${{ environment.environment_type }}
+        - group: fabric_${{ environment.name }}
         - name: FABRIC_TENANT_ID
           value: $(ARM_TENANT_ID)
         - name: FABRIC_CLIENT_ID
@@ -186,7 +186,7 @@ stages:
         - name: TF_FILE_LOCATION
           value: fabric_content/$(workspace_type)/$(pipeline_name)/terraform
         - name: ENV_NAME
-          value: ${{ environment.environment_type }}
+          value: ${{ environment.name }}
 
       jobs:
         - job: deploy_terraform
