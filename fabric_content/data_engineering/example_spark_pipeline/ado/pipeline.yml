@@ -3,7 +3,7 @@ name: "0.0$(Rev:.r)"
 trigger:
   paths:
     include:
-      - fabric_content/data_engineering/example_copy_pipeline/*
+      - fabric_content/data_engineering/example_spark_pipeline/*
   branches:
     include:
       - main
@@ -11,7 +11,7 @@ trigger:
 pr:
   paths:
     include:
-      - fabric_content/data_engineering/example_copy_pipeline/*
+      - fabric_content/data_engineering/example_spark_pipeline/*
   branches:
     include:
       - main
@@ -42,7 +42,7 @@ parameters:
 
 variables:
   - name: pipeline_name
-    value: example_copy_pipeline
+    value: example_spark_pipeline
   - name: workspace_type
     value: data_engineering
   - name: isPR
@@ -53,7 +53,7 @@ variables:
     value: $[eq(variables['Build.Reason'], 'Manual')]
   # Terraform state storage
   - name: tf_state_key
-    value: $(pipeline_name)
+    value: example_spark_pipeline
   - name: tf_state_rg
     value: stacks-terraform-state
   - name: tf_state_storage
@@ -111,6 +111,36 @@ stages:
         value: ${{ parameters.feature_env_name }}
 
     jobs:
+      - job: upload
+        displayName: Upload Python Script
+        pool:
+          vmImage: ubuntu-24.04
+        steps:
+          - task: Bash@3
+            displayName: 'Login to Azure'
+            inputs:
+              targetType: inline
+              script: |
+                az login --service-principal \
+                  -u "$FABRIC_CLIENT_ID" \
+                  -p "$FABRIC_CLIENT_SECRET" \
+                  --tenant "$FABRIC_TENANT_ID"
+
+          - task: Bash@3
+            displayName: 'Upload to Lakehouse'
+            inputs:
+              targetType: inline
+              script: |
+                set -e
+                ACCESS_TOKEN=$(az account get-access-token --resource=https://onelake.dfs.fabric.microsoft.com --query accessToken -o tsv)
+                for file in fabric_content/$(workspace_type)/$(pipeline_name)/spark_job/*.py; do
+                  fname=$(basename "$file")
+                  echo "Uploading $file as $fname"
+                  curl -X PUT "https://onelake.dfs.fabric.microsoft.com/$(engineering_workspace_id)/$(engineering_lakehouse_id)/Files/$fname?resource=file" \
+                    -H "Authorization: Bearer $ACCESS_TOKEN" \
+                    --upload-file "$file"
+                done
+
       - job: deploy_terraform
         displayName: Terraform Stages
         pool:
@@ -140,10 +170,11 @@ stages:
             env:
               # For feature development, the engineering workspace id needs to be updated manually in the library group to match the temporary feature workspace id
               TF_VAR_engineering_workspace_id: $(engineering_workspace_id)
-              TF_VAR_bronze_workspace_id: $(storage_bronze_workspace_id)
-              TF_VAR_bronze_lakehouse_id: $(storage_bronze_lakehouse_id)
+              TF_VAR_engineering_lakehouse_id: $(engineering_lakehouse_id)
               TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
               TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
+              TF_VAR_gold_workspace_id: $(storage_movies_workspace_id)
+              TF_VAR_gold_lakehouse_id: $(storage_movies_lakehouse_id)
 
           - ${{ if eq(parameters.destroy, true) }}:
             - task: Bash@3
@@ -225,10 +256,11 @@ stages:
                   eirctl infra:vars
               env:
                 TF_VAR_engineering_workspace_id: $(engineering_workspace_id)
-                TF_VAR_bronze_workspace_id: $(storage_bronze_workspace_id)
-                TF_VAR_bronze_lakehouse_id: $(storage_bronze_lakehouse_id)
+                TF_VAR_engineering_lakehouse_id: $(engineering_lakehouse_id)
                 TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
                 TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
+                TF_VAR_gold_workspace_id: $(storage_movies_workspace_id)
+                TF_VAR_gold_lakehouse_id: $(storage_movies_lakehouse_id)
 
             - ${{ if eq(parameters.destroy, true) }}:
               - task: Bash@3
