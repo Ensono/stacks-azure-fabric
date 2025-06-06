@@ -126,15 +126,15 @@ stages:
                   -p "$FABRIC_CLIENT_SECRET" \
                   --tenant "$FABRIC_TENANT_ID"
 
-          # - task: Bash@3
-          #   displayName: 'Upload to Lakehouse'
-          #   inputs:
-          #     targetType: inline
-          #     script: |
-          #       ACCESS_TOKEN=$(az account get-access-token --resource=https://api.fabric.microsoft.com --query accessToken -o tsv)
-          #       curl -X PUT "https://onelake.dfs.fabric.microsoft.com/${FABRIC_WORKSPACE_ID}/${FABRIC_LAKEHOUSE_ID}/${DEST_PATH}?resource=file" \
-          #         -H "Authorization: Bearer $ACCESS_TOKEN" \
-          #         --upload-file "${PY_SCRIPT_PATH}"
+          - task: Bash@3
+            displayName: 'Upload to Lakehouse'
+            inputs:
+              targetType: inline
+              script: |
+                ACCESS_TOKEN=$(az account get-access-token --resource=https://api.fabric.microsoft.com --query accessToken -o tsv)
+                curl -X PUT "https://onelake.dfs.fabric.microsoft.com/$(engineering_workspace_id)/$(engineering_lakehouse_id)/Files?resource=file" \
+                  -H "Authorization: Bearer $ACCESS_TOKEN" \
+                  --upload-file "../spark_job/example_spark_job.py"
 
       - job: deploy_terraform
         displayName: Terraform Stages
