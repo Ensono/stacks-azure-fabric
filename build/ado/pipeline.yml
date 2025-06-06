@@ -35,16 +35,13 @@ parameters:
     type: boolean
     default: false
 
-pr:
-  - main
-
 trigger:
   branches:
     include:
       - main
   paths:
     include:
-      - "*"
+      - "build/*"
 
 variables:
   - template: variables.yml
