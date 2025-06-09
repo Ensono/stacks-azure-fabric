@@ -61,7 +61,7 @@ variables:
   - name: tf_state_container
     value: tfstate
   - name: test_unit_src
-    value: "data_engineering/$(tf_state_key)/spark_job/tests/unit/"
+    value: "data_engineering/$(pipeline_name)/spark_job/tests/unit/"
 
   # Dependency versions
   - name: EirctlVersion
@@ -119,7 +119,7 @@ stages:
           vmImage: $(pool_vm_image)
 
         steps:
-          - template: ../../../../de_build/de-workload-testing.yml
+          - template: ../../../../build_de/workload-testing.yml
             parameters:
               pythonVersion: "3.12"
               workingDirectory: "./fabric_content"
