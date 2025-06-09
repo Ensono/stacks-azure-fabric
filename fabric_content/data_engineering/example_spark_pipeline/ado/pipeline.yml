@@ -131,6 +131,7 @@ stages:
               targetType: inline
               script: |
                 cd fabric_content
+                poetry run fab config set encryption_fallback_enabled true
                 poetry run fab auth login -u $FABRIC_CLIENT_ID -p $FABRIC_CLIENT_SECRET -t $FABRIC_TENANT_ID
                 poetry run fab ls -l
 
