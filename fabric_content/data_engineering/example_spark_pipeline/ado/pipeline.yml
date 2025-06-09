@@ -134,6 +134,10 @@ stages:
                 poetry run fab config set encryption_fallback_enabled true
                 poetry run fab auth login -u $FABRIC_CLIENT_ID -p $FABRIC_CLIENT_SECRET -t $FABRIC_TENANT_ID
                 poetry run fab ls -l
+                # WORKSPACE_NAME=$(fab ls -l | grep '01a4548b-b108-43ee-bd23-827469987426' | awk '{print $1}')
+                # LAKEHOUSE_NAME=$(fab ls -l $WORKSPACE_NAME | grep '244c6cef-a02c-48fe-92ab-b3b9edd002b3' | awk '{print $1}')
+                # fab cp example_spark_job.py $WORKSPACE_NAME/$LAKEHOUSE_NAME/Files
+                # fab cp example_spark_job.py test-fabric-processing.Workspace/ProcessingLake.Lakehouse/Files
 
 
   - stage: deploy_to_feature_dev
