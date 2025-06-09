@@ -1,0 +1,6 @@
+# Expected transformed data for integration test
+name,max_age
+Alice,25
+Bob,30
+Charlie,35
+David,40
