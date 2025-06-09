@@ -113,6 +113,18 @@ stages:
         value: ${{ parameters.feature_env_name }}
 
     jobs:
+      - job: run_unit_tests
+        displayName: Run Unit Tests
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - template: ../../../../de_build/de-workload-testing.yml
+            parameters:
+              pythonVersion: "3.12"
+              workingDirectory: "./fabric_content"
+              unitTestLocation: "./$(test_unit_src)"
+
       - job: deploy_terraform
         displayName: Terraform Stages
         pool:
