@@ -91,6 +91,54 @@ stages:
               script: |
                 eirctl build:number
 
+  - stage: install_project
+    displayName: Install Project Dependencies
+    dependsOn:
+      - prelim
+    jobs:
+      - job: install_pipx
+        displayName: Install pipx
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - task: Bash@3
+            displayName: Install pipx
+            inputs:
+              targetType: inline
+              script: |
+                sudo apt update
+                sudo apt install pipx
+                pipx ensurepath
+
+      - job: install_poetry
+        displayName: Install Poetry
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - task: Bash@3
+            displayName: Install Poetry
+            inputs:
+              targetType: inline
+              script: |
+                pipx install poetry==2.1.3
+
+      - job: install_dependencies
+        displayName: Install Python Dependencies
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - task: Bash@3
+            displayName: Install Dependencies
+            inputs:
+              targetType: inline
+              script: |
+                cd fabric_content
+                poetry install
+                poetry run fab ls -l
+
   - stage: deploy_to_feature_dev
     displayName: Deploy dev
     dependsOn:
