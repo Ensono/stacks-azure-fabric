@@ -3,7 +3,7 @@ name: "0.0$(Rev:.r)"
 trigger:
   paths:
     include:
-      - fabric_content/data_engineering/example_copy_pipeline/*
+      - fabric_content/data_engineering/example_spark_pipeline/*
   branches:
     include:
       - main
@@ -11,7 +11,7 @@ trigger:
 pr:
   paths:
     include:
-      - fabric_content/data_engineering/example_copy_pipeline/*
+      - fabric_content/data_engineering/example_spark_pipeline/*
   branches:
     include:
       - main
@@ -42,7 +42,7 @@ parameters:
 
 variables:
   - name: pipeline_name
-    value: example_copy_pipeline
+    value: example_spark_pipeline
   - name: workspace_type
     value: data_engineering
   - name: isPR
@@ -53,7 +53,7 @@ variables:
     value: $[eq(variables['Build.Reason'], 'Manual')]
   # Terraform state storage
   - name: tf_state_key
-    value: $(pipeline_name)
+    value: example_spark_pipeline
   - name: tf_state_rg
     value: stacks-terraform-state
   - name: tf_state_storage
@@ -140,10 +140,11 @@ stages:
             env:
               # For feature development, the engineering workspace id needs to be updated manually in the library group to match the temporary feature workspace id
               TF_VAR_engineering_workspace_id: $(engineering_workspace_id)
-              TF_VAR_bronze_workspace_id: $(storage_bronze_workspace_id)
-              TF_VAR_bronze_lakehouse_id: $(storage_bronze_lakehouse_id)
+              TF_VAR_engineering_lakehouse_id: $(engineering_lakehouse_id)
               TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
               TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
+              TF_VAR_gold_workspace_id: $(storage_gold_example_workspace_id)
+              TF_VAR_gold_lakehouse_id: $(storage_gold_example_lakehouse_id)
 
           - ${{ if eq(parameters.destroy, true) }}:
             - task: Bash@3
@@ -225,10 +226,11 @@ stages:
                   eirctl infra:vars
               env:
                 TF_VAR_engineering_workspace_id: $(engineering_workspace_id)
-                TF_VAR_bronze_workspace_id: $(storage_bronze_workspace_id)
-                TF_VAR_bronze_lakehouse_id: $(storage_bronze_lakehouse_id)
+                TF_VAR_engineering_lakehouse_id: $(engineering_lakehouse_id)
                 TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
                 TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
+                TF_VAR_gold_workspace_id: $(storage_gold_example_workspace_id)
+                TF_VAR_gold_lakehouse_id: $(storage_gold_example_lakehouse_id)
 
             - ${{ if eq(parameters.destroy, true) }}:
               - task: Bash@3
