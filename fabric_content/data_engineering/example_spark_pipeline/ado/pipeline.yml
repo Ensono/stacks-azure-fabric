@@ -91,8 +91,8 @@ stages:
               script: |
                 eirctl build:number
 
-  - stage: install_project
-    displayName: Install Project Dependencies
+  - stage: upload_python
+    displayName: Upload Python Scripts
     dependsOn:
       - prelim
     variables:
@@ -104,8 +104,8 @@ stages:
       - name: FABRIC_CLIENT_SECRET
         value: $(ARM_CLIENT_SECRET)
     jobs:
-      - job: install_pipx
-        displayName: Install pipx
+      - job: upload_python
+        displayName: Upload Python Scripts
         pool:
           vmImage: $(pool_vm_image)
 
@@ -122,9 +122,15 @@ stages:
             inputs:
               targetType: inline
               script: |
-                fab auth login -u $FABRIC_CLIENT_ID -p $FABRIC_CLIENT_SECRET -t $FABRIC_TENANT_ID
                 cd fabric_content
                 poetry install
+
+          - task: Bash@3
+            displayName: Upload to Lakehouse
+            inputs:
+              targetType: inline
+              script: |
+                poetry run fab auth login -u $FABRIC_CLIENT_ID -p $FABRIC_CLIENT_SECRET -t $FABRIC_TENANT_ID
                 poetry run fab ls -l
 
 
