@@ -95,11 +95,11 @@ stages:
                 eirctl build:number
 
   - stage: unit_tests
-    displayName: Unit Tests
+    displayName: Run Tests
     dependsOn: prelim
     jobs:
       - job: run_unit_tests
-        displayName: Run Unit Tests
+        displayName: Run Tests
         pool:
           vmImage: $(pool_vm_image)
 
