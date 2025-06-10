@@ -30,7 +30,7 @@ parameters:
     type: object
     default:
       - name: test
-        dependsOn: unit_tests
+        dependsOn: prelim
         condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
       - name: uat
         dependsOn: test
