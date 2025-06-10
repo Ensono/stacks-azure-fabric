@@ -1,0 +1,3 @@
+=== Architecture
+
+The architecture of the Azure Fabric deployment is designed to be flexible and will allow multiple environments to be deployed. The following diagram shows an example deployment of the infrastructure.
