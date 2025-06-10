@@ -160,6 +160,43 @@ stages:
         value: ${{ parameters.feature_env_name }}
 
     jobs:
+      - job: upload_python
+        displayName: Upload Python Scripts
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - template: ../../../../build_de/upload_to_onelake.yml
+            parameters:
+              pythonVersion: "3.12"
+              workingDirectory: "fabric_content"
+              uploadDirectory: "$(workspace_type)/$(pipeline_name)/spark_job"
+              fileExtension: ".py"
+              targetWorkspaceId: $(engineering_workspace_id)
+              targetLakehouseId: $(engineering_lakehouse_id)
+              fabricTenantId: $FABRIC_TENANT_ID
+              fabricClientId: $FABRIC_CLIENT_ID
+              fabricClientSecret: $FABRIC_CLIENT_SECRET
+
+        # steps:
+        #   - task: Bash@3
+        #     displayName: Install Poetry
+        #     inputs:
+        #       targetType: inline
+        #       script: |
+        #         pipx install poetry==2.1.3
+
+        #   - task: Bash@3
+        #     displayName: Install Project
+        #     inputs:
+        #       targetType: inline
+        #       script: |
+        #         cd fabric_content
+        #         poetry install
+
+
+
+
       - job: deploy_terraform
         displayName: Terraform Stages
         pool:
