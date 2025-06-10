@@ -1,5 +1,4 @@
-from ... import example_spark_job
-from ...example_spark_job import create_delta_table, get_delta_table_path, transform_and_save
+from ../..example_spark_job import get_delta_table_path
 
 def test_get_delta_table_path():
     """Test the get_delta_table_path function."""
