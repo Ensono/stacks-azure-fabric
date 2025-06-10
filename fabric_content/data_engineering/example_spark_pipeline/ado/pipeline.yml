@@ -236,7 +236,6 @@ stages:
       jobs:
         - job: upload_python
           displayName: Upload Python Scripts
-          dependsOn: run_unit_tests
           pool:
             vmImage: $(pool_vm_image)
 
