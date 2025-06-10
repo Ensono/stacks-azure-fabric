@@ -7,22 +7,20 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
-dependencies = []
+dependencies = [
+    "azure-identity (>=1.23.0,<2.0.0)",
+    "chispa (>=0.11.1,<0.12.0)",
+    "delta-spark (>=3.3.1,<4.0.0)",
+    "deltalake (>=0.25.5,<0.26.0)",
+    "pytest (>=8.3.5,<9.0.0)",
+    "pytest-bdd (>=7.1.2,<8.0.0)",
+    "pytest-mock (>=3.14.1,<4.0.0)",
+    "pyspark (>=3.5.1,<4.0.0)",
+    "ms-fabric-cli (>=1.0.0,<2.0.0)"
+]
 
 [tool.poetry]
 package-mode = false
-
-
-[tool.poetry.group.dev.dependencies]
-azure-identity = "^1.23.0"
-delta-spark = "^3.3.1"
-deltalake = "^0.25.5"
-pytest = "^8.3.5"
-pytest-mock = ">=3.14.1,<4.0.0"
-pytest-bdd = "^7.1.2"
-pyspark = "^3.5.1"
-setuptools = "^70.0.0"
-chispa = "^0.11.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

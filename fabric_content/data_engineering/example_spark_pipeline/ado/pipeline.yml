@@ -30,17 +30,18 @@ parameters:
     type: object
     default:
       - name: test
-        dependsOn: prelim
+        dependsOn: unit_tests
+        condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
       - name: uat
         dependsOn: test
+        condition: and(succeeded(), eq(variables.isMainBranch, true))
       - name: prod
         dependsOn: uat
-  - name: feature_env_name
-    displayName: Feature Environment Name
-    type: string
-    default: dev
+        condition: and(succeeded(), eq(variables.isMainBranch, true))
 
 variables:
+  - name: python_version
+    value: "3.12"
   - name: pipeline_name
     value: example_spark_pipeline
   - name: workspace_type
@@ -93,25 +94,9 @@ stages:
               script: |
                 eirctl build:number
 
-  - stage: deploy_to_feature_dev
-    displayName: Deploy dev
-    dependsOn:
-      - prelim
-    condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
-    variables:
-      - group: azure-sp-creds
-      - group: fabric_${{ parameters.feature_env_name }}
-      - name: FABRIC_TENANT_ID
-        value: $(ARM_TENANT_ID)
-      - name: FABRIC_CLIENT_ID
-        value: $(ARM_CLIENT_ID)
-      - name: FABRIC_CLIENT_SECRET
-        value: $(ARM_CLIENT_SECRET)
-      - name: TF_FILE_LOCATION
-        value: fabric_content/$(workspace_type)/$(pipeline_name)/terraform
-      - name: ENV_NAME
-        value: ${{ parameters.feature_env_name }}
-
+  - stage: unit_tests
+    displayName: Unit Tests
+    dependsOn: prelim
     jobs:
       - job: run_unit_tests
         displayName: Run Unit Tests
@@ -121,83 +106,17 @@ stages:
         steps:
           - template: ../../../../build_de/workload-testing.yml
             parameters:
-              pythonVersion: "3.12"
+              pythonVersion: $(python_version)
               workingDirectory: "./fabric_content"
               unitTestLocation: "./$(test_src)/unit"
               componentTestLocation: "./$(test_src)/component"
-
-      - job: deploy_terraform
-        displayName: Terraform Stages
-        pool:
-          vmImage: $(pool_vm_image)
-
-        steps:
-          - template: ../../../../build/ado/templates/setup.yml
-            parameters:
-              EirctlVersion: $(EirctlVersion)
-
-          - task: Bash@3
-            displayName: Terraform Init
-            inputs:
-              targetType: inline
-              script: |
-                eirctl infra:init
-            env:
-              TF_BACKEND_INIT: key=$(tf_state_key)_${{ parameters.feature_env_name }},container_name=$(tf_state_container),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
-
-          # Configure the variables for Terraform
-          - task: Bash@3
-            displayName: Terraform Variables
-            inputs:
-              targetType: inline
-              script: |
-                eirctl infra:vars
-            env:
-              # For feature development, the engineering workspace id needs to be updated manually in the library group to match the temporary feature workspace id
-              TF_VAR_engineering_workspace_id: $(engineering_workspace_id)
-              TF_VAR_engineering_lakehouse_id: $(engineering_lakehouse_id)
-              TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
-              TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
-              TF_VAR_gold_workspace_id: $(storage_gold_example_workspace_id)
-              TF_VAR_gold_lakehouse_id: $(storage_gold_example_lakehouse_id)
-
-          - ${{ if eq(parameters.destroy, true) }}:
-            - task: Bash@3
-              displayName: Terraform Destroy Plan
-              inputs:
-                targetType: inline
-                script: |
-                  eirctl infra:destroy:plan
-
-            - task: Bash@3
-              displayName: Terraform Destroy Apply
-              inputs:
-                targetType: inline
-                script: |
-                  eirctl infra:destroy:apply
-
-          - ${{ if eq(parameters.deploy, true) }}:
-            - task: Bash@3
-              displayName: Terraform Plan
-              inputs:
-                targetType: inline
-                script: |
-                  eirctl infra:plan
-
-            - task: Bash@3
-              displayName: Terraform Apply
-              inputs:
-                targetType: inline
-                script: |
-                  eirctl infra:apply
-
 
   - ${{ each environment in parameters.environments }}:
     - stage: ${{ environment.name }}
       displayName: Deploy ${{ environment.name }}
       dependsOn:
         - ${{ environment.dependsOn }}
-      condition: and(succeeded(), eq(variables.isMainBranch, true))
+      condition: ${{ environment.condition }}
       variables:
         - group: azure-sp-creds
         - group: fabric_${{ environment.name }}
@@ -213,6 +132,19 @@ stages:
           value: ${{ environment.name }}
 
       jobs:
+        - job: upload_python
+          displayName: Upload Python Scripts
+          pool:
+            vmImage: $(pool_vm_image)
+
+          steps:
+            - template: ../../../../build_de/upload-to-onelake.yml
+              parameters:
+                pythonVersion: $(python_version)
+                workingDirectory: "fabric_content"
+                uploadDirectory: "$(workspace_type)/$(pipeline_name)/spark_job"
+                fileExtension: ".py"
+
         - job: deploy_terraform
           displayName: Terraform Stages
           pool:
