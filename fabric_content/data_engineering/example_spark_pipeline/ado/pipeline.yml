@@ -33,7 +33,7 @@ parameters:
         dependsOn: unit_tests
         condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
       - name: uat
-        dependsOn: test
+        dependsOn: unit_tests
         condition: and(succeeded(), eq(variables.isMainBranch, true))
       - name: prod
         dependsOn: uat
