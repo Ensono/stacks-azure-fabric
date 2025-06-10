@@ -1,0 +1,261 @@
+name: "0.0$(Rev:.r)"
+
+trigger:
+  paths:
+    include:
+      - fabric_content/data_engineering/example_copy_pipeline/*
+  branches:
+    include:
+      - main
+
+pr:
+  paths:
+    include:
+      - fabric_content/data_engineering/example_copy_pipeline/*
+  branches:
+    include:
+      - main
+
+parameters:
+  - name: deploy
+    type: boolean
+    default: true
+    displayName: Deploy Pipeline
+  - name: destroy
+    type: boolean
+    default: false
+    displayName: Destroy Pipeline [DANGEROUS]
+  - name: environments
+    displayName: List of Environments with their deployment dependencies
+    type: object
+    default:
+      - name: test
+        dependsOn: prelim
+      - name: uat
+        dependsOn: test
+      - name: prod
+        dependsOn: uat
+  - name: feature_env_name
+    displayName: Feature Environment Name
+    type: string
+    default: dev
+
+variables:
+  - name: pipeline_name
+    value: example_copy_pipeline
+  - name: workspace_type
+    value: data_engineering
+  - name: isPR
+    value: $[eq(variables['Build.Reason'], 'PullRequest')]
+  - name: isMainBranch
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: isManual
+    value: $[eq(variables['Build.Reason'], 'Manual')]
+  # Terraform state storage
+  - name: tf_state_key
+    value: $(pipeline_name)
+  - name: tf_state_rg
+    value: stacks-terraform-state
+  - name: tf_state_storage
+    value: stacksstatehjfis
+  - name: tf_state_container
+    value: tfstate
+
+  # Dependency versions
+  - name: EirctlVersion
+    value: 0.5.7
+
+  - name: pool_vm_image
+    value: ubuntu-24.04
+
+stages:
+  - stage: prelim
+    displayName: Preliminaries
+
+    jobs:
+      - job: version_number
+        displayName: Set Build Number
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - template: ../../../../build/ado/templates/setup.yml
+            parameters:
+              EirctlVersion: $(EirctlVersion)
+
+          # Update the build number
+          - task: Bash@3
+            displayName: Set Build Number
+            inputs:
+              targetType: inline
+              script: |
+                eirctl build:number
+
+  - stage: deploy_to_feature_dev
+    displayName: Deploy dev
+    dependsOn:
+      - prelim
+    condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
+    variables:
+      - group: azure-sp-creds
+      - group: fabric_${{ parameters.feature_env_name }}
+      - name: FABRIC_TENANT_ID
+        value: $(ARM_TENANT_ID)
+      - name: FABRIC_CLIENT_ID
+        value: $(ARM_CLIENT_ID)
+      - name: FABRIC_CLIENT_SECRET
+        value: $(ARM_CLIENT_SECRET)
+      - name: TF_FILE_LOCATION
+        value: fabric_content/$(workspace_type)/$(pipeline_name)/terraform
+      - name: ENV_NAME
+        value: ${{ parameters.feature_env_name }}
+
+    jobs:
+      - job: deploy_terraform
+        displayName: Terraform Stages
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - template: ../../../../build/ado/templates/setup.yml
+            parameters:
+              EirctlVersion: $(EirctlVersion)
+
+          - task: Bash@3
+            displayName: Terraform Init
+            inputs:
+              targetType: inline
+              script: |
+                eirctl infra:init
+            env:
+              TF_BACKEND_INIT: key=$(tf_state_key)_${{ parameters.feature_env_name }},container_name=$(tf_state_container),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
+
+          # Configure the variables for Terraform
+          - task: Bash@3
+            displayName: Terraform Variables
+            inputs:
+              targetType: inline
+              script: |
+                eirctl infra:vars
+            env:
+              # For feature development, the engineering workspace id needs to be updated manually in the library group to match the temporary feature workspace id
+              TF_VAR_engineering_workspace_id: $(engineering_workspace_id)
+              TF_VAR_bronze_workspace_id: $(storage_bronze_workspace_id)
+              TF_VAR_bronze_lakehouse_id: $(storage_bronze_lakehouse_id)
+              TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
+              TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
+
+          - ${{ if eq(parameters.destroy, true) }}:
+            - task: Bash@3
+              displayName: Terraform Destroy Plan
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:destroy:plan
+
+            - task: Bash@3
+              displayName: Terraform Destroy Apply
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:destroy:apply
+
+          - ${{ if eq(parameters.deploy, true) }}:
+            - task: Bash@3
+              displayName: Terraform Plan
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:plan
+
+            - task: Bash@3
+              displayName: Terraform Apply
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:apply
+
+
+  - ${{ each environment in parameters.environments }}:
+    - stage: ${{ environment.name }}
+      displayName: Deploy ${{ environment.name }}
+      dependsOn:
+        - ${{ environment.dependsOn }}
+      condition: and(succeeded(), eq(variables.isMainBranch, true))
+      variables:
+        - group: azure-sp-creds
+        - group: fabric_${{ environment.name }}
+        - name: FABRIC_TENANT_ID
+          value: $(ARM_TENANT_ID)
+        - name: FABRIC_CLIENT_ID
+          value: $(ARM_CLIENT_ID)
+        - name: FABRIC_CLIENT_SECRET
+          value: $(ARM_CLIENT_SECRET)
+        - name: TF_FILE_LOCATION
+          value: fabric_content/$(workspace_type)/$(pipeline_name)/terraform
+        - name: ENV_NAME
+          value: ${{ environment.name }}
+
+      jobs:
+        - job: deploy_terraform
+          displayName: Terraform Stages
+          pool:
+            vmImage: $(pool_vm_image)
+
+          steps:
+            - template: ../../../../build/ado/templates/setup.yml
+              parameters:
+                EirctlVersion: $(EirctlVersion)
+
+            - task: Bash@3
+              displayName: Terraform Init
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:init
+              env:
+                TF_BACKEND_INIT: key=$(tf_state_key)_$(ENV_NAME),container_name=$(tf_state_container),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
+
+            # Configure the variables for Terraform
+            - task: Bash@3
+              displayName: Terraform Variables
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:vars
+              env:
+                TF_VAR_engineering_workspace_id: $(engineering_workspace_id)
+                TF_VAR_bronze_workspace_id: $(storage_bronze_workspace_id)
+                TF_VAR_bronze_lakehouse_id: $(storage_bronze_lakehouse_id)
+                TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
+                TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
+
+            - ${{ if eq(parameters.destroy, true) }}:
+              - task: Bash@3
+                displayName: Terraform Destroy Plan
+                inputs:
+                  targetType: inline
+                  script: |
+                    eirctl infra:destroy:plan
+
+              - task: Bash@3
+                displayName: Terraform Destroy Apply
+                inputs:
+                  targetType: inline
+                  script: |
+                    eirctl infra:destroy:apply
+
+            - ${{ if eq(parameters.deploy, true) }}:
+              - task: Bash@3
+                displayName: Terraform Plan
+                inputs:
+                  targetType: inline
+                  script: |
+                    eirctl infra:plan
+
+              - task: Bash@3
+                displayName: Terraform Apply
+                inputs:
+                  targetType: inline
+                  script: |
+                    eirctl infra:apply
