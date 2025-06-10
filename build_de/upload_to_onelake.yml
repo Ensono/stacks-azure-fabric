@@ -3,8 +3,6 @@ parameters:
   workingDirectory: ""
   uploadDirectory: ""
   fileExtension: ".*"
-  targetWorkspaceId: ""
-  targetLakehouseId: ""
 
 steps:
   - task: UsePythonVersion@0
@@ -14,11 +12,18 @@ steps:
       addToPath: true
 
   - task: Bash@3
-    displayName: "Install Poetry and Project"
+    displayName: "Install Poetry"
     inputs:
       targetType: inline
       script: |
         pipx install poetry==2.1.3
+      workingDirectory: "${{ parameters.workingDirectory }}"
+
+  - task: Bash@3
+    displayName: "Install Project"
+    inputs:
+      targetType: inline
+      script: |
         poetry install
       workingDirectory: "${{ parameters.workingDirectory }}"
 
@@ -30,8 +35,14 @@ steps:
         poetry run fab config set encryption_fallback_enabled true
         poetry run fab auth login -u $FABRIC_CLIENT_ID -p $FABRIC_CLIENT_SECRET -t $FABRIC_TENANT_ID
         poetry run fab ls -l
-        # WORKSPACE_NAME=$(fab ls -l | grep '01a4548b-b108-43ee-bd23-827469987426' | awk '{print $1}')
-        # LAKEHOUSE_NAME=$(fab ls -l $WORKSPACE_NAME | grep '244c6cef-a02c-48fe-92ab-b3b9edd002b3' | awk '{print $1}')
+        WORKSPACE_NAME=$(fab ls -l | grep $(engineering_workspace_id) | awk '{print $1}')
+        LAKEHOUSE_NAME=$(fab ls -l $WORKSPACE_NAME | grep $(engineering_lakehouse_id) | awk '{print $1}')
+
+        for file in "${{ parameters.uploadDirectory }}"/*${{ parameters.fileExtension }}; do
+          echo "Uploading $file to $WORKSPACE_NAME/$LAKEHOUSE_NAME/Files"
+          poetry run fab cp "$file" "$WORKSPACE_NAME/$LAKEHOUSE_NAME/Files"
+        done
+
         # fab cp example_spark_job.py $WORKSPACE_NAME/$LAKEHOUSE_NAME/Files
         # fab cp example_spark_job.py test-fabric-processing.Workspace/ProcessingLake.Lakehouse/Files
       workingDirectory: "${{ parameters.workingDirectory }}"
