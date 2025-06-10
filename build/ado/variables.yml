@@ -37,3 +37,9 @@ variables:
 
   - name: name_project
     value: azfabric
+
+  - name: ado_org_service_url
+    value: https://dev.azure.com/ensono
+
+  - name: ado_project_name
+    value: Stacks
