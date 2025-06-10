@@ -93,55 +93,6 @@ stages:
               script: |
                 eirctl build:number
 
-  - stage: upload_python
-    displayName: Upload Python Scripts
-    dependsOn:
-      - prelim
-    variables:
-      - group: azure-sp-creds
-      - name: FABRIC_TENANT_ID
-        value: $(ARM_TENANT_ID)
-      - name: FABRIC_CLIENT_ID
-        value: $(ARM_CLIENT_ID)
-      - name: FABRIC_CLIENT_SECRET
-        value: $(ARM_CLIENT_SECRET)
-    jobs:
-      - job: upload_python
-        displayName: Upload Python Scripts
-        pool:
-          vmImage: $(pool_vm_image)
-
-        steps:
-          - task: Bash@3
-            displayName: Install Poetry
-            inputs:
-              targetType: inline
-              script: |
-                pipx install poetry==2.1.3
-
-          - task: Bash@3
-            displayName: Install Project
-            inputs:
-              targetType: inline
-              script: |
-                cd fabric_content
-                poetry install
-
-          - task: Bash@3
-            displayName: Upload to Lakehouse
-            inputs:
-              targetType: inline
-              script: |
-                cd fabric_content
-                poetry run fab config set encryption_fallback_enabled true
-                poetry run fab auth login -u $FABRIC_CLIENT_ID -p $FABRIC_CLIENT_SECRET -t $FABRIC_TENANT_ID
-                poetry run fab ls -l
-                # WORKSPACE_NAME=$(fab ls -l | grep '01a4548b-b108-43ee-bd23-827469987426' | awk '{print $1}')
-                # LAKEHOUSE_NAME=$(fab ls -l $WORKSPACE_NAME | grep '244c6cef-a02c-48fe-92ab-b3b9edd002b3' | awk '{print $1}')
-                # fab cp example_spark_job.py $WORKSPACE_NAME/$LAKEHOUSE_NAME/Files
-                # fab cp example_spark_job.py test-fabric-processing.Workspace/ProcessingLake.Lakehouse/Files
-
-
   - stage: deploy_to_feature_dev
     displayName: Deploy dev
     dependsOn:
@@ -186,27 +137,6 @@ stages:
               workingDirectory: "fabric_content"
               uploadDirectory: "$(workspace_type)/$(pipeline_name)/spark_job"
               fileExtension: ".py"
-              targetWorkspaceId: $(engineering_workspace_id)
-              targetLakehouseId: $(engineering_lakehouse_id)
-
-        # steps:
-        #   - task: Bash@3
-        #     displayName: Install Poetry
-        #     inputs:
-        #       targetType: inline
-        #       script: |
-        #         pipx install poetry==2.1.3
-
-        #   - task: Bash@3
-        #     displayName: Install Project
-        #     inputs:
-        #       targetType: inline
-        #       script: |
-        #         cd fabric_content
-        #         poetry install
-
-
-
 
       - job: deploy_terraform
         displayName: Terraform Stages
