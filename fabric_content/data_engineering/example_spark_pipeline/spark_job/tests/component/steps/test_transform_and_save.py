@@ -1,7 +1,6 @@
 import os
 import shutil
 import tempfile
-import pandas as pd
 import pytest
 from pyspark.sql import SparkSession
 from data_engineering.example_spark_pipeline.spark_job.example_spark_job import transform_and_save
@@ -38,8 +37,7 @@ def temp_delta_dirs():
 def create_source_table(spark, temp_delta_dirs, source_data_path):
     source_dir, _ = temp_delta_dirs
     test_data_path = os.path.join(os.path.dirname(__file__), source_data_path)
-    data_frame = pd.read_csv(test_data_path)
-    source_data_frame = spark.createDataFrame(data_frame)
+    source_data_frame = spark.read.format("csv").option("header", True).option("inferSchema", True).load(test_data_path)
     source_data_frame.write.format("delta").mode("overwrite").save(source_dir)
 
 @when("I run the transform_and_save function")
@@ -52,11 +50,11 @@ def check_aggregated(spark, temp_delta_dirs, expected_data_path):
     _, target_dir = temp_delta_dirs
     data_frame = spark.read.format("delta").load(target_dir)
     expected_path = os.path.join(os.path.dirname(__file__), expected_data_path)
-    expected_data = pd.read_csv(expected_path)
-    expected_data_frame = spark.createDataFrame(expected_data)
+    expected_data_frame = spark.read.format("csv").option("header", True).option("inferSchema", True).load(expected_path)
 
     assert_df_equality(
-        data_frame.orderBy("name"),
+        data_frame,
         expected_data_frame.orderBy("name"),
-        ignore_nullable=True
+        ignore_nullable=True,
+        ignore_row_order=True
     )
