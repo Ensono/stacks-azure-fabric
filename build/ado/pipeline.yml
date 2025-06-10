@@ -42,6 +42,7 @@ trigger:
   paths:
     include:
       - "build/*"
+      - "deploy/*"
 
 variables:
   - template: variables.yml
@@ -151,8 +152,8 @@ stages:
                     eirctl infra:vars
                 env:
                   TF_VAR_create_fabric_capacity: true
-                  TF_VAR_permissions: $(ado_org_service_url)
-                  TF_VAR_ado_org_service_url: $(ado_project_name)
+                  TF_VAR_permissions: $(fabric_permissions)
+                  TF_VAR_ado_org_service_url: $(ado_org_service_url)
                   TF_VAR_ado_project_name: $(system_teamproject)
                   ${{ if ne(trim(parameters.environments), '')}}:
                     TF_VAR_environments: $(environments)
