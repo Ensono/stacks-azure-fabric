@@ -39,10 +39,11 @@ steps:
         LAKEHOUSE_NAME=$(poetry run fab ls -l $WORKSPACE_NAME | grep $(engineering_lakehouse_id) | awk '{print $1}')
 
         for file in "${{ parameters.uploadDirectory }}"/*${{ parameters.fileExtension }}; do
-          echo "Uploading $file to $WORKSPACE_NAME/$LAKEHOUSE_NAME/Files"
-          poetry run fab cp "$file" "$WORKSPACE_NAME/$LAKEHOUSE_NAME/Files"
+          fname=$(basename "$file")
+          # Skip files that start with '__' (e.g., __init__.py)
+          if [[ ! "$fname" == __* ]]; then
+            echo "Uploading $file to $WORKSPACE_NAME/$LAKEHOUSE_NAME/Files"
+            poetry run fab cp "$file" "$WORKSPACE_NAME/$LAKEHOUSE_NAME/Files"
+          fi
         done
-
-        # fab cp example_spark_job.py $WORKSPACE_NAME/$LAKEHOUSE_NAME/Files
-        # fab cp example_spark_job.py test-fabric-processing.Workspace/ProcessingLake.Lakehouse/Files
       workingDirectory: "${{ parameters.workingDirectory }}"
