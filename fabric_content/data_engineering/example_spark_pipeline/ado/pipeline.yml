@@ -174,9 +174,6 @@ stages:
               fileExtension: ".py"
               targetWorkspaceId: $(engineering_workspace_id)
               targetLakehouseId: $(engineering_lakehouse_id)
-              fabricTenantId: $FABRIC_TENANT_ID
-              fabricClientId: $FABRIC_CLIENT_ID
-              fabricClientSecret: $FABRIC_CLIENT_SECRET
 
         # steps:
         #   - task: Bash@3
