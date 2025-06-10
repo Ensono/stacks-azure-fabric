@@ -9,7 +9,7 @@ resource "azuredevops_variable_group" "vg" {
   project_id = data.azuredevops_project.project[0].id
 
   # define the name of the variable group
-  name = "${var.project}-${each.key}"
+  name = "${var.project}-${each.key}-outputs"
 
   # Create an entry in the variable group for each of the outputs
   dynamic "variable" {
