@@ -60,8 +60,8 @@ variables:
     value: stacksstatehjfis
   - name: tf_state_container
     value: tfstate
-  - name: test_unit_src
-    value: "data_engineering/$(pipeline_name)/spark_job/tests/unit/"
+  - name: test_src
+    value: "data_engineering/$(pipeline_name)/spark_job/tests"
 
   # Dependency versions
   - name: EirctlVersion
@@ -123,7 +123,8 @@ stages:
             parameters:
               pythonVersion: "3.12"
               workingDirectory: "./fabric_content"
-              unitTestLocation: "./$(test_unit_src)"
+              unitTestLocation: "./$(test_src)/unit"
+              componentTestLocation: "./$(test_src)/component"
 
       - job: deploy_terraform
         displayName: Terraform Stages
