@@ -31,7 +31,7 @@ steps:
       targetType: inline
       script: |
         poetry run fab config set encryption_fallback_enabled true
-        poetry run fab auth login -u $fabricClientId -p $fabricClientSecret -t $fabricTenantId
+        poetry run fab auth login -u ${{ fabricClientId }} -p ${{ fabricClientSecret }} -t ${{ fabricTenantId }}
         poetry run fab ls -l
         # WORKSPACE_NAME=$(fab ls -l | grep '01a4548b-b108-43ee-bd23-827469987426' | awk '{print $1}')
         # LAKEHOUSE_NAME=$(fab ls -l $WORKSPACE_NAME | grep '244c6cef-a02c-48fe-92ab-b3b9edd002b3' | awk '{print $1}')
