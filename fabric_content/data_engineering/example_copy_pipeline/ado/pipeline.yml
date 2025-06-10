@@ -33,7 +33,7 @@ parameters:
         dependsOn: prelim
         condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
       - name: uat
-        dependsOn: test
+        dependsOn: prelim
         condition: and(succeeded(), eq(variables.isMainBranch, true))
       - name: prod
         dependsOn: uat
