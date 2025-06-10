@@ -42,7 +42,7 @@ NOTE: The outputs from Terraform are always generated, however as they are not c
 When enabled variable groups are created using the following naming convention:
 
 ```
-<project>-<environment>
+<project>-<environment>-outputs
 ```
 
 This means the names are predictable and can easily be used in other pipelines.

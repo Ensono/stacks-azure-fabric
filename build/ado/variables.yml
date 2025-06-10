@@ -39,7 +39,7 @@ variables:
     value: azfabric
 
   - name: ado_org_service_url
-    value: https://dev.azure.com/ensonodigitaluk
+    value: $(system_TeamFoundationCollectionUri)
 
   - name: ado_project_name
-    value: Stacks
+    value: $(system_teamproject)
