@@ -11,6 +11,10 @@ output "extended_names" {
   value = module.naming.extended_names
 }
 
+output "encoded_outputs" {
+  value = module.naming.encoded_outputs
+}
+
 output "workspaces" {
   value = local.workspaces
 }

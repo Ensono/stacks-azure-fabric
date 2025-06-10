@@ -28,5 +28,5 @@ provider "fabric" {
 }
 
 provider "azuredevops" {
-  org_service_url = var.azuredevops_org_service_url
+  org_service_url = var.ado_org_service_url
 }
