@@ -34,7 +34,7 @@ variable "fabric_sku" {
 
 variable "environments" {
   description = "List of environments that need to be created"
-  default     = "dev:false,uat:false,prod:true"
+  default     = "test:false,uat:false,prod:true"
 }
 
 variable "ws_types" {
