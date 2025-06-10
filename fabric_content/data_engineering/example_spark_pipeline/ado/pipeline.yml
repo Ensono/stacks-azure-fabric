@@ -38,10 +38,6 @@ parameters:
       - name: prod
         dependsOn: uat
         condition: and(succeeded(), eq(variables.isMainBranch, true))
-  - name: feature_env_name
-    displayName: Feature Environment Name
-    type: string
-    default: dev
 
 variables:
   - name: pipeline_name
