@@ -1,4 +1,4 @@
-from ./../..example_spark_job import get_delta_table_path
+from ...example_spark_job import get_delta_table_path
 
 def test_get_delta_table_path():
     """Test the get_delta_table_path function."""
