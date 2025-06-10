@@ -152,7 +152,7 @@ stages:
                 env:
                   TF_VAR_create_fabric_capacity: true
                   TF_VAR_permissions: $(fabric_permissions)
-                  TF_VAR_ado_org_serice_url: $(ado_org_service_url)
+                  TF_VAR_ado_org_service_url: $(ado_org_service_url)
                   TF_VAR_ado_project_name: $(ado_project_name)
                   ${{ if ne(trim(parameters.environments), '')}}:
                     TF_VAR_environments: $(environments)
