@@ -5,5 +5,5 @@ Feature: Transform and Save Delta Table
 
   Scenario: Happy path for transform_and_save
     Given a source delta table created from test data at '../test_data/input/source_table.csv'
-    When I run the transform_and_save function
+    When I trigger the example_spark_job
     Then the target delta table should contain the correct aggregated data from '../test_data/output/expected_table.csv'
