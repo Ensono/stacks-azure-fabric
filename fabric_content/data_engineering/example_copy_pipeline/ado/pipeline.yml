@@ -8,6 +8,14 @@ trigger:
     include:
       - main
 
+pr:
+  paths:
+    include:
+      - fabric_content/data_engineering/example_copy_pipeline/*
+  branches:
+    include:
+      - main
+
 parameters:
   - name: deploy
     type: boolean
