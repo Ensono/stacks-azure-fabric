@@ -1,3 +1,8 @@
+variable "company_name" {
+  description = "The name of the company, used for naming resources"
+  type        = string
+  default     = "ensono"
+}
 
 variable "location" {
   description = "Location that the resources should be deployed to"
@@ -32,9 +37,9 @@ variable "environments" {
   default     = "dev:false,uat:false,prod:true"
 }
 
-variable "env_types" {
+variable "ws_types" {
   description = "List of environment types that need to be created"
-  default     = "engineering,storage-bronze,storage-silver,storage-finance,analytics-finance"
+  default     = "engineering,storage-bronze,storage-silver,storage-goldexample,analytics-example"
 }
 
 variable "is_prod_subscription" {
@@ -53,9 +58,20 @@ variable "deploy_all_environments" {
 # Azure DevOps Settings
 #######################################################
 
-variable "azuredevops_org_service_url" {
+variable "ado_org_service_url" {
   description = "The URL of the Azure DevOps organization service"
   type        = string
+}
+
+variable "ado_project_name" {
+  description = "The name of the Azure DevOps project"
+  type        = string
+}
+
+variable "create_ado_variable_group" {
+  description = "Flag to indicate if a variable group should be created in Azure DevOps"
+  type        = bool
+  default     = true
 }
 
 
@@ -112,4 +128,14 @@ variable "key_vault_purge_protection_enabled" {
   description = "Boolean flag to specify whether purge protection is enabled for the key vault."
   type        = bool
   default     = true
+}
+
+#######################################################
+# Local development settings
+#######################################################
+
+variable "create_env_files" {
+  description = "Flag to indicate if environment files should be created for local development"
+  type        = bool
+  default     = false
 }

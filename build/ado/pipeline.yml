@@ -26,7 +26,7 @@ parameters:
     displayName: Environments
     default: " "
 
-  - name: env_types
+  - name: ws_types
     displayName: Environment Types
     default: " "
 
@@ -157,8 +157,8 @@ stages:
                   TF_VAR_permissions: $(fabric_permissions)
                   ${{ if ne(trim(parameters.environments), '')}}:
                     TF_VAR_environments: $(environments)
-                  ${{ if ne(trim(parameters.env_types), '')}}:
-                    TF_VAR_env_types: $(env_types)
+                  ${{ if ne(trim(parameters.ws_types), '')}}:
+                    TF_VAR_ws_types: $(ws_types)
 
               # If the debug option has been enabled, upload the vars file that has been created
               - ${{ if eq(parameters.debug, true) }}:

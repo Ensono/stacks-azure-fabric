@@ -8,25 +8,53 @@ locals {
     {
       filename = "envvars.ps1.tpl",
       type     = "powershell"
-    },
+    }
+    ,
     {
       filename = "inputs.auto.tfvars.tpl",
       type     = "terraform"
     }
   ]
 
-  # Create a local object for the template mapping so that the script files can be generated
-  template_items = {
-    for template_file in local.template_files : template_file.filename => {
-      envname = terraform.workspace
-      file    = template_file.filename
-      items   = local.outputs
-      path    = "${path.module}/../templates/${template_file.filename}"
-    }
-  }
-
   # Define the outputs for this module
-  outputs = merge(jsondecode(var.outputs), { "module_path" : path.module })
+  # outputs = merge(jsondecode(var.outputs), { "module_path" : path.module })
+  outputs = jsondecode(var.outputs)
+
+  # Iterate around the envrionments and the outputs and encode as required, e.g. quotes around strings
+  # and encode anything else
+  #encoded_outputs = {
+  #  for name in var.environments : name => {
+  #    for key, value in local.outputs[name] : key => jsonencode(value)
+  #  }
+  #}
+
+  encoded_outputs = tomap({
+    for name in var.environments : name => {
+      for k, v in local.outputs[name] :
+      replace(k, "-", "_") => (
+        // This will be true for lists (arrays)
+        can([for x in v : x]) ||
+        // This will be true for maps/objects
+        can(keys(v)) ?
+
+        jsonencode(v) :
+        tostring(v)
+      )
+    }
+  })
+
+  # Create a local object for the template mapping so that the script files can be generated
+  template_items = flatten([
+    for template_file in local.template_files : [
+      for name in var.environments : {
+        envname      = name
+        tf_workspace = terraform.workspace
+        file         = template_file.filename
+        items        = local.encoded_outputs[name]
+        path         = "${path.module}/../templates/${template_file.filename}"
+      }
+    ]
+  ])
 
   # Simplify the naming module and extend for unsupported naming types
   naming_map = {
