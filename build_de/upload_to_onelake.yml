@@ -17,7 +17,7 @@ steps:
       addToPath: true
 
   - task: Bash@3
-    displayName: "Create Poetry Environment and Install Packages"
+    displayName: "Install Poetry and Project"
     inputs:
       targetType: inline
       script: |
