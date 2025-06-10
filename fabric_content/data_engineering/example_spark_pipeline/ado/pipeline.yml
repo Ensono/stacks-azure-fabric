@@ -40,6 +40,8 @@ parameters:
         condition: and(succeeded(), eq(variables.isMainBranch, true))
 
 variables:
+  - name: python_version
+    value: "3.12"
   - name: pipeline_name
     value: example_spark_pipeline
   - name: workspace_type
@@ -104,7 +106,7 @@ stages:
         steps:
           - template: ../../../../build_de/workload-testing.yml
             parameters:
-              pythonVersion: "3.12"
+              pythonVersion: $(python_version)
               workingDirectory: "./fabric_content"
               unitTestLocation: "./$(test_unit_src)"
 
@@ -137,7 +139,7 @@ stages:
           steps:
             - template: ../../../../build_de/upload-to-onelake.yml
               parameters:
-                pythonVersion: "3.12"
+                pythonVersion: $(python_version)
                 workingDirectory: "fabric_content"
                 uploadDirectory: "$(workspace_type)/$(pipeline_name)/spark_job"
                 fileExtension: ".py"
