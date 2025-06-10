@@ -1,0 +1,48 @@
+[#outputs]
+=== Outputs
+
+When Terraform runs it generates a number of outputs that can be used in other deployments. There are three output formats that can be generated:
+
+.Terraform output formats
+[cols="1,2,1", options="header", stripes=true]
+|===
+| Format | Description | Generated
+| Terraform | Terraform standard outputs | Yes always
+| Env Files | Environment variable files for local development | Optional
+| Azure DevOps Variable Grooup | Outputs are saved in variable groups for other pipelines to use | Optional
+|===
+
+The outputs that are generated for the environment files and the variable groups are listed in the following table.
+
+.Generated outputs
+[cols="1,2,1", options="header", stripes=true]
+|===
+| Name | Description | Type
+| `analytics_example_lakehouse_id` | ID of the Fabric Lakehouse for the analytics example workload | string
+| `analytics_example_workspace_id` | ID of the Fabric Workspace for the analytics example workload | string
+| `capacity_admins` | List of the admins of the Fabric Capacity | list(string)
+| `engineering_lakehouse_id` | ID of the Fabric Lakehouse for the engineering workload | string
+| `engineering_workspace_id` | ID of the Fabric Workspace for the engineering workload | string
+| `fabric_capacity_name` | Name of the Fabric Capacity in Azure | string
+| `key_vault_name` | Name of the Azure Key Vault for the each environment | string
+| `key_vault_resource_id` | Azure Resource ID for the Key Vault | string
+| `resource_group_name` | Name of the Azure Resource Group that contains the Fabric resources | string
+| `storage_bronze_lakehouse_id` | ID for the Fabric Lakehouse for the storage bronze workload | string
+| `storage_bronze_workspace_id` | ID of the Fabric Workspace for the storage bronze workload | string
+| `storage_silver_lakehouse_id` | ID of the Fabric Lakehouse for the storage silver workload | string
+| `storage_silver_workspace_id` | ID of the Fabric Workspace for the storage silver workload | string
+| `storage_goldexample_lakehouse_id` | ID of the Fabric Lakehouse for the storage gold example workload | string
+| `storage_goldexample_workspace_id` | ID of the Fabric Workspace for the storage gold example workload | string
+|===
+
+NOTE: The outputs from Terraform are always generated, however as they are not consumed directly they are not used in the deployment.
+
+==== Variable Groups
+
+When enabled variable groups are created using the following naming convention:
+
+```
+<project>-<environment>
+```
+
+This means the names are predictable and can easily be used in other pipelines.
