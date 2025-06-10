@@ -6,7 +6,7 @@ import pytest
 from pyspark.sql import SparkSession
 from data_engineering.example_spark_pipeline.spark_job.example_spark_job import transform_and_save
 from pytest_bdd import scenarios, given, when, then, parsers
-import chispa
+from chispa.dataframe_comparer import assert_df_equality
 
 scenarios("../features/transform_and_save.feature")
 
@@ -34,28 +34,29 @@ def temp_delta_dirs():
     shutil.rmtree(source_dir)
     shutil.rmtree(target_dir)
 
-@given("a source delta table created from test data")
-def create_source_table(spark, temp_delta_dirs):
+@given(parsers.parse("a source delta table created from test data at '{source_data_path}'"))
+def create_source_table(spark, temp_delta_dirs, source_data_path):
     source_dir, _ = temp_delta_dirs
-    test_data_path = os.path.join(os.path.dirname(__file__), "../test_data/source_table.csv")
-    df = pd.read_csv(test_data_path)
-    sdf = spark.createDataFrame(df)
-    sdf.write.format("delta").mode("overwrite").save(source_dir)
+    test_data_path = os.path.join(os.path.dirname(__file__), source_data_path)
+    data_frame = pd.read_csv(test_data_path)
+    source_data_frame = spark.createDataFrame(data_frame)
+    source_data_frame.write.format("delta").mode("overwrite").save(source_dir)
 
 @when("I run the transform_and_save function")
 def run_transform(spark, temp_delta_dirs):
     source_dir, target_dir = temp_delta_dirs
     transform_and_save(spark, source_dir, target_dir)
 
-@then("the target delta table should contain the correct aggregated data")
-def check_aggregated(spark, temp_delta_dirs):
-    import pandas as pd
-    from chispa.dataframe_comparer import assert_df_equality
+@then(parsers.parse("the target delta table should contain the correct aggregated data from '{expected_data_path}'"))
+def check_aggregated(spark, temp_delta_dirs, expected_data_path):
     _, target_dir = temp_delta_dirs
-    df = spark.read.format("delta").load(target_dir)
-    expected_data = pd.DataFrame({
-        "name": ["Alice", "Bob", "Charlie", "David"],
-        "max_age": [25, 30, 35, 40]
-    })
-    expected_df = spark.createDataFrame(expected_data)
-    assert_df_equality(df.orderBy("name"), expected_df.orderBy("name"), ignore_nullable=True)
+    data_frame = spark.read.format("delta").load(target_dir)
+    expected_path = os.path.join(os.path.dirname(__file__), expected_data_path)
+    expected_data = pd.read_csv(expected_path)
+    expected_data_frame = spark.createDataFrame(expected_data)
+
+    assert_df_equality(
+        data_frame.orderBy("name"),
+        expected_data_frame.orderBy("name"),
+        ignore_nullable=True
+    )

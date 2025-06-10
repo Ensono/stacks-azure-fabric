@@ -4,6 +4,6 @@ Feature: Transform and Save Delta Table
   So that the aggregation is correct and persisted
 
   Scenario: Happy path for transform_and_save
-    Given a source delta table created from test data
+    Given a source delta table created from test data at '../test_data/input/source_table.csv'
     When I run the transform_and_save function
-    Then the target delta table should contain the correct aggregated data
+    Then the target delta table should contain the correct aggregated data from '../test_data/output/expected_table.csv'
