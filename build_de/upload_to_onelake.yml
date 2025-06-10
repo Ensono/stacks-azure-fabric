@@ -35,8 +35,8 @@ steps:
         poetry run fab config set encryption_fallback_enabled true
         poetry run fab auth login -u $FABRIC_CLIENT_ID -p $FABRIC_CLIENT_SECRET -t $FABRIC_TENANT_ID
         poetry run fab ls -l
-        WORKSPACE_NAME=$(fab ls -l | grep $(engineering_workspace_id) | awk '{print $1}')
-        LAKEHOUSE_NAME=$(fab ls -l $WORKSPACE_NAME | grep $(engineering_lakehouse_id) | awk '{print $1}')
+        WORKSPACE_NAME=$(poetry run fab ls -l | grep $(engineering_workspace_id) | awk '{print $1}')
+        LAKEHOUSE_NAME=$(poetry run fab ls -l $WORKSPACE_NAME | grep $(engineering_lakehouse_id) | awk '{print $1}')
 
         for file in "${{ parameters.uploadDirectory }}"/*${{ parameters.fileExtension }}; do
           echo "Uploading $file to $WORKSPACE_NAME/$LAKEHOUSE_NAME/Files"
