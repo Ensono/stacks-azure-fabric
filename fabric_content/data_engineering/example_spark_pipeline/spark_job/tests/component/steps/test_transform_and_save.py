@@ -56,7 +56,7 @@ def check_aggregated(spark, temp_delta_dirs, expected_data_path):
 
     assert_df_equality(
         data_frame,
-        expected_data_frame.orderBy("name"),
+        expected_data_frame,
         ignore_nullable=True,
         ignore_row_order=True
     )
