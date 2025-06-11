@@ -31,3 +31,27 @@ export TF_VAR_silver_lakehouse_id="<SILVER_LAKEHOUSE_ID>"
 export TF_VAR_gold_workspace_id="<GOLD_WORKSPACE_ID>"
 export TF_VAR_gold_lakehouse_id="<GOLD_LAKEHOUSE_ID>"
 ```
+
+# Testing
+
+## Unit tests
+Example unit tests are available within `./spark_job/tests/unit`
+Tests are written with `pytest`
+
+How to run tests locally:
+```shell
+cd fabric_content
+poetry install
+poetry run pytest data_engineering/example_spark_pipeline/spark_job/tests/unit
+```
+
+## Component tests
+Example component tests are available within `./spark_job/tests/component`
+Tests are written using: `pytest`, `pytest-bdd`, `pyspark`
+
+How to run tests locally:
+```shell
+cd fabric_content
+poetry install
+PYTHONPATH=. poetry run pytest data_engineering/example_spark_pipeline/spark_job/tests/component
+```
