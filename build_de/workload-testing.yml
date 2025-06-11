@@ -28,8 +28,6 @@ steps:
       script: |
         poetry run pytest -rf -v "${{ parameters.unitTestLocation }}" --junitxml=test-results/unit-tests.xml
       workingDirectory: "${{ parameters.workingDirectory }}"
-    env:
-      UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
 
   - task: Bash@3
     displayName: "Component Tests"
@@ -39,8 +37,6 @@ steps:
       script: |
         PYTHONPATH=. poetry run pytest -rf -v "${{ parameters.componentTestLocation }}" --junitxml=test-results/component-tests.xml
       workingDirectory: "${{ parameters.workingDirectory }}"
-    env:
-      COMPONENT_TEST_LOCATION: ${{ parameters.componentTestLocation }}
 
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
