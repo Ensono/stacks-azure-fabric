@@ -2,6 +2,7 @@ parameters:
   pythonVersion: ""
   workingDirectory: "./"
   unitTestLocation: "./$(test_src)/unit"
+  skipComponentTests: false
   componentTestLocation: "./$(test_src)/component"
 
 steps:
@@ -32,6 +33,7 @@ steps:
 
   - task: Bash@3
     displayName: "Component Tests"
+    condition: eq('${{ parameters.skipComponentTests }}', false)
     inputs:
       targetType: inline
       script: |
