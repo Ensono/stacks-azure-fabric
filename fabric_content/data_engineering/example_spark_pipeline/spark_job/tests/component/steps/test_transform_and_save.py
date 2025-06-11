@@ -41,7 +41,7 @@ def temp_delta_dirs():
 
 @given("a source data is available")
 def create_source_table(spark, temp_delta_dirs):
-    """Given step to create a source Delta table from in-memory test data matching the original CSV, with correct types."""
+    """Given step to create a source Delta table from in-memory test data with correct types."""
     source_dir, _ = temp_delta_dirs
     schema = StructType([
         StructField("id", IntegerType(), True),
