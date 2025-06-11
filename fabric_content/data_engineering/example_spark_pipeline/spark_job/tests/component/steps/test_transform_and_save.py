@@ -5,6 +5,7 @@ import tempfile
 
 import pytest
 from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, LongType
 from pytest_bdd import scenarios, given, when, then, parsers
 from chispa.dataframe_comparer import assert_df_equality
 
@@ -38,34 +39,28 @@ def temp_delta_dirs():
     shutil.rmtree(source_dir)
     shutil.rmtree(target_dir)
 
-@given(parsers.parse("a source delta table created from test data at '{source_data_path}'"))
-def create_source_table(spark, temp_delta_dirs, source_data_path):
-    """Given step to create a source Delta table from a CSV test data file."""
+@given("a source data is available")
+def create_source_table(spark, temp_delta_dirs):
+    """Given step to create a source Delta table from in-memory test data matching the original CSV, with correct types."""
     source_dir, _ = temp_delta_dirs
-    test_data_path = os.path.join(os.path.dirname(__file__), source_data_path)
-    source_data_frame = spark.read.format("csv").option("header", True).option("inferSchema", True).load(test_data_path)
+    schema = StructType([
+        StructField("id", IntegerType(), True),
+        StructField("name", StringType(), True),
+        StructField("age", IntegerType(), True)
+    ])
+    data = [
+        (1, "Alice", 25),
+        (2, "Bob", 30),
+        (3, "Charlie", 35),
+        (4, "David", 40)
+    ]
+    source_data_frame = spark.createDataFrame(data, schema)
     source_data_frame.write.format("delta").mode("overwrite").save(source_dir)
 
-@then(parsers.parse("the target delta table should contain the correct aggregated data from '{expected_data_path}'"))
-def check_aggregated(spark, temp_delta_dirs, expected_data_path):
-    """Then step to check that the target Delta table contains the expected aggregated data."""
-    _, target_dir = temp_delta_dirs
-    data_frame = spark.read.format("delta").load(target_dir)
-    expected_path = os.path.join(os.path.dirname(__file__), expected_data_path)
-    expected_data_frame = spark.read.format("csv").option("header", True).option("inferSchema", True).load(expected_path)
-
-    assert_df_equality(
-        data_frame,
-        expected_data_frame,
-        ignore_nullable=True,
-        ignore_row_order=True
-    )
-
-@when("I trigger the example_spark_job")
-def run_main(monkeypatch, spark, temp_delta_dirs):
+@when("the spark job is triggered")
+def run_main(monkeypatch, temp_delta_dirs):
     """When step to run the example_spark_job main function with test-specific patching."""
     source_dir, target_dir = temp_delta_dirs
-    # Patch sys.argv to simulate CLI arguments for the main function
     monkeypatch.setattr(sys, "argv", [
         "example_spark_job.py",
         "silver_workspace_id",
@@ -73,16 +68,24 @@ def run_main(monkeypatch, spark, temp_delta_dirs):
         "gold_workspace_id",
         "gold_lakehouse_id"
     ])
-    # Patch get_delta_table_path to use our temp dirs
     def fake_get_delta_table_path(workspace_id, lakehouse_id, table_name):
         if table_name == "sample_table":
             return source_dir
         else:
             return target_dir
     monkeypatch.setattr(example_spark_job, "get_delta_table_path", fake_get_delta_table_path)
-    # Patch create_delta_table to do nothing (since we already created it in the fixture)
-    monkeypatch.setattr(example_spark_job, "create_delta_table", lambda *a, **kw: None)
-    # Patch SparkSession.builder.getOrCreate to return our test spark session
-    monkeypatch.setattr(example_spark_job.SparkSession.builder, "getOrCreate", lambda self=None: spark)
-    # Call main
     example_spark_job.main()
+
+@then(parsers.parse("the target table contains expected aggregated data matching '{expected_data_path}'"))
+def check_aggregated(spark, temp_delta_dirs, expected_data_path):
+    """Then step to check that the target Delta table contains the expected aggregated data."""
+    _, target_dir = temp_delta_dirs
+    data_frame = spark.read.format("delta").load(target_dir)
+    expected_path = os.path.join(os.path.dirname(__file__), expected_data_path)
+    expected_data_frame = spark.read.format("csv").option("header", True).option("inferSchema", True).load(expected_path)
+    assert_df_equality(
+        data_frame,
+        expected_data_frame,
+        ignore_nullable=True,
+        ignore_row_order=True
+    )
