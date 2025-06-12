@@ -19,7 +19,7 @@ locals {
   #
   # For example, if the variable `is_prod_subscription` is set to false
   #
-  # ["dev", "uat"]
+  # ["test", "uat"]
   #
   #
   environments = flatten([for name, detail in local.environments_all : [
