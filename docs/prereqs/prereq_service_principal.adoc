@@ -1,6 +1,32 @@
+:subscription_id: 70f23d63-33fc-43bd-9423-191b8dcc0b65
+
 === Service Principal
 
-In order for Terraform to be able to authenticate against Azure and deploy resources, a Service Principal (SP) needs to be created.
+In order for Terraform to be able to authenticate against Azure and deploy resources, a Service Principal (SP) needs to be created. For deployment into Azure this needs to have the "Contributor" role assigned to it for the subscription that is being deployed to.
+
+The service principal can be created through the Azure EntraID portal, the Azure CLI or the Azure PowerShell module.
+
+[cols="1a,1a", options="header"]
+|===
+| Azure CLI | Azure PowerShell
+
+|
+
+[source, bash]
+---
+az ad sp create-for-rbac --name "fabric-sp" --role Contributor --scopes /subscriptions/{subscription-id}
+---
+
+|
+
+[source, powershell]
+---
+$sp = New-AzADServicePrincipal -DisplayName "fabric-sp" -Role Contributor -Scope "/subscriptions/{subscription-id}"
+---
+
+|===
+
+NOTE: The person that is creating the service principal must have the appropriate permissions on the organisation EntraID.
 
 ==== Fabric Permissions
 
@@ -19,3 +45,7 @@ There are two options to enable the Service Principal to access Fabric APIs:
 NOTE: Creating a https://learn.microsoft.com/en-us/power-bi/developer/embedded/embed-service-principal?tabs=azure-portal#step-2---create-a-microsoft-entra-security-group[security group] requires access to the Microsoft Graph API.
 
 In addition the Service Principal needs to be able to create workspaces in Fabric.
+
+==== Azure DevOps Permissions
+
+The Terraform templates have the ability to create Azure DevOps variable groups that contain the outputs from the deployment. There will be one for each environment that is deployed. If this feature is required, then the Service Principal needs to be added to the Azure DevOps project as a team member.

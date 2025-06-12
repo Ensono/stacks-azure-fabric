@@ -37,3 +37,9 @@ variables:
 
   - name: name_project
     value: azfabric
+
+  - name: ado_org_service_url
+    value: $(System.TeamFoundationCollectionUri)
+
+  - name: ado_project_name
+    value: $(System.TeamProject)
