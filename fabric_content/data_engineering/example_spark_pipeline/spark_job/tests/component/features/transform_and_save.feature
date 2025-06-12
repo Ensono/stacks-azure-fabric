@@ -4,6 +4,6 @@ Feature: Transform and Save Delta Table
   So that the aggregation is correct and persisted
 
   Scenario: Happy path for transform_and_save
-    Given a source data is available
+    Given a source table containing data matching '../test_data/input/input_data.csv'
     When the spark job is triggered
     Then the target table contains expected aggregated data matching '../test_data/output/expected_table.csv'
