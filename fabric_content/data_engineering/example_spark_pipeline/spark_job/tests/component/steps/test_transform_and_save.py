@@ -76,9 +76,9 @@ def run_main(monkeypatch, temp_delta_dirs: Tuple[str, str]) -> None:
 def check_aggregated(spark: SparkSession, temp_delta_dirs: Tuple[str, str], expected_data_path: str) -> None:
     """Then step to check that the target Delta table contains the expected aggregated data."""
     _, target_dir = temp_delta_dirs
-    data_frame: DataFrame = spark.read.format("delta").load(target_dir)
+    data_frame = spark.read.format("delta").load(target_dir)
     expected_path = os.path.join(os.path.dirname(__file__), expected_data_path)
-    expected_data_frame: DataFrame = spark.read.format("csv").option("header", True).option("inferSchema", True).load(expected_path)
+    expected_data_frame = spark.read.format("csv").option("header", True).option("inferSchema", True).load(expected_path)
     assert_df_equality(
         data_frame,
         expected_data_frame,
