@@ -88,7 +88,7 @@ def transform_and_save(spark: SparkSession, source_table_path: str, target_table
     logger.info(f"Transformed data saved at {target_table_path}")
 
 
-if __name__ == "__main__":
+def main():
     """Main function to parse arguments and execute the Spark job."""
     parser = argparse.ArgumentParser(description="Sample Spark job.")
 
@@ -105,3 +105,7 @@ if __name__ == "__main__":
     create_delta_table(spark, silver_table_path)
     transform_and_save(spark, silver_table_path, gold_table_path)
     logger.info("Spark job completed successfully.")
+
+
+if __name__ == "__main__":
+    main()
