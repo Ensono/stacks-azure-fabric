@@ -119,7 +119,7 @@ stages:
         condition: ${{ environment.condition }}
         variables:
           - group: azure-sp-creds
-          - group: fabric_${{ environment.name }}
+          - group: fabric-${{ environment.name }}-outputs
           - name: FABRIC_TENANT_ID
             value: $(ARM_TENANT_ID)
           - name: FABRIC_CLIENT_ID
