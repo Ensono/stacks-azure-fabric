@@ -32,7 +32,7 @@ locals {
   # For example, for environments "dev" and "uat" with the default ws_types, the output
   # would be:
   # {
-  #   "dev" = [
+  #   "test" = [
   #     "engineering",
   #     "storage-bronze",
   #     "storage-silver",
@@ -58,11 +58,11 @@ locals {
   # This so that the resources can just iterate over the list
   # It is made up of the environment name and the envtypes and will produce a list like:
   # [
-  #   "dev-engineering",
-  #   "dev-storage-bronze",
-  #   "dev-storage-silver",
-  #   "dev-storage-finance",
-  #   "dev-analytics-finance",
+  #   "test-engineering",
+  #   "test-storage-bronze",
+  #   "test-storage-silver",
+  #   "test-storage-finance",
+  #   "test-analytics-finance",
   #   "uat-engineering",
   #   "uat-storage-bronze",
   #   "uat-storage-silver",
