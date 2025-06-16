@@ -1,0 +1,46 @@
+parameters:
+  pythonVersion: ""
+  workingDirectory: "./"
+  unitTestLocation: "./$(test_src)/unit"
+  skipComponentTests: false
+  componentTestLocation: "./$(test_src)/component"
+
+steps:
+  - task: UsePythonVersion@0
+    displayName: Set Python Version
+    inputs:
+      versionSpec: ${{ parameters.pythonVersion }}
+      addToPath: true
+
+  - task: Bash@3
+    displayName: "Create Poetry Environment and Install Packages"
+    inputs:
+      targetType: inline
+      script: |
+        pipx install poetry==2.1.3
+        poetry install
+      workingDirectory: "${{ parameters.workingDirectory }}"
+
+  - task: Bash@3
+    displayName: "Unit Tests"
+    inputs:
+      targetType: inline
+      script: |
+        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}" --junitxml=test-results/unit-tests.xml
+      workingDirectory: "${{ parameters.workingDirectory }}"
+
+  - task: Bash@3
+    displayName: "Component Tests"
+    condition: eq('${{ parameters.skipComponentTests }}', false)
+    inputs:
+      targetType: inline
+      script: |
+        PYTHONPATH=. poetry run pytest -rf -v "${{ parameters.componentTestLocation }}" --junitxml=test-results/component-tests.xml
+      workingDirectory: "${{ parameters.workingDirectory }}"
+
+  - task: PublishTestResults@2
+    displayName: "Publish Test Results"
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/test-results/*.xml'
+      failTaskOnFailedTests: true

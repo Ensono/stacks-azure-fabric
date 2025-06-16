@@ -44,6 +44,14 @@ trigger:
       - "build/*"
       - "deploy/*"
 
+pr:
+  branches:
+      include:
+        - main
+  paths:
+    include:
+      - build/*
+
 variables:
   - template: variables.yml
 
