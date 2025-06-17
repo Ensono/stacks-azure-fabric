@@ -9,9 +9,9 @@ from azure.storage.filedatalake import DataLakeServiceClient
 
 class FabricHelper:
     def __init__(self):
-        self.tenant_id = os.getenv("TENANT_ID")
-        self.client_id = os.getenv("CLIENT_ID")
-        self.client_secret = os.getenv("CLIENT_SECRET")
+        self.tenant_id = os.getenv("FABRIC_TENANT_ID")
+        self.client_id = os.getenv("FABRIC_CLIENT_ID")
+        self.client_secret = os.getenv("FABRIC_CLIENT_SECRET")
         self._access_token = None
 
     def get_access_token(self) -> str:
