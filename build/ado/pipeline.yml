@@ -179,7 +179,6 @@ stages:
                   TF_VAR_permissions: $(fabric_permissions)
                   TF_VAR_ado_org_service_url: $(ado_org_service_url)
                   TF_VAR_ado_project_name: $(ado_project_name)
-                  TF_VAR_deploy_all_environments: ${{ sub.deploy_all_environments }}
                   ${{ if ne(trim(parameters.environments), '')}}:
                     TF_VAR_environments: $(environments)
                   ${{ if ne(trim(parameters.ws_types), '')}}:
