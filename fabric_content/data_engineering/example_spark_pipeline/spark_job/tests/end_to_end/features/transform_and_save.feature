@@ -3,10 +3,9 @@ Feature: End-to-End Transform and Save Delta Table
   I want to trigger the actual Fabric pipeline to transform and save data
   So that the aggregation is correct and persisted in the lakehouse
 
-  Scenario: E2E happy path for transform_and_save
-    Given a source table in the lakehouse containing data matching the provided input file
-    When the Fabric pipeline is triggered to run the transform_and_save job
-    And I poll the pipeline every 10 seconds until it has completed
-    Then the pipeline transform_and_save has finished with state Succeeded
-    And the pipeline transform_and_save has completed in less than 900 seconds
-    Then the target table in the lakehouse contains expected aggregated data matching the provided expected output file
+  Scenario: Fabric example_spark_pipeline is triggered successfully
+    When the Fabric pipeline is triggered to run the example_spark_pipeline job
+    And I poll the pipeline every 30 seconds until it has completed
+    Then the pipeline example_spark_pipeline has finished with state Completed
+    And the pipeline example_spark_pipeline has completed in less than 900 seconds
+    Then the target table in the lakehouse gold_lake contains expected aggregated data
