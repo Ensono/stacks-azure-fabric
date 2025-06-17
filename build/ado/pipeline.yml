@@ -35,14 +35,14 @@ parameters:
       - name: uat
         type: nonprod
         dependsOn: prelim
-        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(${{ parameters.deploy_all_environments }}, true)))
+        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(${{ parameters["deploy_all_environments"] }}, true)))
         credential_group: azure_sp_creds
         definition: uat:false
         is_prod_subscription: false
       - name: prod
         type: prod
         dependsOn: prelim
-        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(${{ parameters.deploy_all_environments }}, true)))
+        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(${{ parameters["deploy_all_environments"] }}, true)))
         credential_group: azure_sp_creds
         definition: prod:true
         is_prod_subscription: true
@@ -131,6 +131,7 @@ stages:
   - ${{ each env in parameters.environments }}:
     - stage: ${{ env.name }}
       displayName: Infrastructure - ${{ env.name }}
+      condition: ${{ env.condition }}
       dependsOn:
         - ${{ env.dependsOn }}
       variables:
