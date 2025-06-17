@@ -55,3 +55,17 @@ cd fabric_content
 poetry install
 PYTHONPATH=. poetry run pytest data_engineering/example_spark_pipeline/spark_job/tests/component
 ```
+
+## End-to-end tests
+Example E2E tests are available within `./spark_job/tests/end_to_end`
+Tests are written using: `pytest`, `pytest-bdd`, `pyspark`, `azure-identity`, `azure-storage-datalake`
+
+How to run tests locally:
+The following environment variables need to be set:
+TBD
+
+```shell
+cd fabric_content
+poetry install
+PYTHONPATH=. poetry run pytest data_engineering/example_spark_pipeline/spark_job/tests/end_to_end
+```
