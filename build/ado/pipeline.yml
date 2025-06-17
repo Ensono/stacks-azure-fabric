@@ -6,11 +6,6 @@ parameters:
     default: true
     displayName: Deploy Infrastructure
 
-  - name: deploy_all_environments
-    type: boolean
-    default: true
-    displayName: Deploy all environments to the subscription
-
   - name: destroy_infrastructure
     type: boolean
     default: false
@@ -21,11 +16,27 @@ parameters:
     default: false
     displayName: Generate Documentation
 
+  - name: subscription_types
+    displayName: Subscription types and the environments that should be deployed
+    type: object
+    default:
+      - type: nonprod
+        creds_group: azure_sp_creds
+        is_prod_subscription: "false"
+        environments: "test:false,uat:false"
+        ws_types: ""
+      - type: prod
+        creds_group: azure_sp_creds
+        is_prod_subscription: "true"
+        environments: "prod:true"
+        ws_types: ""
+
   - name: sub_types
     displayName: Subscription Types
     type: object
     default:
       - nonprod
+      - prod
 
   - name: environments
     displayName: Environments
@@ -59,8 +70,6 @@ pr:
 
 variables:
   - template: variables.yml
-  - name: deploy_all_environments
-    value: lower(${{ parameters.deploy_all_environments }})
 
 stages:
   - stage: prelim
@@ -119,13 +128,13 @@ stages:
               artifactName: docs
 
   - ${{ each sub in parameters.sub_types }}:
-      - stage: infrastructure
-        displayName: Infrastructure - ${{ sub }}
+      - stage: infrastructure_${{ sub.name }}
+        displayName: Infrastructure - ${{ sub.name }}
         dependsOn:
           - prelim
         variables:
-          - group: azure-sp-creds
-          - group: azure-fabric-${{ sub }}-permissions
+          - group: ${{ sub.creds_group }}
+          - group: azure-fabric-${{ sub.name }}-permissions
           - name: FABRIC_TENANT_ID
             value: $(ARM_TENANT_ID)
           - name: FABRIC_CLIENT_ID
@@ -135,7 +144,7 @@ stages:
           - name: TF_FILE_LOCATION
             value: deploy/terraform
           - name: ENV_NAME
-            value: ${{ sub }}
+            value: ${{ sub.name }}
 
         jobs:
           - job: deploy_infra
@@ -170,7 +179,7 @@ stages:
                   TF_VAR_permissions: $(fabric_permissions)
                   TF_VAR_ado_org_service_url: $(ado_org_service_url)
                   TF_VAR_ado_project_name: $(ado_project_name)
-                  TF_VAR_deploy_all_environments: $(deploy_all_environments)
+                  TF_VAR_deploy_all_environments: ${{ sub.deploy_all_environments }}
                   ${{ if ne(trim(parameters.environments), '')}}:
                     TF_VAR_environments: $(environments)
                   ${{ if ne(trim(parameters.ws_types), '')}}:
