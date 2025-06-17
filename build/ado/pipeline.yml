@@ -165,7 +165,7 @@ stages:
                   script: |
                     eirctl infra:init
                 env:
-                  TF_BACKEND_INIT: key=fabric_${{ sub }},container_name=tfstate,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
+                  TF_BACKEND_INIT: key=fabric_${{ sub.name }},container_name=tfstate,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
 
               # Configure the variables for Terraform
               - task: Bash@3
