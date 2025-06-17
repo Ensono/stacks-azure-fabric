@@ -222,7 +222,6 @@ stages:
                 workingDirectory: "./fabric_content"
                 endToEndTestLocation: "./$(test_src)/end_to_end"
                 skipEndToEndTests: false
-              env:
-                FABRIC_TENANT_ID: $(ARM_TENANT_ID)
-                FABRIC_CLIENT_ID: $(ARM_CLIENT_ID)
-                FABRIC_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                fabricTenantId: $(ARM_TENANT_ID)
+                fabricClientId: $(ARM_CLIENT_ID)
+                fabricClientSecret: $(ARM_CLIENT_SECRET)
