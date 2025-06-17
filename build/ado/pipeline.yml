@@ -152,7 +152,7 @@ stages:
 
       jobs:
         - job: deploy_infra
-          displayName: Terraform Stages
+          displayName: Deploy ${{ env.name }}
           pool:
             vmImage: $(pool_vm_image)
 
