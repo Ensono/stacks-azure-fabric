@@ -128,13 +128,13 @@ stages:
               artifactName: docs
 
   - ${{ each sub in parameters.subscription_types }}:
-      - stage: infrastructure_${{ sub.name }}
-        displayName: Infrastructure - ${{ sub.name }}
+      - stage: infrastructure_${{ sub.type }}
+        displayName: Infrastructure - ${{ sub.type }}
         dependsOn:
           - prelim
         variables:
           - group: ${{ sub.creds_group }}
-          - group: azure-fabric-${{ sub.name }}-permissions
+          - group: azure-fabric-${{ sub.type }}-permissions
           - name: FABRIC_TENANT_ID
             value: $(ARM_TENANT_ID)
           - name: FABRIC_CLIENT_ID
@@ -144,7 +144,7 @@ stages:
           - name: TF_FILE_LOCATION
             value: deploy/terraform
           - name: ENV_NAME
-            value: ${{ sub.name }}
+            value: ${{ sub.type }}
 
         jobs:
           - job: deploy_infra
@@ -165,7 +165,7 @@ stages:
                   script: |
                     eirctl infra:init
                 env:
-                  TF_BACKEND_INIT: key=fabric_${{ sub.name }},container_name=tfstate,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
+                  TF_BACKEND_INIT: key=fabric_${{ sub.type }},container_name=tfstate,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
 
               # Configure the variables for Terraform
               - task: Bash@3
