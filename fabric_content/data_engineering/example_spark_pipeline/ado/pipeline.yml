@@ -30,10 +30,10 @@ parameters:
     type: object
     default:
       - name: test
-        dependsOn: unit_tests
+        dependsOn: run_build_tests
         condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
       - name: uat
-        dependsOn: unit_tests
+        dependsOn: run_build_tests
         condition: and(succeeded(), eq(variables.isMainBranch, true))
       - name: prod
         dependsOn: uat
@@ -94,22 +94,23 @@ stages:
               script: |
                 eirctl build:number
 
-  - stage: unit_tests
+  - stage: run_build_tests
     displayName: Run Tests
     dependsOn: prelim
     jobs:
-      - job: run_unit_tests
+      - job: run_build_tests
         displayName: Run Tests
         pool:
           vmImage: $(pool_vm_image)
 
         steps:
-          - template: ../../../../build_de/workload-testing.yml
+          - template: ../../../../build_de/workload-pre-deploy-testing.yml
             parameters:
               pythonVersion: $(python_version)
               workingDirectory: "./fabric_content"
               unitTestLocation: "./$(test_src)/unit"
               componentTestLocation: "./$(test_src)/component"
+              skipComponentTests: false
 
   - ${{ each environment in parameters.environments }}:
     - stage: ${{ environment.name }}
@@ -208,3 +209,16 @@ stages:
                   targetType: inline
                   script: |
                     eirctl infra:apply
+
+        - job: run_endToEnd_tests
+          displayName: Run E2E Tests
+          pool:
+            vmImage: $(pool_vm_image)
+
+          steps:
+            - template: ../../../../build_de/workload-post-deploy-testing.yml
+              parameters:
+                pythonVersion: $(python_version)
+                workingDirectory: "./fabric_content"
+                endToEndTestLocation: "./$(test_src)/end_to_end"
+                skipEndToEndTests: false
