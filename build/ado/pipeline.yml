@@ -35,14 +35,14 @@ parameters:
       - name: uat
         type: nonprod
         dependsOn: prelim
-        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(${{ parameters["deploy_all_environments"] }}, true)))
+        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
         credential_group: azure_sp_creds
         definition: uat:false
         is_prod_subscription: false
       - name: prod
         type: prod
         dependsOn: prelim
-        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(${{ parameters["deploy_all_environments"] }}, true)))
+        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
         credential_group: azure_sp_creds
         definition: prod:true
         is_prod_subscription: true
@@ -71,6 +71,8 @@ pr:
 
 variables:
   - template: variables.yml
+  - name: deploy_all_environments
+    value: ${{ parameters.deploy_all_environments }}
 
 stages:
   - stage: prelim
