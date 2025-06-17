@@ -3,6 +3,9 @@ parameters:
   workingDirectory: "./"
   skipEndToEndTests: true
   endToEndTestLocation: "./$(test_src)/end_to_end"
+  fabricTenantId: ""
+  fabricClientId: ""
+  fabricClientSecret: ""
 
 steps:
   - task: UsePythonVersion@0
@@ -23,6 +26,10 @@ steps:
   - task: Bash@3
     displayName: "End-to-end Tests"
     condition: eq('${{ parameters.skipEndToEndTests }}', false)
+    env:
+      FABRIC_TENANT_ID: ${{ parameters.fabricTenantId }}
+      FABRIC_CLIENT_ID: ${{ parameters.fabricClientId }}
+      FABRIC_CLIENT_SECRET: ${{ parameters.fabricClientSecret }}
     inputs:
       targetType: inline
       script: |
