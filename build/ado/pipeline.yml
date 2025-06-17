@@ -127,7 +127,7 @@ stages:
               pathToPublish: $(Build.SourcesDirectory)/outputs/docs
               artifactName: docs
 
-  - ${{ each sub in parameters.sub_types }}:
+  - ${{ each sub in parameters.subscription_types }}:
       - stage: infrastructure_${{ sub.name }}
         displayName: Infrastructure - ${{ sub.name }}
         dependsOn:
