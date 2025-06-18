@@ -1,6 +1,4 @@
-"""
-Helper class for interacting with Microsoft Fabric REST API and OneLake storage for end-to-end pipeline testing.
-"""
+"""Helper class for interacting with Microsoft Fabric REST API and OneLake storage for end-to-end pipeline testing."""
 import os
 import tempfile
 import requests
