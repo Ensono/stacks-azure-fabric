@@ -6,6 +6,7 @@ from pytest_bdd import scenarios, when, then, parsers
 from chispa.dataframe_comparer import assert_df_equality
 from pyspark.sql import SparkSession
 import os
+import requests
 
 from ..fabric_helper import FabricHelper
 
@@ -14,9 +15,6 @@ scenarios("../features/transform_and_save.feature")
 ENGINEERING_WORKSPACE_ID = os.getenv("ENGINEERING_WORKSPACE_ID")
 GOLD_WORKSPACE_ID = os.getenv("GOLD_WORKSPACE_ID")
 GOLD_LAKEHOUSE_ID = os.getenv("GOLD_LAKEHOUSE_ID")
-PIPELINE_ID = "4085a673-cec4-4600-9d05-ed8d36f910c9"
-WORKSPACE_NAME = "test-fabric-gold"
-
 FABRIC_CLIENT_ID = os.getenv("FABRIC_CLIENT_ID")
 FABRIC_CLIENT_SECRET = os.getenv("FABRIC_CLIENT_SECRET")
 FABRIC_TENANT_ID = os.getenv("FABRIC_TENANT_ID")
@@ -46,20 +44,54 @@ spark = (
 )
 
 
-@when(parsers.parse("the Fabric pipeline is triggered to run the {pipeline_name} job"))
-def trigger_fabric_pipeline(test_context, pipeline_name):
+def get_workspace_id_by_name(workspace_name: str) -> str:
     """
-    Trigger the Fabric pipeline and store the pipeline run id in the test context.
-    The pipeline_name parameter can be used to select the pipeline or for logging.
+    Helper to map workspace names to their corresponding IDs.
+    """
+    workspace_ids = {
+        "engineering": ENGINEERING_WORKSPACE_ID,
+        "gold": GOLD_WORKSPACE_ID,
+    }
+    if workspace_name not in workspace_ids:
+        raise ValueError(f"Unknown workspace name: {workspace_name}")
+    return workspace_ids[workspace_name]
+
+
+def get_pipeline_id_by_name(items, pipeline_name: str) -> str:
+    """
+    Helper to find the pipeline ID by display name from the workspace items list.
+    """
+    for item in items:
+        if item.get("displayName") == pipeline_name and item.get("type") == "DataPipeline":
+            return item.get("id")
+    raise ValueError(f"Pipeline with name '{pipeline_name}' not found in workspace items.")
+
+
+@when(parsers.parse("the Fabric pipeline is triggered to run the {pipeline_name} job from the {workspace_name} workspace"))
+def trigger_fabric_pipeline(test_context, pipeline_name, workspace_name):
+    """
+    Trigger the Fabric pipeline from the specified workspace by dynamically resolving the pipeline_id from the workspace items API.
+    The pipeline_name and workspace_name parameters are used to look up the pipeline ID and workspace ID.
     """
     fabric = FabricHelper(
         tenant_id=FABRIC_TENANT_ID,
         client_id=FABRIC_CLIENT_ID,
         client_secret=FABRIC_CLIENT_SECRET
     )
+    workspace_id = get_workspace_id_by_name(workspace_name)
+    # Get all items in the specified workspace
+    url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items"
+    headers = fabric.get_auth_header()
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    items = response.json().get("value", [])
+    # Find the pipeline with the given name
+    pipeline_id = get_pipeline_id_by_name(items, pipeline_name)
     payload = {}  # Customize if you need to pass parameters
-    fabric.trigger_pipeline(ENGINEERING_WORKSPACE_ID, PIPELINE_ID, payload)
-    print(f"✅ Pipeline {pipeline_name} triggered successfully")
+    fabric.trigger_pipeline(workspace_id, pipeline_id, payload)
+    print(f"✅ Pipeline {pipeline_name} triggered successfully from {workspace_name} workspace")
+    test_context['pipeline_id'] = pipeline_id
+    test_context['workspace_id'] = workspace_id
 
 
 @when(parsers.parse("I poll the pipeline every {interval:d} seconds until it has completed"))
@@ -73,8 +105,10 @@ def poll_pipeline_until_complete(test_context, interval):
         client_id=FABRIC_CLIENT_ID,
         client_secret=FABRIC_CLIENT_SECRET
     )
+    workspace_id = test_context['workspace_id']
+    pipeline_id = test_context['pipeline_id']
     status, duration = fabric.poll_pipeline_until_complete(
-        ENGINEERING_WORKSPACE_ID, PIPELINE_ID, interval=interval
+        workspace_id, pipeline_id, interval=interval
     )
     test_context['pipeline_status'] = status
     test_context['pipeline_duration'] = duration
