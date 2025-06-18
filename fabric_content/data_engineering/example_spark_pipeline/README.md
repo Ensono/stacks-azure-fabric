@@ -62,7 +62,9 @@ Tests are written using: `pytest`, `pytest-bdd`, `pyspark`, `azure-identity`, `a
 
 How to run tests locally:
 The following environment variables need to be set:
-TBD
+- FABRIC_TENANT_ID
+- FABRIC_CLIENT_ID
+- FABRIC_CLIENT_SECRET
 
 ```shell
 cd fabric_content
