@@ -7,24 +7,41 @@ from chispa.dataframe_comparer import assert_df_equality
 from pyspark.sql import SparkSession
 import os
 import requests
+import sys
 
 from ..fabric_helper import FabricHelper
 
 scenarios("../features/transform_and_save.feature")
 
-ENGINEERING_WORKSPACE_ID = os.getenv("ENGINEERING_WORKSPACE_ID")
-GOLD_WORKSPACE_ID = os.getenv("GOLD_WORKSPACE_ID")
-GOLD_LAKEHOUSE_ID = os.getenv("GOLD_LAKEHOUSE_ID")
-FABRIC_CLIENT_ID = os.getenv("FABRIC_CLIENT_ID")
-FABRIC_CLIENT_SECRET = os.getenv("FABRIC_CLIENT_SECRET")
-FABRIC_TENANT_ID = os.getenv("FABRIC_TENANT_ID")
+
+def require_env(var: str) -> str:
+    """Get an environment variable or fail with a clear error."""
+    value = os.getenv(var)
+    if not value:
+        print(f"❌ Required environment variable '{var}' is not set.", file=sys.stderr)
+        sys.exit(1)
+    return value
+
+
+ENGINEERING_WORKSPACE_ID = require_env("ENGINEERING_WORKSPACE_ID")
+GOLD_WORKSPACE_ID = require_env("GOLD_WORKSPACE_ID")
+GOLD_LAKEHOUSE_ID = require_env("GOLD_LAKEHOUSE_ID")
+FABRIC_CLIENT_ID = require_env("FABRIC_CLIENT_ID")
+FABRIC_CLIENT_SECRET = require_env("FABRIC_CLIENT_SECRET")
+FABRIC_TENANT_ID = require_env("FABRIC_TENANT_ID")
 
 spark = (
     SparkSession.builder
         .appName("Testing PySpark Example")
         .config("spark.driver.bindAddress", "127.0.0.1")
         .config("spark.driver.host", "127.0.0.1")
-        .config("spark.jars.packages", "io.delta:delta-spark_2.12:3.1.0,org.apache.hadoop:hadoop-azure:3.3.6,com.azure:azure-storage-blob:12.30.0")
+        .config(
+            "spark.jars.packages",
+            "io.delta:delta-spark_2.12:3.1.0," \
+            "org.apache.hadoop:hadoop-azure:3.4.1," \
+            "org.apache.hadoop:hadoop-common:3.4.1," \
+            "com.azure:azure-storage-blob:12.30.0"
+        )
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
         .config("fs.azure.account.auth.type", "OAuth")
@@ -32,21 +49,22 @@ spark = (
         .config("fs.azure.account.oauth2.client.id", FABRIC_CLIENT_ID)
         .config("fs.azure.account.oauth2.client.secret", FABRIC_CLIENT_SECRET)
         .config("fs.azure.account.oauth2.client.endpoint", f"https://login.microsoftonline.com/{FABRIC_TENANT_ID}/oauth2/token")
-        .config(
-            "spark.jars.packages",
-            "io.delta:delta-spark_2.12:3.1.0,"
-            "org.apache.hadoop:hadoop-azure:3.4.1,"
-            "org.apache.hadoop:hadoop-common:3.4.1,"
-            "com.azure:azure-storage-blob:12.30.0"
-        )
         .config("spark.jars.repositories", "https://repo1.maven.org/maven2,https://mvnrepository.com/artifact")
         .getOrCreate()
 )
 
 
 def get_workspace_id_by_name(workspace_name: str) -> str:
-    """
-    Helper to map workspace names to their corresponding IDs.
+    """Map workspace names to their corresponding IDs.
+
+    Args:
+        workspace_name (str): The logical name of the workspace (e.g., 'engineering', 'gold').
+
+    Returns:
+        str: The corresponding workspace ID.
+
+    Raises:
+        ValueError: If the workspace name is not recognized.
     """
     workspace_ids = {
         "engineering": ENGINEERING_WORKSPACE_ID,
@@ -57,9 +75,18 @@ def get_workspace_id_by_name(workspace_name: str) -> str:
     return workspace_ids[workspace_name]
 
 
-def get_pipeline_id_by_name(items, pipeline_name: str) -> str:
-    """
-    Helper to find the pipeline ID by display name from the workspace items list.
+def get_pipeline_id_by_name(items: list[dict], pipeline_name: str) -> str:
+    """Find the pipeline ID by display name from the workspace items list.
+
+    Args:
+        items (list[dict]): List of workspace items from the Fabric API.
+        pipeline_name (str): The display name of the pipeline to find.
+
+    Returns:
+        str: The pipeline ID.
+
+    Raises:
+        ValueError: If the pipeline is not found in the workspace items.
     """
     for item in items:
         if item.get("displayName") == pipeline_name and item.get("type") == "DataPipeline":
