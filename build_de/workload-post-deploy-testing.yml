@@ -6,6 +6,9 @@ parameters:
   fabricTenantId: ""
   fabricClientId: ""
   fabricClientSecret: ""
+  engineeringWorkspaceId: ""
+  goldWorkspaceId: ""
+  goldLakehouseId: ""
 
 steps:
   - task: UsePythonVersion@0
@@ -30,6 +33,9 @@ steps:
       FABRIC_TENANT_ID: ${{ parameters.fabricTenantId }}
       FABRIC_CLIENT_ID: ${{ parameters.fabricClientId }}
       FABRIC_CLIENT_SECRET: ${{ parameters.fabricClientSecret }}
+      ENGINEERING_WORKSPACE_ID: ${{ parameters.engineeringWorkspaceId }}
+      GOLD_WORKSPACE_ID: ${{ parameters.goldWorkspaceId }}
+      GOLD_LAKEHOUSE_ID: ${{ parameters.goldLakehouseId }}
     inputs:
       targetType: inline
       script: |

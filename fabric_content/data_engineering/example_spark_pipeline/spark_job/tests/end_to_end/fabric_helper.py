@@ -1,15 +1,12 @@
 """Helper class for interacting with Microsoft Fabric REST API and OneLake storage for end-to-end pipeline testing."""
-import os
-import tempfile
 import requests
 from azure.identity import ClientSecretCredential
-from azure.storage.filedatalake import DataLakeServiceClient
 
 class FabricHelper:
-    def __init__(self):
-        self.tenant_id = os.getenv("FABRIC_TENANT_ID")
-        self.client_id = os.getenv("FABRIC_CLIENT_ID")
-        self.client_secret = os.getenv("FABRIC_CLIENT_SECRET")
+    def __init__(self, tenant_id: str, client_id: str, client_secret: str):
+        self.tenant_id = tenant_id
+        self.client_id = client_id
+        self.client_secret = client_secret
         self._access_token = None
 
     def get_access_token(self) -> str:
@@ -61,7 +58,6 @@ class FabricHelper:
         self,
         workspace_id: str,
         pipeline_id: str,
-        run_id: str = None,
         interval: int = 10,
         timeout: int = 900
     ) -> tuple[str, int | None]:
@@ -71,7 +67,6 @@ class FabricHelper:
         Args:
             workspace_id: The ID of the Fabric workspace.
             pipeline_id: The ID of the Fabric pipeline.
-            run_id: The specific run ID to poll. If not provided, polls the latest run. Defaults to None.
             interval: Number of seconds between polling attempts. Defaults to 10.
             timeout: Maximum time in seconds to poll before timing out. Defaults to 900.
 
@@ -91,11 +86,6 @@ class FabricHelper:
                 print("⚠️ No pipeline runs found.")
                 return None, None
             latest_run = runs[0]
-            # If run_id is specified, make sure we're polling the correct run
-            if run_id and latest_run.get("id") != run_id:
-                print(f"Waiting for run_id {run_id} to appear as latest...")
-                time.sleep(interval)
-                continue
             status = latest_run.get('status')
             duration = latest_run.get('duration') or int(time.time() - start_time)
             print(f"Status: {status}")
@@ -105,27 +95,3 @@ class FabricHelper:
                 print("❌ Polling timed out.")
                 return status, duration
             time.sleep(interval)
-
-    def download_table_parquet_to_local(self, lakehouse_name: str, table_name: str, workspace_name: str = None) -> str:
-        """
-        Download the first Parquet file from the OneLake table (excluding _delta_log) to a local temp file and return the local path.
-        """
-        credential = ClientSecretCredential(self.tenant_id, self.client_id, self.client_secret)
-        account_url = "https://onelake.dfs.fabric.microsoft.com"
-        service_client = DataLakeServiceClient(account_url=account_url, credential=credential)
-
-        file_system_client = service_client.get_file_system_client(file_system=workspace_name)
-        table_path = f"{lakehouse_name}.lakehouse/Tables/{table_name}"
-        directory_client = file_system_client.get_directory_client(table_path)
-        paths = directory_client.get_paths()
-        for path in paths:
-            # Only pick Parquet files that are NOT in _delta_log
-            if path.name.endswith(".parquet") and "_delta_log" not in path.name:
-                file_client = file_system_client.get_file_client(path.name)
-                local_temp = tempfile.NamedTemporaryFile(delete=False, suffix=".parquet")
-                download = file_client.download_file()
-                local_temp.write(download.readall())
-                local_temp.close()
-                print(f"✅ Downloaded Parquet file to {local_temp.name}")
-                return local_temp.name
-        raise FileNotFoundError(f"No Parquet file found in the specified table directory: {table_path}")

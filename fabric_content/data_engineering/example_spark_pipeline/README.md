@@ -65,6 +65,9 @@ The following environment variables need to be set:
 - FABRIC_TENANT_ID
 - FABRIC_CLIENT_ID
 - FABRIC_CLIENT_SECRET
+- ENGINEERING_WORKSPACE_ID
+- GOLD_WORKSPACE_ID
+- GOLD_LAKEHOUSE_ID
 
 ```shell
 cd fabric_content
