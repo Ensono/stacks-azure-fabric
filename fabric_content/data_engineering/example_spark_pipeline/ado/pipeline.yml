@@ -30,10 +30,10 @@ parameters:
     type: object
     default:
       - name: test
-        dependsOn: run_build_tests
+        dependsOn: run_pre_deploy_tests
         condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
       - name: uat
-        dependsOn: run_build_tests
+        dependsOn: run_pre_deploy_tests
         condition: and(succeeded(), eq(variables.isMainBranch, true))
       - name: prod
         dependsOn: uat
