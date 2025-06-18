@@ -8,4 +8,4 @@ Feature: End-to-End Transform and Save Delta Table
     And I poll the pipeline every 30 seconds until it has completed
     Then the pipeline example_spark_pipeline has finished with state Completed
     And the pipeline example_spark_pipeline has completed in less than 900 seconds
-    Then the target table in the lakehouse gold_lake contains expected aggregated data
+    Then the target table dbo/sample_table_agg in the lakehouse gold_lake contains expected aggregated data
