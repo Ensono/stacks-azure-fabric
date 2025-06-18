@@ -210,7 +210,7 @@ stages:
                   script: |
                     eirctl infra:apply
 
-        - job: run_endToEnd_tests
+        - job: run_e2e_tests
           displayName: Run E2E Tests
           pool:
             vmImage: $(pool_vm_image)
