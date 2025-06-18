@@ -57,11 +57,26 @@ class FabricHelper:
             print(f"Response JSON: {response.json() if response.headers.get('Content-Type') == 'application/json' else 'N/A'}")
             response.raise_for_status()
 
-    def poll_pipeline_until_complete(self, workspace_id: str, pipeline_id: str, run_id: str = None, interval: int = 10, timeout: int = 900):
+    def poll_pipeline_until_complete(
+        self,
+        workspace_id: str,
+        pipeline_id: str,
+        run_id: str = None,
+        interval: int = 10,
+        timeout: int = 900
+    ) -> tuple[str, int | None]:
         """
         Poll the Fabric pipeline run status every `interval` seconds until it completes or times out.
-        Returns (status, duration_seconds).
-        If run_id is provided, will look for that run; otherwise, will poll the latest run.
+
+        Args:
+            workspace_id: The ID of the Fabric workspace.
+            pipeline_id: The ID of the Fabric pipeline.
+            run_id: The specific run ID to poll. If not provided, polls the latest run. Defaults to None.
+            interval: Number of seconds between polling attempts. Defaults to 10.
+            timeout: Maximum time in seconds to poll before timing out. Defaults to 900.
+
+        Returns:
+            A tuple containing the final status (str) and the duration in seconds (int) of the pipeline run. Returns (None, None) if no runs are found.
         """
         import time
         url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items/{pipeline_id}/jobs/instances?$top=1"

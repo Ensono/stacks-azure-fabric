@@ -94,11 +94,11 @@ stages:
               script: |
                 eirctl build:number
 
-  - stage: run_build_tests
+  - stage: run_pre_deploy_tests
     displayName: Run Tests
     dependsOn: prelim
     jobs:
-      - job: run_build_tests
+      - job: run_pre_deploy_tests
         displayName: Run Tests
         pool:
           vmImage: $(pool_vm_image)
