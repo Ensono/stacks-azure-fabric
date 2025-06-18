@@ -74,6 +74,7 @@ class FabricHelper:
             A tuple containing the final status (str) and the duration in seconds (int) of the pipeline run. Returns (None, None) if no runs are found.
         """
         import time
+
         url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items/{pipeline_id}/jobs/instances?$top=1"
         headers = self.get_auth_header()
         print(f"⏳ Polling pipeline {pipeline_id} in workspace {workspace_id}...")
