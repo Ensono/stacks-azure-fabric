@@ -12,12 +12,10 @@ contexts:
 
   docs:
     container:
-      name: ensono/eir-asciidoctor
+      name: ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:1.2.13
       shell: pwsh
       shell_args:
         - -Command
-      container_args:
-        - -v /mnt/c/Users/rseymour/workspaces/stacks/independent-runner/src/modules:/modules
     envfile:
       exclude:
         - sourceversionmessage
