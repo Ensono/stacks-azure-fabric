@@ -29,7 +29,7 @@ locals {
   # Create an object of the environments and the types of workspaces and lakehouses that
   # are required
   #
-  # For example, for environments "dev" and "uat" with the default ws_types, the output
+  # For example, for environments "test" and "uat" with the default ws_types, the output
   # would be:
   # {
   #   "test" = [
