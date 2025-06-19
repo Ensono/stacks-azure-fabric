@@ -1,3 +1,7 @@
 == Deployment
 
+include::architecture.adoc[]
+
 include::permissions.adoc[]
+
+include::outputs.adoc[]

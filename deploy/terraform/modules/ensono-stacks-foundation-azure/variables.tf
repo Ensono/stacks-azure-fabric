@@ -60,6 +60,10 @@ variable "output_path" {
   default     = "../../outputs"
 }
 
+variable "environments" {
+  description = "List of environments being deployed"
+}
+
 variable "generate_env_files" {
   description = "State if the environment files should be generated"
   default     = false
