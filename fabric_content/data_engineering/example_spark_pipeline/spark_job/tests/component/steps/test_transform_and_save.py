@@ -5,7 +5,7 @@ import tempfile
 from typing import Generator, Tuple
 
 import pytest
-from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql import SparkSession
 from pytest_bdd import scenarios, given, when, then, parsers
 from chispa.dataframe_comparer import assert_df_equality
 
