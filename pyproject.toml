@@ -1,0 +1,20 @@
+[project]
+name = "stacks-azure-fabric"
+version = "0.1.0"
+description = "Ensono Stacks Fabric provides a solution to accelerate the deployment of an Azure Fabric Data Platform"
+authors = [
+    {name = "Jose Carrera",email = "jose.carrera@amido.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "pre-commit (>=4.2.0,<5.0.0)",
+    "black (>=25.1.0,<26.0.0)",
+    "flake8 (>=7.2.0,<8.0.0)",
+    "pydocstyle (>=6.3.0,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
