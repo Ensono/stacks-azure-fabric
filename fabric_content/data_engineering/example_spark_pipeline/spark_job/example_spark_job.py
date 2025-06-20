@@ -1,8 +1,10 @@
 """Example Spark job to create and transform Delta tables.
 
-It creates a Delta table with sample data, saves it to a Silver lakehouse, and then transforms the data and saves it to a Gold lakehouse.
+It creates a Delta table with sample data, saves it to a Silver lakehouse,
+and then transforms the data and saves it to a Gold lakehouse.
 
 """
+
 import argparse
 import logging
 
@@ -66,11 +68,13 @@ def get_delta_table_path(workspace_id: str, lakehouse_id: str, table_name: str) 
 def create_delta_table(spark: SparkSession, delta_table_path: str) -> None:
     """Creates a Delta table with sample data and saves it to the specified path."""
     logger.info(f"Saving delta table: {delta_table_path}...")
-    schema = StructType([
-        StructField("id", IntegerType(), True),
-        StructField("name", StringType(), True),
-        StructField("age", IntegerType(), True)
-    ])
+    schema = StructType(
+        [
+            StructField("id", IntegerType(), True),
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+        ]
+    )
     data = [(1, "Alice", 25), (2, "Bob", 30), (3, "Charlie", 35), (4, "David", 40)]
     df = spark.createDataFrame(data, schema)
 

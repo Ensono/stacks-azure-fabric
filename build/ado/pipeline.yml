@@ -45,11 +45,11 @@ trigger:
 
 pr:
   branches:
-      include:
-        - main
+    include:
+      - main
   paths:
     include:
-      - build/*
+      - build/*"
 
 variables:
   - template: variables.yml
