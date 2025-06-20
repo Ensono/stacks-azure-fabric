@@ -6,6 +6,16 @@ This repo holds the infrastructure and code required for deploying Azure Fabric 
 
 This project uses [pre-commit](https://pre-commit.com/) to automate code quality checks and formatting.
 
+### Pre-commit hook installation
+
+To ensure pre-commit checks run automatically on every `git commit`, you must install the git hooks after cloning the repository:
+
+```sh
+poetry run pre-commit install
+```
+
+You only need to do this once per clone. After that, pre-commit will run automatically on every commit.
+
 ### How to run pre-commit checks
 
 - **Run all checks on all files:**
