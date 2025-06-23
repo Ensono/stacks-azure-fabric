@@ -11,6 +11,7 @@ resource "fabric_data_pipeline" "example_ingest_pipeline" {
           bronze_lakehouse_id = var.bronze_lakehouse_id
           silver_workspace_id = var.silver_workspace_id
           silver_lakehouse_id = var.silver_lakehouse_id
+          environment = var.environment
         }
     }
   }
