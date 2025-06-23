@@ -129,43 +129,11 @@
         }
       },
       {
-        "name": "Team alert",
-        "type": "Teams",
-        "dependsOn": [
-            {
-                "activity": "ForEach Table",
-                "dependencyConditions": [
-                    "Failed"
-                ]
-            }
-        ],
-        "typeProperties": {
-            "inputs": {
-                "method": "post",
-                "path": "/beta/teams/conversation/message/poster/User/location/Channel",
-                "body": {
-                    "recipient": {
-                        "groupId": "919bfba8-e03e-4d30-ade0-48f6cf66140e",
-                        "channelId": "19:bzdQK6cr55jGsXYa1T-Mj5RLENk18xac7m0EtNIiQnM1@thread.tacv2"
-                    },
-                    "messageBody": "<p>Trigger time: @{pipeline().TriggerTime}</p>\n<p>Run ID: @{pipeline().RunId}</p>\n<p>Workspace ID: @{pipeline().DataFactory}</p>",
-                    "subject": "@concat('FAILED: ', toUpper(pipeline().parameters.environment), ' | ', pipeline().PipelineName)"
-                }
-            }
-        }
-      },
-      {
         "name": "Fail",
         "type": "Fail",
         "dependsOn": [
             {
                 "activity": "E-mail alert",
-                "dependencyConditions": [
-                    "Succeeded"
-                ]
-            },
-            {
-                "activity": "Team alert",
                 "dependencyConditions": [
                     "Succeeded"
                 ]
