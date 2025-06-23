@@ -27,3 +27,9 @@ variable "silver_lakehouse_id" {
   default = ""
   description = "The silver lakehouse id"
 }
+
+variable "environment" {
+  type = string
+  default = ""
+  description = "The environment name (e.g., test, uat, prod)."
+}

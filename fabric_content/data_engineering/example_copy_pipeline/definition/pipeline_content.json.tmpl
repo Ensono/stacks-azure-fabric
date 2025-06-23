@@ -98,6 +98,80 @@
                   }
                 }
               }
+            },
+            {
+              "name": "E-mail alert",
+              "type": "Office365Outlook",
+              "dependsOn": [
+                  {
+                      "activity": "ForEach Table",
+                      "dependencyConditions": [
+                          "Failed"
+                      ]
+                  }
+              ],
+              "typeProperties": {
+                  "inputs": {
+                      "method": "post",
+                      "path": "/v2/Mail",
+                      "body": {
+                          "To": "paulina.motyl@ensono.com; jose.carrera@ensono.com; Andy.Durkan@Ensono.com",
+                          "Subject": "@concat('FAILED: ', toUpper(pipeline().parameters.environment), ' | ', pipeline().PipelineName)",
+                          "Body": "<p>Trigger time: @{pipeline().TriggerTime}</p>\n<p>Run ID: @{pipeline().RunId}</p>\n<p>Workspace ID: @{pipeline().DataFactory}</p>",
+                          "Sensitivity": "",
+                          "Importance": "Normal",
+                          "From": ""
+                      }
+                  }
+              }
+            },
+            {
+              "name": "Team alert",
+              "type": "Teams",
+              "dependsOn": [
+                  {
+                      "activity": "ForEach Table",
+                      "dependencyConditions": [
+                          "Failed"
+                      ]
+                  }
+              ],
+              "typeProperties": {
+                  "inputs": {
+                      "method": "post",
+                      "path": "/beta/teams/conversation/message/poster/User/location/Channel",
+                      "body": {
+                          "recipient": {
+                              "groupId": "919bfba8-e03e-4d30-ade0-48f6cf66140e",
+                              "channelId": "19:bzdQK6cr55jGsXYa1T-Mj5RLENk18xac7m0EtNIiQnM1@thread.tacv2"
+                          },
+                          "messageBody": "<p>Trigger time: @{pipeline().TriggerTime}</p>\n<p>Run ID: @{pipeline().RunId}</p>\n<p>Workspace ID: @{pipeline().DataFactory}</p>",
+                          "subject": "@concat('FAILED: ', toUpper(pipeline().parameters.environment), ' | ', pipeline().PipelineName)"
+                      }
+                  }
+              }
+            },
+            {
+              "name": "Fail",
+              "type": "Fail",
+              "dependsOn": [
+                  {
+                      "activity": "E-mail alert",
+                      "dependencyConditions": [
+                          "Succeeded"
+                      ]
+                  },
+                  {
+                      "activity": "Team alert",
+                      "dependencyConditions": [
+                          "Succeeded"
+                      ]
+                  }
+              ],
+              "typeProperties": {
+                  "message": "Pipeline failed",
+                  "errorCode": "500"
+              }
             }
           ]
         }
@@ -114,6 +188,10 @@
           "year_2021.green_tripdata_2021",
           "year_2022.green_tripdata_2022"
         ]
+      },
+      "environment": {
+          "type": "string",
+          "defaultValue": "{{ .environment }}"
       }
     }
   }
