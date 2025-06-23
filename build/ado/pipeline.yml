@@ -41,7 +41,9 @@ parameters:
         is_prod_subscription: "false"
       - name: prod
         type: prod
-        dependsOn: prelim
+        dependsOn:
+          - prelim
+          - uat
         condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
         credentials_group: azure_sp_creds
         definition: prod:true
