@@ -96,8 +96,8 @@ def get_pipeline_id_by_name(items: list[dict], pipeline_name: str) -> str:
     """Find the pipeline ID by display name from the workspace items list.
 
     Args:
-        items (list[dict]): List of workspace items from the Fabric API.
-        pipeline_name (str): The display name of the pipeline to find.
+        items: List of workspace items from the Fabric API.
+        pipeline_name: The display name of the pipeline to find.
 
     Returns:
         str: The pipeline ID.
