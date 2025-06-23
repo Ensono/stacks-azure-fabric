@@ -100,7 +100,7 @@ def get_pipeline_id_by_name(items: list[dict], pipeline_name: str) -> str:
         pipeline_name: The display name of the pipeline to find.
 
     Returns:
-        str: The pipeline ID.
+        The pipeline ID.
 
     Raises:
         ValueError: If the pipeline is not found in the workspace items.
