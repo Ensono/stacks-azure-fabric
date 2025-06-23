@@ -6,7 +6,11 @@ The `data_engineering` module contains example data pipelines for Microsoft Fabr
 
 ## Step-by-Step: Creating a New Data Pipeline
 
-This guide applies to both ingest (copy) pipelines and Spark pipelines.
+This guide covers the development process for Data Pipelines containing:
+ - Data Pipeline Copy Activities (data ingestion)
+ - Spark Jobs (data processing)
+
+ Additional workload types (e.g. Notebooks) will be added in future.
 
 ### 1. Prepare Your Development Environment
 
@@ -98,7 +102,7 @@ Each example pipeline directory (e.g., [`example_copy_pipeline`](./example_copy_
 - After the PR pipeline completes, verify the deployment in the test Fabric workspace.
 - If further changes are needed, update your branch and the PR; the pipeline will re-run.
 
-### 8. Clean Up
+### 9. Clean Up
 
 - When finished, delete your temporary development workspace and any resources you created manually to avoid unnecessary costs.
 
