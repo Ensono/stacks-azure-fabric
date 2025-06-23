@@ -12,7 +12,7 @@ contexts:
 
   docs:
     container:
-      name: ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:1.2.13
+      name: ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:1.2.17
       shell: pwsh
       shell_args:
         - -Command
