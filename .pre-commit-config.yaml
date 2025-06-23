@@ -1,4 +1,10 @@
 repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: "v1.99.4"
+    hooks:
+      - id: terraform_fmt
+        args:
+          - --args=-write=true
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -31,5 +37,5 @@ repos:
     rev: 6.3.0
     hooks:
       - id: pydocstyle
-        args: ["--config=pyproject.toml"]
+        args: ["--config=fabric_content/pyproject.toml"]
         additional_dependencies: ["tomli"]
