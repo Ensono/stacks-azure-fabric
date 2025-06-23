@@ -39,7 +39,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        PYTHONPATH=. poetry run pytest -rf -v "${{ parameters.endToEndTestLocation }}" --junitxml=test-results/end-to-end-tests.xml
+        PYTHONPATH=. poetry run pytest -rf -v --capture=tee-sys "${{ parameters.endToEndTestLocation }}" --junitxml=test-results/end-to-end-tests.xml
       workingDirectory: "${{ parameters.workingDirectory }}"
 
   - task: PublishTestResults@2
