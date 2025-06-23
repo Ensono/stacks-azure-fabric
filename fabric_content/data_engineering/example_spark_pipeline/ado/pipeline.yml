@@ -188,12 +188,27 @@ stages:
                       script: |
                         eirctl infra:destroy:plan
 
-              - task: Bash@3
-                displayName: Terraform Apply
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:apply
+                  - task: Bash@3
+                    displayName: Terraform Destroy Apply
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:destroy:apply
+
+              - ${{ if eq(parameters.deploy, true) }}:
+                  - task: Bash@3
+                    displayName: Terraform Plan
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:plan
+
+                  - task: Bash@3
+                    displayName: Terraform Apply
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:apply
 
           - job: run_e2e_tests
             displayName: Run E2E Tests
