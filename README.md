@@ -33,7 +33,6 @@ You only need to do this once per clone. After that, pre-commit will run automat
   Replace `<hook-id>` with the name of the hook (e.g., `black`, `flake8`).
 
 ### Common parameters
-
 - `--all-files` : Run the hook(s) on all files, not just changed ones.
 - `-v` or `--verbose` : Show detailed output.
 - `--show-diff-on-failure` : Show a diff when a hook fails and can fix the file.
