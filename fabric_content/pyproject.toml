@@ -16,7 +16,11 @@ dependencies = [
     "pytest-bdd (>=7.1.2,<8.0.0)",
     "pytest-mock (>=3.14.1,<4.0.0)",
     "pyspark (>=3.5.1,<4.0.0)",
-    "ms-fabric-cli (>=1.0.0,<2.0.0)"
+    "ms-fabric-cli (>=1.0.0,<2.0.0)",
+    "pre-commit (>=4.2.0,<5.0.0)",
+    "black (>=25.1.0,<26.0.0)",
+    "flake8 (>=7.2.0,<8.0.0)",
+    "pydocstyle (>=6.3.0,<7.0.0)"
 ]
 
 [tool.poetry]
@@ -25,3 +29,25 @@ package-mode = false
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+
+[tool.black]
+line_length = 120
+target_version = ["py312"]
+exclude = '''
+/(
+    \\.git
+  | \\.venv
+)/
+'''
+
+[tool.flake8]
+max_line_length = 120
+exclude = ".venv,.git"
+
+[tool.pydocstyle]
+convention = "google"
+add_ignore = "D100,D101,D104"

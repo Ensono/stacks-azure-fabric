@@ -41,7 +41,7 @@ trigger:
       - main
   paths:
     include:
-      - "build/*"
+      - build/*
 
 pr:
   branches:
@@ -49,7 +49,7 @@ pr:
       - main
   paths:
     include:
-      - build/*"
+      - build/*
 
 variables:
   - template: variables.yml
