@@ -84,7 +84,7 @@ Each example pipeline directory (e.g., [`example_copy_pipeline`](./example_copy_
 - **Create a new Azure DevOps pipeline for your data pipeline:**
   1. In Azure DevOps, navigate to your project and go to **Pipelines** > **New Pipeline**.
   2. Select your repository and choose to configure the pipeline using existing YAML.
-     > Note: in case of Stacks the code is in GitHub.gi
+     > Note: in case of Stacks the code is in GitHub.
   3. When prompted, provide the path to your new pipeline YAML file (e.g., `fabric_content/data_engineering/my_ingest_pipeline/ado/pipeline.yml`).
   4. Save and the pipeline to ensure it is set up correctly.
   5. Rename your pipeline and give it a clear and descriptive name that matches your new pipeline (e.g., `my_ingest_pipeline` or `my_spark_pipeline`).
@@ -102,7 +102,7 @@ Each example pipeline directory (e.g., [`example_copy_pipeline`](./example_copy_
 - After the PR pipeline completes, verify the deployment in the test Fabric workspace.
 - If further changes are needed, update your branch and the PR; the pipeline will re-run.
 
-### 8. Clean Up
+### 9. Clean Up
 
 - When finished, delete your temporary development workspace and any resources you created manually to avoid unnecessary costs.
 
