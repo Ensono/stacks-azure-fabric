@@ -33,3 +33,9 @@ variable "engineering_workspace_id" {
    default = ""
    description = "The gold lakehouse ID."
  }
+
+ variable "environment" {
+  type = string
+  default = ""
+  description = "The environment name (e.g., test, uat, prod)."
+}
