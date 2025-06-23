@@ -30,10 +30,10 @@ parameters:
     type: object
     default:
       - name: test
-        dependsOn: unit_tests
+        dependsOn: run_pre_deploy_tests
         condition: and(succeeded(), or(eq(variables.isPR, true), eq(variables.isManual, true)))
       - name: uat
-        dependsOn: unit_tests
+        dependsOn: run_pre_deploy_tests
         condition: and(succeeded(), eq(variables.isMainBranch, true))
       - name: prod
         dependsOn: uat
@@ -94,22 +94,23 @@ stages:
               script: |
                 eirctl build:number
 
-  - stage: unit_tests
+  - stage: run_pre_deploy_tests
     displayName: Run Tests
     dependsOn: prelim
     jobs:
-      - job: run_unit_tests
+      - job: run_pre_deploy_tests
         displayName: Run Tests
         pool:
           vmImage: $(pool_vm_image)
 
         steps:
-          - template: ../../../../build_de/workload-testing.yml
+          - template: ../../../../build_de/workload-pre-deploy-testing.yml
             parameters:
               pythonVersion: $(python_version)
               workingDirectory: "./fabric_content"
               unitTestLocation: "./$(test_src)/unit"
               componentTestLocation: "./$(test_src)/component"
+              skipComponentTests: false
 
   - ${{ each environment in parameters.environments }}:
       - stage: ${{ environment.name }}
@@ -180,31 +181,50 @@ stages:
                     TF_VAR_gold_lakehouse_id: $(storage_goldexample_lakehouse_id)
 
                 - ${{ if eq(parameters.destroy, true) }}:
-                    - task: Bash@3
-                      displayName: Terraform Destroy Plan
-                      inputs:
-                        targetType: inline
-                        script: |
-                          eirctl infra:destroy:plan
+                  - task: Bash@3
+                    displayName: Terraform Destroy Plan
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:destroy:plan
 
-                    - task: Bash@3
-                      displayName: Terraform Destroy Apply
-                      inputs:
-                        targetType: inline
-                        script: |
-                          eirctl infra:destroy:apply
+                  - task: Bash@3
+                    displayName: Terraform Destroy Apply
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:destroy:apply
 
                 - ${{ if eq(parameters.deploy, true) }}:
-                    - task: Bash@3
-                      displayName: Terraform Plan
-                      inputs:
-                        targetType: inline
-                        script: |
-                          eirctl infra:plan
+                  - task: Bash@3
+                    displayName: Terraform Plan
+                    inputs:
+                      targetType: inline
+                      script: |
+                        eirctl infra:plan
 
-                    - task: Bash@3
-                      displayName: Terraform Apply
-                      inputs:
-                        targetType: inline
-                        script: |
-                          eirctl infra:apply
+                - task: Bash@3
+                  displayName: Terraform Apply
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:apply
+
+          - job: run_e2e_tests
+            displayName: Run E2E Tests
+            pool:
+              vmImage: $(pool_vm_image)
+
+            steps:
+              - template: ../../../../build_de/workload-post-deploy-testing.yml
+                parameters:
+                  pythonVersion: $(python_version)
+                  workingDirectory: "./fabric_content"
+                  endToEndTestLocation: "./$(test_src)/end_to_end"
+                  skipEndToEndTests: false
+                  fabricTenantId: $(ARM_TENANT_ID)
+                  fabricClientId: $(ARM_CLIENT_ID)
+                  fabricClientSecret: $(ARM_CLIENT_SECRET)
+                  engineeringWorkspaceId: $(engineering_workspace_id)
+                  goldWorkspaceId: $(storage_gold_example_workspace_id)
+                  goldLakehouseId: $(storage_gold_example_lakehouse_id)

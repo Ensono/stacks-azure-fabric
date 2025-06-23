@@ -16,6 +16,7 @@ dependencies = [
     "pytest-bdd (>=7.1.2,<8.0.0)",
     "pytest-mock (>=3.14.1,<4.0.0)",
     "pyspark (>=3.5.1,<4.0.0)",
+    "azure-storage-file-datalake (>=12.20.0,<13.0.0)",
     "ms-fabric-cli (>=1.0.0,<2.0.0)"
 ]
 
