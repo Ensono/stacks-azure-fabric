@@ -2,4 +2,8 @@
 
 This section provides solutions to issues that may arise when using the templates to deploy the Fabric environments.
 
-include::ts_*.adoc[]
+include::ts_capacity_admins.adoc[]
+
+include::ts_capacity_guid.adoc[]
+
+include::ts_create_operation.adoc[]
