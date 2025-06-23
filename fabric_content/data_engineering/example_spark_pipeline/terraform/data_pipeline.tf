@@ -7,12 +7,12 @@ resource "fabric_spark_job_definition" "example_spark_job" {
     "SparkJobDefinitionV1.json" = {
       source = "${path.module}/../definition/example_spark_job_definition.json.tmpl"
       tokens = {
-        "engineeringWorkspaceId" = var.engineering_workspace_id
-        "engineeringLakehouseId" = var.engineering_lakehouse_id
-        "silverWorkspaceId" = var.silver_workspace_id
-        "silverLakehouseId" = var.silver_lakehouse_id
-        "goldWorkspaceId" = var.gold_workspace_id
-        "goldLakehouseId" = var.gold_lakehouse_id
+        engineeringWorkspaceId = var.engineering_workspace_id
+        engineeringLakehouseId = var.engineering_lakehouse_id
+        silverWorkspaceId = var.silver_workspace_id
+        silverLakehouseId = var.silver_lakehouse_id
+        goldWorkspaceId = var.gold_workspace_id
+        goldLakehouseId = var.gold_lakehouse_id
       }
     }
   }
@@ -27,8 +27,9 @@ resource "fabric_data_pipeline" "example_spark_pipeline" {
     "pipeline-content.json" = {
       source = "${path.module}/../definition/example_spark_pipeline.json.tmpl"
       tokens = {
-        "sparkJobDefinitionId" = fabric_spark_job_definition.example_spark_job.id
-        "engineeringWorkspaceId" = var.engineering_workspace_id
+        sparkJobDefinitionId = fabric_spark_job_definition.example_spark_job.id
+        engineeringWorkspaceId = var.engineering_workspace_id
+        environment = var.environment
       }
     }
   }

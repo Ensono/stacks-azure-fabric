@@ -17,7 +17,55 @@
                     "sparkJobDefinitionId": "{{ .sparkJobDefinitionId }}",
                     "workspaceId": "{{ .engineeringWorkspaceId }}"
                 }
+            },
+            {
+                "name": "E-mail alert",
+                "type": "Office365Outlook",
+                "dependsOn": [
+                    {
+                        "activity": "ExampleSparkJob",
+                        "dependencyConditions": [
+                            "Failed"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "inputs": {
+                        "method": "post",
+                        "path": "/v2/Mail",
+                        "body": {
+                            "To": "paulina.motyl@ensono.com; jose.carrera@ensono.com; Andy.Durkan@Ensono.com",
+                            "Subject": "@concat('FAILED: ', toUpper(pipeline().parameters.environment), ' | ', pipeline().PipelineName)",
+                            "Body": "<p>Trigger time: @{pipeline().TriggerTime}</p>\n<p>Run ID: @{pipeline().RunId}</p>\n<p>Workspace ID: @{pipeline().DataFactory}</p>",
+                            "Sensitivity": "",
+                            "Importance": "Normal",
+                            "From": ""
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Fail",
+                "type": "Fail",
+                "dependsOn": [
+                    {
+                        "activity": "E-mail alert",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "message": "Pipeline failed",
+                    "errorCode": "500"
+                }
             }
-        ]
+        ],
+        "parameters": {
+            "environment": {
+                "type": "string",
+                "defaultValue": "{{ .environment }}"
+            }
+        }
     }
 }
