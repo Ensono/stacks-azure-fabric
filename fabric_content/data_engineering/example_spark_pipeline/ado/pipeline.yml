@@ -226,5 +226,5 @@ stages:
                   fabricClientId: $(ARM_CLIENT_ID)
                   fabricClientSecret: $(ARM_CLIENT_SECRET)
                   engineeringWorkspaceId: $(engineering_workspace_id)
-                  goldWorkspaceId: $(storage_gold_example_workspace_id)
-                  goldLakehouseId: $(storage_gold_example_lakehouse_id)
+                  goldWorkspaceId: $(storage_goldexample_workspace_id)
+                  goldLakehouseId: $(storage_goldexample_lakehouse_id)
