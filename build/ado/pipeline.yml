@@ -31,14 +31,14 @@ parameters:
         condition: succeeded()
         credentials_group: azure_sp_creds
         definition: test:false
-        is_prod_subscription: "false"
+        is_prod_subscription: 'false'
       - name: uat
         type: nonprod
         dependsOn: prelim
         condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
         credentials_group: azure_sp_creds
         definition: uat:false
-        is_prod_subscription: "false"
+        is_prod_subscription: 'false'
       - name: prod
         type: prod
         dependsOn:
@@ -47,7 +47,7 @@ parameters:
         condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
         credentials_group: azure_sp_creds
         definition: prod:true
-        is_prod_subscription: "true"
+        is_prod_subscription: 'true'
 
   - name: debug
     displayName: Enable Debugging
@@ -151,8 +151,6 @@ stages:
           value: deploy/terraform
         - name: ENV_NAME
           value: ${{ env.name }}
-        - name: is_prod_subscription
-          value: lower("${{ env.is_prod_subscription }}")
 
       jobs:
         - job: deploy_infra
@@ -187,7 +185,7 @@ stages:
                 TF_VAR_permissions: $(fabric_permissions)
                 TF_VAR_ado_org_service_url: $(ado_org_service_url)
                 TF_VAR_ado_project_name: $(ado_project_name)
-                TF_VAR_is_prod_subscription: $(is_prod_subscription)
+                TF_VAR_is_prod_subscription: ${{ env.is_prod_subscription }}
                 TF_VAR_environments: ${{ env.definition }}
 
             # If the debug option has been enabled, upload the vars file that has been created
