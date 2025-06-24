@@ -37,26 +37,28 @@ FABRIC_TENANT_ID = require_env("FABRIC_TENANT_ID")
 def spark() -> Generator[SparkSession, None, None]:
     """Fixture to provide a SparkSession for the test module and clean up after."""
     spark = (
-        SparkSession.builder
-            .appName("Testing PySpark Example")
-            .config("spark.driver.bindAddress", "127.0.0.1")
-            .config("spark.driver.host", "127.0.0.1")
-            .config(
-                "spark.jars.packages",
-                "io.delta:delta-spark_2.12:3.1.0," \
-                "org.apache.hadoop:hadoop-azure:3.4.1," \
-                "org.apache.hadoop:hadoop-common:3.4.1," \
-                "com.azure:azure-storage-blob:12.30.0"
-            )
-            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-            .config("fs.azure.account.auth.type", "OAuth")
-            .config("fs.azure.account.oauth.provider.type", "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
-            .config("fs.azure.account.oauth2.client.id", FABRIC_CLIENT_ID)
-            .config("fs.azure.account.oauth2.client.secret", FABRIC_CLIENT_SECRET)
-            .config("fs.azure.account.oauth2.client.endpoint", f"https://login.microsoftonline.com/{FABRIC_TENANT_ID}/oauth2/token")
-            .config("spark.jars.repositories", "https://repo1.maven.org/maven2,https://mvnrepository.com/artifact")
-            .getOrCreate()
+        SparkSession.builder.appName("Testing PySpark Example")
+        .config("spark.driver.bindAddress", "127.0.0.1")
+        .config("spark.driver.host", "127.0.0.1")
+        .config(
+            "spark.jars.packages",
+            "io.delta:delta-spark_2.12:3.1.0,"
+            "org.apache.hadoop:hadoop-azure:3.4.1,"
+            "org.apache.hadoop:hadoop-common:3.4.1,"
+            "com.azure:azure-storage-blob:12.30.0",
+        )
+        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+        .config("fs.azure.account.auth.type", "OAuth")
+        .config("fs.azure.account.oauth.provider.type", "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
+        .config("fs.azure.account.oauth2.client.id", FABRIC_CLIENT_ID)
+        .config("fs.azure.account.oauth2.client.secret", FABRIC_CLIENT_SECRET)
+        .config(
+            "fs.azure.account.oauth2.client.endpoint",
+            f"https://login.microsoftonline.com/{FABRIC_TENANT_ID}/oauth2/token",
+        )
+        .config("spark.jars.repositories", "https://repo1.maven.org/maven2,https://mvnrepository.com/artifact")
+        .getOrCreate()
     )
     yield spark
     spark.stop()
@@ -65,11 +67,7 @@ def spark() -> Generator[SparkSession, None, None]:
 @pytest.fixture
 def fabric_helper() -> FabricHelper:
     """Fixture to provide a FabricHelper instance for the test."""
-    return FabricHelper(
-        tenant_id=FABRIC_TENANT_ID,
-        client_id=FABRIC_CLIENT_ID,
-        client_secret=FABRIC_CLIENT_SECRET
-    )
+    return FabricHelper(tenant_id=FABRIC_TENANT_ID, client_id=FABRIC_CLIENT_ID, client_secret=FABRIC_CLIENT_SECRET)
 
 
 def get_workspace_id_by_name(workspace_name: str) -> str:
@@ -93,22 +91,24 @@ def get_pipeline_id_by_name(items: list[dict], pipeline_name: str) -> str:
     Raises:
         ValueError: If the pipeline is not found in the workspace items.
     """
-    print(f"Items: {items}")
     for item in items:
         if item.get("displayName") == pipeline_name and item.get("type") == "DataPipeline":
             return item.get("id")
     raise ValueError(f"Pipeline with name '{pipeline_name}' not found in workspace items.")
 
 
-@when(parsers.parse("the Fabric pipeline is triggered to run the {pipeline_name} job from the {workspace_name} workspace"))
-def trigger_fabric_pipeline(test_context: dict[str, Any], pipeline_name: str, workspace_name: str, fabric_helper: FabricHelper) -> None:
+@when(
+    parsers.parse("the Fabric pipeline is triggered to run the {pipeline_name} job from the {workspace_name} workspace")
+)
+def trigger_fabric_pipeline(
+    test_context: dict[str, Any], pipeline_name: str, workspace_name: str, fabric_helper: FabricHelper
+) -> None:
     """
-    Trigger the Fabric pipeline from the specified workspace by dynamically resolving the pipeline_id from the workspace items API.
+    Trigger the Fabric pipeline from the workspace by dynamically resolving the pipeline_id from the items API.
     The pipeline_name and workspace_name parameters are used to look up the pipeline ID and workspace ID.
     """
     workspace_id = get_workspace_id_by_name(workspace_name)
     # Get all items in the specified workspace
-    print(f"🔍 Fetching items from workspace {workspace_name} ({workspace_id}) to find pipeline {pipeline_name}")
     url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items"
     headers = fabric_helper.get_auth_header()
     response = requests.get(url, headers=headers)
@@ -119,8 +119,8 @@ def trigger_fabric_pipeline(test_context: dict[str, Any], pipeline_name: str, wo
     payload = {}  # Customize if you need to pass parameters
     fabric_helper.trigger_pipeline(workspace_id, pipeline_id, payload)
     print(f"✅ Pipeline {pipeline_name} triggered successfully from {workspace_name} workspace")
-    test_context['pipeline_id'] = pipeline_id
-    test_context['workspace_id'] = workspace_id
+    test_context["pipeline_id"] = pipeline_id
+    test_context["workspace_id"] = workspace_id
 
 
 @when(parsers.parse("I poll the pipeline every {interval:d} seconds until it has completed"))
@@ -129,13 +129,11 @@ def poll_pipeline_until_complete(test_context: dict[str, Any], interval: int, fa
     Poll the Fabric pipeline run status every `interval` seconds until it completes.
     Store the final status and duration in the test_context.
     """
-    workspace_id = test_context['workspace_id']
-    pipeline_id = test_context['pipeline_id']
-    status, duration = fabric_helper.poll_pipeline_until_complete(
-        workspace_id, pipeline_id, interval=interval
-    )
-    test_context['pipeline_status'] = status
-    test_context['pipeline_duration'] = duration
+    workspace_id = test_context["workspace_id"]
+    pipeline_id = test_context["pipeline_id"]
+    status, duration = fabric_helper.poll_pipeline_until_complete(workspace_id, pipeline_id, interval=interval)
+    test_context["pipeline_status"] = status
+    test_context["pipeline_duration"] = duration
 
 
 @then(parsers.parse("the pipeline {pipeline_name} has finished with state {expected_state}"))
@@ -143,7 +141,7 @@ def assert_pipeline_state(test_context: dict[str, Any], expected_state: str) -> 
     """
     Assert that the pipeline finished with the expected state.
     """
-    actual_state = test_context.get('pipeline_status')
+    actual_state = test_context.get("pipeline_status")
     assert actual_state == expected_state, f"Expected pipeline state '{expected_state}', got '{actual_state}'"
 
 
@@ -152,13 +150,19 @@ def assert_pipeline_duration(test_context: dict[str, Any], max_seconds: int) -> 
     """
     Assert that the pipeline completed in less than the specified number of seconds.
     """
-    duration = test_context.get('pipeline_duration')
+    duration = test_context.get("pipeline_duration")
     assert duration is not None, "Pipeline duration was not set."
-    assert duration < max_seconds, f"Pipeline took {duration} seconds, which exceeds the limit of {max_seconds} seconds."
+    assert (
+        duration < max_seconds
+    ), f"Pipeline took {duration} seconds, which exceeds the limit of {max_seconds} seconds."
 
 
-@then(parsers.parse("the target table {table_name} in the lakehouse {lakehouse_name} contains expected aggregated data"))
-def assert_target_table(test_context: dict[str, Any], table_name: str, lakehouse_name: str, spark: SparkSession) -> None:
+@then(
+    parsers.parse("the target table {table_name} in the lakehouse {lakehouse_name} contains expected aggregated data")
+)
+def assert_target_table(
+    test_context: dict[str, Any], table_name: str, lakehouse_name: str, spark: SparkSession
+) -> None:
     """
     Read the target table from the specified lakehouse and compare it to the expected output file using chispa.
     """
@@ -166,8 +170,7 @@ def assert_target_table(test_context: dict[str, Any], table_name: str, lakehouse
         os.path.join(os.path.dirname(__file__), "../../end_to_end/test_data/output/expected_table.csv")
     )
     abfss_table_path = (
-        f"abfss://{GOLD_WORKSPACE_ID}@onelake.dfs.fabric.microsoft.com/"
-        f"{GOLD_LAKEHOUSE_ID}/Tables/{table_name}"
+        f"abfss://{GOLD_WORKSPACE_ID}@onelake.dfs.fabric.microsoft.com/" f"{GOLD_LAKEHOUSE_ID}/Tables/{table_name}"
     )
     actual_df = spark.read.format("delta").load(abfss_table_path)
     expected_df = spark.read.csv(expected_output_path, header=True, inferSchema=True)
