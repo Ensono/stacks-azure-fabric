@@ -179,6 +179,9 @@ stages:
               inputs:
                 targetType: inline
                 script: |
+                  # Convert to lowercase
+                  TF_VAR_is_prod_subscription=$(echo "$TF_VAR_is_prod_subscription" | tr '[:upper:]' '[:lower:]')
+
                   eirctl infra:vars
               env:
                 TF_VAR_create_fabric_capacity: true
