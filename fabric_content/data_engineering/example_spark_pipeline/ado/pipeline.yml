@@ -212,6 +212,7 @@ stages:
 
           - job: run_e2e_tests
             displayName: Run E2E Tests
+            dependsOn: deploy_terraform
             pool:
               vmImage: $(pool_vm_image)
 
