@@ -98,7 +98,7 @@ stages:
         condition: ${{ environment.condition }}
         variables:
           - group: azure-sp-creds
-          - group: fabric_${{ environment.name }}
+          - group: fabric-${{ environment.name }}-outputs
           - name: FABRIC_TENANT_ID
             value: $(ARM_TENANT_ID)
           - name: FABRIC_CLIENT_ID
@@ -109,7 +109,6 @@ stages:
             value: fabric_content/$(workspace_type)/$(pipeline_name)/terraform
           - name: ENV_NAME
             value: ${{ environment.name }}
-
         jobs:
           - job: deploy_terraform
             displayName: Terraform Stages
@@ -129,7 +128,6 @@ stages:
                     eirctl infra:init
                 env:
                   TF_BACKEND_INIT: key=$(tf_state_key)_$(ENV_NAME),container_name=$(tf_state_container),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
-
               # Configure the variables for Terraform
               - task: Bash@3
                 displayName: Terraform Variables
@@ -143,6 +141,7 @@ stages:
                   TF_VAR_bronze_lakehouse_id: $(storage_bronze_lakehouse_id)
                   TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
                   TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
+                  TF_VAR_environment: $(ENV_NAME)
 
               - ${{ if eq(parameters.destroy, true) }}:
                   - task: Bash@3

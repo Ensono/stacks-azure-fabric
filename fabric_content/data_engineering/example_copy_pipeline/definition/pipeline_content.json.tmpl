@@ -1,5 +1,5 @@
 {
-  "name": "example_ingest_pipeline",
+  "name": "example_copy_pipeline",
   "properties": {
     "description": "Example data pipeline with a copy activity",
     "activities": [
@@ -101,6 +101,48 @@
             }
           ]
         }
+      },
+      {
+        "name": "E-mail alert",
+        "type": "Office365Outlook",
+        "dependsOn": [
+            {
+                "activity": "ForEach Table",
+                "dependencyConditions": [
+                    "Failed"
+                ]
+            }
+        ],
+        "typeProperties": {
+            "inputs": {
+                "method": "post",
+                "path": "/v2/Mail",
+                "body": {
+                    "To": "{{ .data_team_email }}",
+                    "Subject": "@concat('FAILED: ', toUpper(pipeline().parameters.environment), ' | ', pipeline().PipelineName)",
+                    "Body": "<p>Trigger time: @{pipeline().TriggerTime}</p>\n<p>Run ID: @{pipeline().RunId}</p>\n<p>Workspace ID: @{pipeline().DataFactory}</p>",
+                    "Sensitivity": "",
+                    "Importance": "Normal",
+                    "From": ""
+                }
+            }
+        }
+      },
+      {
+        "name": "Fail",
+        "type": "Fail",
+        "dependsOn": [
+            {
+                "activity": "E-mail alert",
+                "dependencyConditions": [
+                    "Succeeded"
+                ]
+            }
+        ],
+        "typeProperties": {
+            "message": "Pipeline failed",
+            "errorCode": "500"
+        }
       }
     ],
     "parameters": {
@@ -114,6 +156,10 @@
           "year_2021.green_tripdata_2021",
           "year_2022.green_tripdata_2022"
         ]
+      },
+      "environment": {
+          "type": "string",
+          "defaultValue": "{{ .environment }}"
       }
     }
   }

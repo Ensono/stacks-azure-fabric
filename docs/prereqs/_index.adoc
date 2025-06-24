@@ -2,4 +2,8 @@
 
 In order to deploy the resources for Fabric, there are a number of pre-requisites that need to be met.
 
-include::prereq_*.adoc[]
+include::prereq_ado_variable_group.adoc[]
+
+include::prereq_service_principal.adoc[]
+
+include::prereq_tools.adoc[]

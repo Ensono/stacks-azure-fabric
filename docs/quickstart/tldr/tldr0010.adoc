@@ -27,7 +27,7 @@ $env:TF_BACKEND_INIT = "key=,storage_account_name=stacksstatehjfis,resource_grou
 
 # Configure the envrionments that are required
 $env:TF_VAR_environments = "dev:false"
-$env:TF_VAR_env_types = "engineering"
+$env:TF_VAR_ws_types = "engineering"
 
 # Define a comma seperated list of the permissions that are required
 # <upn>:<capacity_admin>:<guid>:<workspace_permission>

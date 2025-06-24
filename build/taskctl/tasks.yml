@@ -60,4 +60,4 @@ tasks:
     description: Build Docs for Project
     context: docs
     command: |
-      Build-Documentation -Config /eirctl/build/config/docs.json -Type pdf
+      Build-Documentation -Config /eirctl/build/config/docs.json

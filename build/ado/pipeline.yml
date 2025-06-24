@@ -6,6 +6,11 @@ parameters:
     default: true
     displayName: Deploy Infrastructure
 
+  - name: deploy_all_environments
+    type: boolean
+    default: true
+    displayName: Deploy All Environments
+
   - name: destroy_infrastructure
     type: boolean
     default: false
@@ -13,22 +18,36 @@ parameters:
 
   - name: generate_docs
     type: boolean
-    default: false
+    default: true
     displayName: Generate Documentation
 
-  - name: sub_types
-    displayName: Subscription Types
+  - name: environments
+    displayName: List of environments
     type: object
     default:
-      - nonprod
-
-  - name: environments
-    displayName: Environments
-    default: " "
-
-  - name: env_types
-    displayName: Environment Types
-    default: " "
+      - name: test
+        type: nonprod
+        dependsOn: prelim
+        condition: succeeded()
+        credentials_group: azure_sp_creds
+        definition: test:false
+        is_prod_subscription: "false"
+      - name: uat
+        type: nonprod
+        dependsOn: prelim
+        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
+        credentials_group: azure_sp_creds
+        definition: uat:false
+        is_prod_subscription: "false"
+      - name: prod
+        type: prod
+        dependsOn:
+          - prelim
+          - uat
+        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
+        credentials_group: azure_sp_creds
+        definition: prod:true
+        is_prod_subscription: "true"
 
   - name: debug
     displayName: Enable Debugging
@@ -42,6 +61,7 @@ trigger:
   paths:
     include:
       - "build/*"
+      - "deploy/*"
 
 pr:
   branches:
@@ -53,6 +73,8 @@ pr:
 
 variables:
   - template: variables.yml
+  - name: deploy_all_environments
+    value: ${{ parameters.deploy_all_environments }}
 
 stages:
   - stage: prelim
@@ -110,96 +132,97 @@ stages:
               pathToPublish: $(Build.SourcesDirectory)/outputs/docs
               artifactName: docs
 
-  - ${{ each sub in parameters.sub_types }}:
-      - stage: infrastructure
-        displayName: Infrastructure - ${{ sub }}
-        dependsOn:
-          - prelim
-        variables:
-          - group: azure-sp-creds
-          - group: azure-fabric-${{ sub }}-permissions
-          - name: FABRIC_TENANT_ID
-            value: $(ARM_TENANT_ID)
-          - name: FABRIC_CLIENT_ID
-            value: $(ARM_CLIENT_ID)
-          - name: FABRIC_CLIENT_SECRET
-            value: $(ARM_CLIENT_SECRET)
-          - name: TF_FILE_LOCATION
-            value: deploy/terraform
-          - name: ENV_NAME
-            value: ${{ sub }}
+  - ${{ each env in parameters.environments }}:
+    - stage: ${{ env.name }}
+      displayName: Infrastructure - ${{ env.name }}
+      condition: ${{ env.condition }}
+      dependsOn:
+        - ${{ env.dependsOn }}
+      variables:
+        - group: ${{ env.credentials_group }}
+        - group: azure-fabric-${{ env.type }}-permissions
+        - name: FABRIC_TENANT_ID
+          value: $(ARM_TENANT_ID)
+        - name: FABRIC_CLIENT_ID
+          value: $(ARM_CLIENT_ID)
+        - name: FABRIC_CLIENT_SECRET
+          value: $(ARM_CLIENT_SECRET)
+        - name: TF_FILE_LOCATION
+          value: deploy/terraform
+        - name: ENV_NAME
+          value: ${{ env.name }}
 
-        jobs:
-          - job: deploy_infra
-            displayName: Terraform Stages
-            pool:
-              vmImage: $(pool_vm_image)
+      jobs:
+        - job: deploy_infra
+          displayName: Deploy ${{ env.name }}
+          pool:
+            vmImage: $(pool_vm_image)
 
-            steps:
-              - template: templates/setup.yml
-                parameters:
-                  EirctlVersion: $(EirctlVersion)
+          steps:
+            - template: templates/setup.yml
+              parameters:
+                EirctlVersion: $(EirctlVersion)
 
-              # initialise Terraform with the correct backend
-              - task: Bash@3
-                displayName: Terraform Init
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:init
-                env:
-                  TF_BACKEND_INIT: key=fabric_${{ sub }},container_name=tfstate,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
+            # initialise Terraform with the correct backend
+            - task: Bash@3
+              displayName: Terraform Init
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:init
+              env:
+                TF_BACKEND_INIT: key=fabric_${{ env.type }},container_name=tfstate,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg)
 
-              # Configure the variables for Terraform
-              - task: Bash@3
-                displayName: Terraform Variables
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:vars
-                env:
-                  TF_VAR_create_fabric_capacity: true
-                  TF_VAR_permissions: $(fabric_permissions)
-                  ${{ if ne(trim(parameters.environments), '')}}:
-                    TF_VAR_environments: $(environments)
-                  ${{ if ne(trim(parameters.env_types), '')}}:
-                    TF_VAR_env_types: $(env_types)
+            # Configure the variables for Terraform
+            - task: Bash@3
+              displayName: Terraform Variables
+              inputs:
+                targetType: inline
+                script: |
+                  eirctl infra:vars
+              env:
+                TF_VAR_create_fabric_capacity: true
+                TF_VAR_permissions: $(fabric_permissions)
+                TF_VAR_ado_org_service_url: $(ado_org_service_url)
+                TF_VAR_ado_project_name: $(ado_project_name)
+                TF_VAR_is_prod_subscription: ${{ env.is_prod_subscription }}
+                TF_VAR_environments: ${{ env.definition }}
 
-              # If the debug option has been enabled, upload the vars file that has been created
-              - ${{ if eq(parameters.debug, true) }}:
-                  - template: templates/upload.yml
-                    parameters:
-                      path: $(Build.SourcesDirectory)/deploy/terraform/terraform.tfvars
-                      stage: infra
+            # If the debug option has been enabled, upload the vars file that has been created
+            - ${{ if eq(parameters.debug, true) }}:
+                - template: templates/upload.yml
+                  parameters:
+                    path: $(Build.SourcesDirectory)/deploy/terraform/terraform.tfvars
+                    stage: infra
 
-              - ${{ if eq(parameters.destroy_infrastructure, true) }}:
-                  - task: Bash@3
-                    displayName: Terraform Destroy Plan
-                    inputs:
-                      targetType: inline
-                      script: |
-                        eirctl infra:destroy:plan
+            - ${{ if eq(parameters.destroy_infrastructure, true) }}:
+                - task: Bash@3
+                  displayName: Terraform Destroy Plan
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:destroy:plan
 
-                  - task: Bash@3
-                    displayName: Terraform Destroy Apply
-                    inputs:
-                      targetType: inline
-                      script: |
-                        eirctl infra:destroy:apply
+                - task: Bash@3
+                  displayName: Terraform Destroy Apply
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:destroy:apply
 
-              - ${{ if eq(parameters.deploy_infrastructure, true) }}:
-                  - task: Bash@3
-                    displayName: Terraform Plan
-                    inputs:
-                      targetType: inline
-                      script: |
-                        eirctl infra:plan
-                    env:
-                      TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
+            - ${{ if eq(parameters.deploy_infrastructure, true) }}:
+                - task: Bash@3
+                  displayName: Terraform Plan
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:plan
+                  env:
+                    TF_BACKEND_PLAN: -input=false,-out=deploy.tfplan
 
-                  - task: Bash@3
-                    displayName: Terraform Apply
-                    inputs:
-                      targetType: inline
-                      script: |
-                        eirctl infra:apply
+                - task: Bash@3
+                  displayName: Terraform Apply
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:apply

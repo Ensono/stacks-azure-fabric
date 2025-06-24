@@ -1,5 +1,5 @@
-resource "fabric_data_pipeline" "example_ingest_pipeline" {
-  display_name = "example_ingest_pipeline"
+resource "fabric_data_pipeline" "example_copy_pipeline" {
+  display_name = "example_copy_pipeline"
   description  = "Example data pipeline with a copy activity"
   workspace_id = var.engineering_workspace_id
   format       = "Default"
@@ -11,6 +11,8 @@ resource "fabric_data_pipeline" "example_ingest_pipeline" {
           bronze_lakehouse_id = var.bronze_lakehouse_id
           silver_workspace_id = var.silver_workspace_id
           silver_lakehouse_id = var.silver_lakehouse_id
+          environment = var.environment
+          data_team_email = var.data_team_email
         }
     }
   }
