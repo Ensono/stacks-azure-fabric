@@ -14,3 +14,7 @@ output "regions" {
 output "computed_outputs" {
   value = local.outputs
 }
+
+output "encoded_outputs" {
+  value = local.encoded_outputs
+}
