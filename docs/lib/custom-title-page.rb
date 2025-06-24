@@ -19,4 +19,5 @@ begin
       end
     end
   end
+rescue
 end
