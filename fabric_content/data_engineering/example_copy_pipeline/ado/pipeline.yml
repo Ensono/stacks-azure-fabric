@@ -98,7 +98,7 @@ stages:
       condition: ${{ environment.condition }}
       variables:
         - group: azure-sp-creds
-        - group: fabric_${{ environment.name }}
+        - group: fabric-${{ environment.name }}-outputs
         - name: FABRIC_TENANT_ID
           value: $(ARM_TENANT_ID)
         - name: FABRIC_CLIENT_ID
@@ -146,31 +146,31 @@ stages:
                 TF_VAR_environment: $(ENV_NAME)
 
             - ${{ if eq(parameters.destroy, true) }}:
-              - task: Bash@3
-                displayName: Terraform Destroy Plan
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:destroy:plan
+                - task: Bash@3
+                  displayName: Terraform Destroy Plan
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:destroy:plan
 
-              - task: Bash@3
-                displayName: Terraform Destroy Apply
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:destroy:apply
+                - task: Bash@3
+                  displayName: Terraform Destroy Apply
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:destroy:apply
 
             - ${{ if eq(parameters.deploy, true) }}:
-              - task: Bash@3
-                displayName: Terraform Plan
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:plan
+                - task: Bash@3
+                  displayName: Terraform Plan
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:plan
 
-              - task: Bash@3
-                displayName: Terraform Apply
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:apply
+                - task: Bash@3
+                  displayName: Terraform Apply
+                  inputs:
+                    targetType: inline
+                    script: |
+                      eirctl infra:apply

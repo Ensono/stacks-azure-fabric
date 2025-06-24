@@ -120,7 +120,7 @@ stages:
       condition: ${{ environment.condition }}
       variables:
         - group: azure-sp-creds
-        - group: fabric_${{ environment.name }}
+        - group: fabric-${{ environment.name }}-outputs
         - name: FABRIC_TENANT_ID
           value: $(ARM_TENANT_ID)
         - name: FABRIC_CLIENT_ID
@@ -177,8 +177,8 @@ stages:
                 TF_VAR_engineering_lakehouse_id: $(engineering_lakehouse_id)
                 TF_VAR_silver_workspace_id: $(storage_silver_workspace_id)
                 TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
-                TF_VAR_gold_workspace_id: $(storage_gold_example_workspace_id)
-                TF_VAR_gold_lakehouse_id: $(storage_gold_example_lakehouse_id)
+                TF_VAR_gold_workspace_id: $(storage_goldexample_workspace_id)
+                TF_VAR_gold_lakehouse_id: $(storage_goldexample_lakehouse_id)
                 TF_VAR_environment: $(ENV_NAME)
 
             - ${{ if eq(parameters.destroy, true) }}:
@@ -213,6 +213,7 @@ stages:
 
         - job: run_e2e_tests
           displayName: Run E2E Tests
+          dependsOn: deploy_terraform
           pool:
             vmImage: $(pool_vm_image)
 
@@ -227,5 +228,5 @@ stages:
                 fabricClientId: $(ARM_CLIENT_ID)
                 fabricClientSecret: $(ARM_CLIENT_SECRET)
                 engineeringWorkspaceId: $(engineering_workspace_id)
-                goldWorkspaceId: $(storage_gold_example_workspace_id)
-                goldLakehouseId: $(storage_gold_example_lakehouse_id)
+                goldWorkspaceId: $(storage_goldexample_workspace_id)
+                goldLakehouseId: $(storage_goldexample_lakehouse_id)

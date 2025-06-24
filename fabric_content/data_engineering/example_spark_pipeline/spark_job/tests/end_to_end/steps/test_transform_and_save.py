@@ -93,6 +93,7 @@ def get_pipeline_id_by_name(items: list[dict], pipeline_name: str) -> str:
     Raises:
         ValueError: If the pipeline is not found in the workspace items.
     """
+    print(f"Items: {items}")
     for item in items:
         if item.get("displayName") == pipeline_name and item.get("type") == "DataPipeline":
             return item.get("id")
@@ -107,6 +108,7 @@ def trigger_fabric_pipeline(test_context: dict[str, Any], pipeline_name: str, wo
     """
     workspace_id = get_workspace_id_by_name(workspace_name)
     # Get all items in the specified workspace
+    print(f"🔍 Fetching items from workspace {workspace_name} ({workspace_id}) to find pipeline {pipeline_name}")
     url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items"
     headers = fabric_helper.get_auth_header()
     response = requests.get(url, headers=headers)
