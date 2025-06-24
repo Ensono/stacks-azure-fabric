@@ -30,6 +30,7 @@ resource "fabric_data_pipeline" "example_spark_pipeline" {
         sparkJobDefinitionId = fabric_spark_job_definition.example_spark_job.id
         engineeringWorkspaceId = var.engineering_workspace_id
         environment = var.environment
+        data_team_email = var.data_team_email
       }
     }
   }

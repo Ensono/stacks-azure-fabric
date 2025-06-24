@@ -36,6 +36,11 @@ variable "engineering_workspace_id" {
 
  variable "environment" {
   type = string
-  default = ""
   description = "The environment name (e.g., test, uat, prod)."
+}
+
+variable "data_team_email" {
+  type        = string
+  description = "List of Email Addresses to send Data Alerts to."
+  default     = "paulina.motyl@ensono.com; jose.carrera@ensono.com; Andy.Durkan@Ensono.com"
 }
