@@ -27,3 +27,14 @@ variable "silver_lakehouse_id" {
   default = ""
   description = "The silver lakehouse id"
 }
+
+variable "environment" {
+  type = string
+  description = "The environment name (e.g., test, uat, prod)."
+}
+
+variable "data_team_email" {
+  type        = string
+  description = "List of Email Addresses to send Data Alerts to."
+  default     = "example@example.com; example2@example.com"
+}
