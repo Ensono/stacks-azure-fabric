@@ -12,6 +12,7 @@ resource "fabric_data_pipeline" "example_copy_pipeline" {
           silver_workspace_id = var.silver_workspace_id
           silver_lakehouse_id = var.silver_lakehouse_id
           environment = var.environment
+          data_team_email = var.data_team_email
         }
     }
   }

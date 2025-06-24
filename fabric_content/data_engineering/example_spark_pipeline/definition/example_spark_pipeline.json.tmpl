@@ -34,7 +34,7 @@
                         "method": "post",
                         "path": "/v2/Mail",
                         "body": {
-                            "To": "paulina.motyl@ensono.com; jose.carrera@ensono.com; Andy.Durkan@Ensono.com",
+                            "To": "{{ .data_team_email }}",
                             "Subject": "@concat('FAILED: ', toUpper(pipeline().parameters.environment), ' | ', pipeline().PipelineName)",
                             "Body": "<p>Trigger time: @{pipeline().TriggerTime}</p>\n<p>Run ID: @{pipeline().RunId}</p>\n<p>Workspace ID: @{pipeline().DataFactory}</p>",
                             "Sensitivity": "",
