@@ -100,6 +100,7 @@ Each example pipeline directory (e.g., [`example_copy_pipeline`](./example_copy_
 ### 8. Test and Iterate in the Test Environment
 
 - After the PR pipeline completes, verify the deployment in the test Fabric workspace.
+- If the pipeline contains an **Office 365 Outlook** or **Teams** activity, you need to manually sign in to an Office account the first time the pipeline is deployed to a workspace, as explained in [Add an Office 365 Outlook activity to your pipeline](https://learn.microsoft.com/en-us/fabric/data-factory/tutorial-end-to-end-integration#add-an-office-365-outlook-activity-to-your-pipeline).
 - If further changes are needed, update your branch and the PR; the pipeline will re-run.
 
 ### 9. Clean Up
