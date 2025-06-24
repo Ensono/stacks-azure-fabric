@@ -36,5 +36,5 @@ variable "environment" {
 variable "data_team_email" {
   type        = string
   description = "List of Email Addresses to send Data Alerts to."
-  default     = "paulina.motyl@ensono.com; jose.carrera@ensono.com; Andy.Durkan@Ensono.com"
+  default     = "example@example.com; example2@example.com"
 }
