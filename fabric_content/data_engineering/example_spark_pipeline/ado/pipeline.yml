@@ -179,6 +179,7 @@ stages:
                 TF_VAR_silver_lakehouse_id: $(storage_silver_lakehouse_id)
                 TF_VAR_gold_workspace_id: $(storage_gold_example_workspace_id)
                 TF_VAR_gold_lakehouse_id: $(storage_gold_example_lakehouse_id)
+                TF_VAR_environment: $(ENV_NAME)
 
             - ${{ if eq(parameters.destroy, true) }}:
               - task: Bash@3
