@@ -1,3 +1,4 @@
+ifndef::imagesdir[:imagesdir: ../]
 :subscription_id: 70f23d63-33fc-43bd-9423-191b8dcc0b65
 
 === Service Principal

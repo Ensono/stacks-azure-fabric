@@ -1,3 +1,5 @@
+ifndef::imagesdir[:imagesdir: ../]
+
 === Fabric Capacity GUID
 
 When creating a Fabric Workspace, the GUID of the Fabric Capacity is required. This is not exposed by the `azurerm_fabric_capacity` resource as and output.

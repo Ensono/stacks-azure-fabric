@@ -15,7 +15,7 @@
     ]
   },
   "attributes": {
-    "asciidoctor": ["base_doc_dir=/eirctl/docs"]
+    "asciidoctor": ["base_doc_dir=/eirctl/docs", "imagesdir=''"]
   },
   "pdf": {
     "attributes": {

@@ -1,3 +1,5 @@
+ifndef::imagesdir[:imagesdir: ../]
+
 === Fabric Capacity Adminstrators
 
 Capacity Administrators are assigned using the User Principal Name (UPN) of the user, which is in the format of an email address, e.g. <name>@<domain>.

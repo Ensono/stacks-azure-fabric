@@ -1,3 +1,5 @@
+ifndef::imagesdir[:imagesdir: ../]
+
 === Workspace creation
 
 The Service Principal that is being used to deploy the resources, needs to have the permission enabled to create workspaces.
