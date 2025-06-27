@@ -33,6 +33,11 @@ $env:TF_VAR_ws_types = "engineering"
 # <upn>:<capacity_admin>:<guid>:<workspace_permission>
 $env:TF_VAR_permissions = ""
 
+$env:TF_VAR_ado_org_service_url = "https://dev.azure.com/ensonodigitaluk"
+$env:TF_VAR_ado_project_name = "stacks"
+$env:TF_VAR_create_fabric_capacity = "true"
+$env:TF_VAR_company_name = "Turtle"
+$env:TF_VAR_create_env_files = "true"
 ----
 
 Once the script has been created, run it, e.g. `. ./local/envvars.ps1`.
