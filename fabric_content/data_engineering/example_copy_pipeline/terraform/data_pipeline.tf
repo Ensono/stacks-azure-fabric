@@ -7,13 +7,13 @@ resource "fabric_data_pipeline" "example_copy_pipeline" {
     "pipeline-content.json" = {
       source = "${path.module}/../definition/pipeline_content.json.tmpl",
       tokens = {
-          bronze_workspace_id = var.bronze_workspace_id
-          bronze_lakehouse_id = var.bronze_lakehouse_id
-          silver_workspace_id = var.silver_workspace_id
-          silver_lakehouse_id = var.silver_lakehouse_id
-          environment = var.environment
-          data_team_email = var.data_team_email
-        }
+        bronze_workspace_id = var.bronze_workspace_id
+        bronze_lakehouse_id = var.bronze_lakehouse_id
+        silver_workspace_id = var.silver_workspace_id
+        silver_lakehouse_id = var.silver_lakehouse_id
+        environment         = var.environment
+        data_team_email     = var.data_team_email
+      }
     }
   }
 }

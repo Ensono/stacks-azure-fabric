@@ -1,2 +1,2 @@
 create_fabric_capacity = true
-fabric_sku = "F2"
+fabric_sku             = "F2"
