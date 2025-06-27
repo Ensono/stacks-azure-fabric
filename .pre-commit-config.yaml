@@ -16,26 +16,22 @@ repos:
     hooks:
       - id: yamllint
         args: ["-c=yamllint.conf"]
-        exclude: de_workloads/ingest/ingest_azure_sql_example/de-ingest-ado-pipeline.yml
   - repo: https://github.com/pycqa/flake8
-    rev: "7.2.0"
+    rev: "7.3.0"
     hooks:
       - id: flake8
-        exclude: |
-          (?x)^(
-              .venv|
-              .git
-          )$
-        args:
-          - "--max-line-length=120"
+        files: ^fabric_content/
+        args: ["--config=fabric_content/.flake8"]
   - repo: https://github.com/psf/black
     rev: 25.1.0
     hooks:
       - id: black
-        language_version: python3.10
+        files: ^fabric_content/
+        args: ["--config=fabric_content/pyproject.toml"]
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.3.0
     hooks:
       - id: pydocstyle
+        files: ^fabric_content/
         args: ["--config=fabric_content/pyproject.toml"]
         additional_dependencies: ["tomli"]
