@@ -23,13 +23,13 @@ variable "silver_workspace_id" {
 }
 
 variable "silver_lakehouse_id" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "The silver lakehouse id"
 }
 
 variable "environment" {
-  type = string
+  type        = string
   description = "The environment name (e.g., test, uat, prod)."
 }
 
