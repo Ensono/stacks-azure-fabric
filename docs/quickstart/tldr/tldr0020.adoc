@@ -4,6 +4,7 @@ Plan and apply the Terraform deployment:
 
 [source,powershell]
 ----
+eirctl infra:init
 eirctl infra:plan
 eirctl infra:apply
 ----
