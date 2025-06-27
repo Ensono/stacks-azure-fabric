@@ -45,10 +45,6 @@ exclude = '''
 )/
 '''
 
-[tool.flake8]
-max_line_length = 120
-exclude = ".venv,.git"
-
 [tool.pydocstyle]
 convention = "google"
 add_ignore = "D100,D101,D104"

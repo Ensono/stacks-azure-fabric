@@ -6,42 +6,55 @@ This repo holds the infrastructure and code required for deploying Azure Fabric 
 
 This project uses [pre-commit](https://pre-commit.com/) to automate code quality checks and formatting.
 
-### Pre-commit hook installation
+The checks for the project are defined in [.pre-commit-config.yaml](/.pre-commit-config.yaml).
+
+[Make commands](./Makefile) have been provided to simplify setup and usage.
+
+### Pre-commit setup
 
 To ensure pre-commit checks run automatically on every `git commit`, you must install the git hooks after cloning the repository:
 
+1. Install the `pre-commit` CLI (if not already installed):
+
+   ```sh
+   pip install --user pre-commit
+   ```
+
+2. Install the Git hooks (from the root of the repo):
+
+   ```sh
+   make pre-commit-install
+   ```
+
+You only need to do this once. After that, pre-commit will run automatically on every commit.
+
+### Run pre-commit checks manually
+
+You can run pre-commit hooks manually at any time:
+
+- **Run hooks only on staged files**:
+
+  ```sh
+  make pre-commit-run
+  ```
+
+- **Run all hooks on all files** (useful after updating hooks or dependencies):
+
+  ```sh
+  make pre-commit-all
+  ```
+
+### Updating Hook Versions
+
+To update pre-commit hooks to their latest versions (defined in `.pre-commit-config.yaml`):
+
 ```sh
-poetry run pre-commit install
+make pre-commit-update
 ```
 
-You only need to do this once per clone. After that, pre-commit will run automatically on every commit.
-
-### How to run pre-commit checks
-
-- **Run all checks on all files:**
-  ```sh
-  poetry run pre-commit run --all-files
-  ```
-- **Run checks only on staged files (default on commit):**
-  ```sh
-  poetry run pre-commit run
-  ```
-- **Run a specific hook:**
-  ```sh
-  poetry run pre-commit run <hook-id> --all-files
-  ```
-  Replace `<hook-id>` with the name of the hook (e.g., `black`, `flake8`).
-
-### Common parameters
-- `--all-files` : Run the hook(s) on all files, not just changed ones.
-- `-v` or `--verbose` : Show detailed output.
-- `--show-diff-on-failure` : Show a diff when a hook fails and can fix the file.
-- `--hook-stage <stage>` : Run hooks for a specific git stage (e.g., `commit`, `push`).
+Then commit any changes made to the config file.
 
 ### Notes
+
 - Hooks like `black` and `end-of-file-fixer` will auto-fix issues.
 - Linters like `flake8` and `yamllint` will only report issues for you to fix manually.
-- You can update hooks to their latest versions with:
-  ```sh
-  poetry run pre-commit autoupdate
-  ```
