@@ -124,6 +124,12 @@ foreach ($param in $data.default.credentials.$Cloud) {
 $rendered = Render-Data($credentials)
 $credfile = "$PSScriptRoot/../../{1}/credentials.{0}" -f $config[$Shell].extension, $Target
 
+# Ensure that the parent path exists
+$parent_dir = Split-Path -Path $credfile -Parent
+if (!(Test-Path -Path $parent_dir)) {
+    New-Item -Path $parent_dir -ItemType Directory | Out-Null
+}
+
 Write-Information ("Writing credentials file: " -f $credfile)
 Set-Content -Path $credfile -Value ($rendered -join "`n")
 

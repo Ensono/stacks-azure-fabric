@@ -1,0 +1,34 @@
+ifndef::imagesdir[:imagesdir: ../]
+
+=== Clone repository
+
+In order to deploy the infrastructure for Azure Fabric, the repository containing the Terraform files needs to be cloned to the local workstation.
+
+[source,bash]
+----
+# Create working directory
+mkdir ~/working
+cd ~/working
+
+# Clone the respository
+git clone https://github.com/ensono/stacks-azure-fabric.git
+----
+
+.Cloning the repository
+image::images/tldr_clone_repo.png[]
+
+
+[IMPORTANT]
+.Working from a branch
+====
+Sometimes new updates mean that things have to be tested from a branch rather than the trunk. To do this, the branch has to be fetched from the remote and and then checked out.
+
+[source,bash]
+----
+# Fetch the branch
+git fetch origin feat/docs-update
+
+# Switch to the branch
+got checkout feat/docs-update
+----
+====
