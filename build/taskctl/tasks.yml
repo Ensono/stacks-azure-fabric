@@ -17,6 +17,18 @@ tasks:
     command:
       - Invoke-Terraform -Format -Path $env:TF_FILE_LOCATION -Debug
 
+  local:envfile:powershell:
+    context: powershell
+    description: Create environment file for local workstation
+    command: |
+      /eirctl/build/scripts/Write-Envfile.ps1 -Shell powershell
+
+  local:envfile:bash:
+    context: powershell
+    description: Create environment file for local workstation
+    command: |
+      /eirctl/build/scripts/Write-Envfile.ps1 -Shell bash
+
   # Infrastructure tasks
   infra:init:
     context: powershell
