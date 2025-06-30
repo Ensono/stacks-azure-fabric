@@ -17,6 +17,10 @@ default:
 
           key=,container_name=,storage_account_name=,resource_group_name=
 
+    - name: ENV_NAME
+      description: This is the name of the environment being deployed to. It is used by Terarform to set the workspace in the state
+      default: test
+
   credentials:
     azure:
       - name: ARM_CLIENT_ID

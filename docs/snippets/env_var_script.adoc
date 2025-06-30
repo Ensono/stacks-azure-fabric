@@ -20,6 +20,9 @@ $env:TF_FILE_LOCATION = "/eirctl/deploy/terraform/infra"
 #
 $env:TF_BACKEND_INIT = ""
 
+# This is the name of the environment being deployed to. It is used by Terarform to set the workspace in the state
+$env:ENV_NAME = "test"
+
 # The URL of the Azure DevOps organization service
 $env:TF_VAR_ado_org_service_url = ""
 

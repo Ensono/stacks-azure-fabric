@@ -1,5 +1,6 @@
 ifndef::imagesdir[:imagesdir: ../]
 
+[#qs_clone_repo]
 === Clone repository
 
 In order to deploy the infrastructure for Azure Fabric, the repository containing the Terraform files needs to be cloned to the local workstation.
