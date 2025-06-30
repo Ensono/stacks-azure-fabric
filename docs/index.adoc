@@ -24,3 +24,7 @@ include::troubleshooting/_index.adoc[]
 <<<
 
 include::enchancements/_index.adoc[]
+
+<<<
+
+include::glossary.adoc[]

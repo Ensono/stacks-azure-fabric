@@ -1,0 +1,13 @@
+==== TLDR{paddedcounter:tldr[]} - Clone Repository
+
+In order to deploy the infrastructure for Azure Fabric, the repository containing the Terraform files needs to be cloned to the local workstation.
+
+[source,bash]
+----
+# Create working directory
+mkdir ~/working
+cd ~/working
+
+# Clone the respository
+git clone https://github.com/ensono/stacks-azure-fabric.git
+----

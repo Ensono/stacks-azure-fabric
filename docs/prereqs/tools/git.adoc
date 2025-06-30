@@ -1,0 +1,6 @@
+[#tools_git]
+==== Git
+
+URL: https://git-scm.com/downloads
+
+The Git application is used to manage the source code of the repository. It used to track changes, collaborate with others, and manage different versions of the code.
