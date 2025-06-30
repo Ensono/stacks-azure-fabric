@@ -9,3 +9,5 @@ include::tldr/_index.adoc[]
 include::clone_repo.adoc[]
 
 include::setting_env_vars.adoc[]
+
+include::deployment.adoc[]
