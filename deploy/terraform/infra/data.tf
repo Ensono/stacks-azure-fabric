@@ -7,6 +7,7 @@ data "azurerm_client_config" "current" {}
 # is a prod or nonprod sub or it should be overridden
 data "azurerm_subscription" "current" {}
 data "fabric_capacity" "afc" {
+  count        = var.create_fabric_capacity ? 0 : 1
   display_name = local.fabric_capacity_name
 }
 
