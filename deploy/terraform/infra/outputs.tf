@@ -32,5 +32,5 @@ output "workspace_roles" {
 }
 
 output "fabric_capacity" {
-  value = var.create_fabric_capacity ? azurerm_fabric_capacity.afc[0] : data.fabric_capacity.afc[0]
+  value = data.fabric_capacity.afc
 }
