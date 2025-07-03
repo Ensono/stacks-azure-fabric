@@ -72,4 +72,5 @@ tasks:
     description: Build Docs for Project
     context: docs
     command: |
+      gem install rqrcode:2.2.0
       Build-Documentation -Config /eirctl/build/config/docs.json

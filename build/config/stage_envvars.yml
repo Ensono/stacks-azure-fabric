@@ -21,6 +21,15 @@ default:
       description: This is the name of the environment being deployed to. It is used by Terarform to set the workspace in the state
       default: test
 
+    - name: FABRIC_TENANT_ID
+      default: ${env:ARM_TENANT_ID}
+
+    - name: FABRIC_CLIENT_ID
+      default: ${env:ARM_CLIENT_ID}
+
+    - name: FABRIC_CLIENT_SECRET
+      default: ${env:ARM_CLIENT_SECRET}
+
   credentials:
     azure:
       - name: ARM_CLIENT_ID
@@ -40,7 +49,10 @@ stages:
       - description: Name of the existing Fabric Capacity to look up
         required: true
         name: TF_VAR_fabric_capacity_name
-      - description: Comma separated list of users to be added as administrators to the fabric capacity
+      - description: |
+          Comma separated list of users to be added as administrators to the fabric capacity
+
+          This uses a specific format to
         required: true
         name: TF_VAR_permissions
       - description: "The name of the company, used for naming resources (Default: ensono)"
@@ -58,7 +70,17 @@ stages:
       - description: "If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod (Default: False)"
         required: false
         name: TF_VAR_deploy_all_environments
-      - description: "List of environments that need to be created (Default: test:false,uat:false,prod:true)"
+      - description: |
+          List of environments that need to be created (Default: test:false,uat:false,prod:true)
+
+          The format of the list is as follows:
+
+            <env_name>:<is_prod?>
+
+          This states the name of the environment and whether it is a production environment or not. This is used to determine
+          if the env should be deployed to the current subscription or not. It can be overridden so that all envs are deployed
+          by using the "TF_VAR_deploy_all_environments" variable.
+
         required: false
         name: TF_VAR_environments
       - description: "The SKU of the fabric capacity to be created (Default: F2)"

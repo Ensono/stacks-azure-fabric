@@ -99,6 +99,20 @@ stages:
               script: |
                 eirctl build:number
 
+          - task: Bash@3
+            displayName: Perform YAML linting
+            inputs:
+              targetType: inline
+              script: |
+                eirctl lint:yaml
+
+          - task: Bash@3
+            displayName: Perform Terraform format check
+            inputs:
+              targetType: inline
+              script: |
+                eirctl lint:terraform:format
+
   - stage: docs
     displayName: Documentation
     condition: and(succeeded(), eq(${{ parameters.generate_docs }}, true))
