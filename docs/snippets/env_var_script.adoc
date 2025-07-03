@@ -1,6 +1,6 @@
 
 
-[source,powershell]
+[source,powershell,linenums]
 ----
 . (Split-Path -Parent -Path $PSScriptRoot)/credentials.ps1
 # The stage of Terraform that is being deployed by this pipeline
@@ -32,7 +32,15 @@ $env:TF_VAR_ado_project_name = ""
 # Name of the existing Fabric Capacity to look up
 $env:TF_VAR_fabric_capacity_name = ""
 
-# Comma separated list of users to be added as administrators to the fabric capacity
+# List of environments that need to be created (Default: test:false,uat:false,prod:true)
+#
+# The format of the list is as follows:
+#
+# <env_name>:<is_prod?>
+#
+# This states the name of the environment and whether it is a production environment or not. This is used to determine
+# if the env should be deployed to the current subscription or not. It can be overridden so that all envs are deployed
+# by using the "TF_VAR_deploy_all_environments" variable.
 $env:TF_VAR_permissions = ""
 
 # The name of the company, used for naming resources (Default: ensono)
