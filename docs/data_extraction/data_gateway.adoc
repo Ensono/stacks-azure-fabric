@@ -1,0 +1,42 @@
+ifndef::imagesdir[:imagesdir: ../]
+
+:whatisdg_url: https://learn.microsoft.com/en-us/data-integration/gateway/service-gateway-onprem
+:installdg_url: https://learn.microsoft.com/en-us/data-integration/gateway/service-gateway-install
+
+=== Data Gateway
+
+When there is no direct connection from the on-premises data source to Azure, a data gateway can be used to allow Azure Fabric access to the data. This is a product from Microsoft and is installed on a Windows machine.
+
+image::images/on-premises-data-gateway.png[width=400,align="center"]
+
+The following pages provide information about how the data gateway works and how to configure it.
+
+[cols="1a,4",grid=none,frame=none,options="noheader"]
+|====
+^| qrcode::{whatisdg_url}[ydim=2,xdim=2]
+
+image::images/ms-learn.png[width=100]
+
+|
+{whatisdg_url}
+
+**What is an on-premises data gateway?**
+
+Learn the basics about on-premises data gateways, which enable quick and secure data transfer between on-premises data and several Microsoft cloud services.
+
+^| qrcode::{installdg_url}[ydim=2,xdim=2]
+
+image::images/ms-learn.png[width=100]
+
+|
+
+{installdg_url}
+
+**Install an on-premises data gateway**
+Learn how to install a gateway so you can connect to on-premises data.
+|====
+
+[IMPORTANT]
+====
+As this software needs to be installed on a machine that is running in the on-premise environment, Ensono will not be be able to install or support this for you. We will assist in information that is required to set the service up, but all installation and configuration will need to be performed by your team.
+====

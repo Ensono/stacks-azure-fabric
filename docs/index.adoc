@@ -19,6 +19,10 @@ include::deployment/_index.adoc[]
 
 <<<
 
+include::data_extraction/_index.adoc[]
+
+<<<
+
 include::troubleshooting/_index.adoc[]
 
 <<<

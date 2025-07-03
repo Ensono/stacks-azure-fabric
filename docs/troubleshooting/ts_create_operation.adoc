@@ -5,3 +5,5 @@ ifndef::imagesdir[:imagesdir: ../]
 The Service Principal that is being used to deploy the resources, needs to have the permission enabled to create workspaces.
 
 image::images/fabric-workspace-creation-error.png[]
+
+This is something that has to be done at the tenant level within PowerBI.
