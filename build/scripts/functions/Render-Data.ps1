@@ -2,7 +2,6 @@ function Render-Data($data) {
     $output = @()
 
     foreach ($key in $data.keys) {
-        $item = $data[$key]
 
         $prepend = ""
         if (!$item.required) {
@@ -17,8 +16,6 @@ function Render-Data($data) {
             }
         }
 
-
-
         # ensure that True and False are correctly cased
         $value = $item.value
         if ($value.tostring() -eq "True" -or $value.tostring() -eq "False") {
@@ -26,6 +23,20 @@ function Render-Data($data) {
         }
 
         $output += $config[$Shell].template -f $prepend, $key, $value
+
+        # if there is an alias set then set to the name of the variable
+        if (![String]::IsNullOrEmpty($data[$key].alias)) {
+
+            # Set the value for the alias, based on the shell or operating system
+            if ($Shell -eq "bash") {
+                $value = '${{{0}}}' -f $key
+            }
+            else {
+                $value = '${{env:{0}}}' -f $key
+            }
+
+            $output += $config[$Shell].template -f $prepend, $item.alias, $value
+        }
     }
 
     return $output

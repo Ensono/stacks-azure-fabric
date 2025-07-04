@@ -104,16 +104,23 @@ foreach ($var in $data.default.variables) {
 
 # Add in the credentials for the chosen platform
 foreach ($param in $data.default.credentials.$Cloud) {
+
     # create the item object for the data
     $item = [PSCustomObject]@{
         description = ""
         value       = ""
         required    = $true
+        alias       = ""
     }
 
     # check to see if the value already exists, and if so add that
     if (Test-Path -Path ("env:\{0}" -f $param.name)) {
         $item.value = (Get-Item -Path ("env:\{0}" -f $param.name)).Value
+    }
+
+    # Determine if an alias has been set for the variable
+    if (![String]::IsNullOrEmpty($param.alias)) {
+        $item.alias = $param.alias
     }
 
     $credentials[$param.name] = $item
@@ -122,8 +129,9 @@ foreach ($param in $data.default.credentials.$Cloud) {
 # Create a file for the credentials so that they only need to be set once and then
 # sourced in each file
 $rendered = Render-Data($credentials)
+$rendered
 $credfile = "$PSScriptRoot/../../{1}/credentials.{0}" -f $config[$Shell].extension, $Target
-
+exit
 # Ensure that the parent path exists
 $parent_dir = Split-Path -Path $credfile -Parent
 if (!(Test-Path -Path $parent_dir)) {
@@ -178,6 +186,8 @@ foreach ($itm in $data.stages) {
         if ($var.containskey("description")) {
             $data.description = $var.description
         }
+
+
 
         # set some default values
         $data.value = ""

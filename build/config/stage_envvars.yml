@@ -21,21 +21,15 @@ default:
       description: This is the name of the environment being deployed to. It is used by Terarform to set the workspace in the state
       default: test
 
-    - name: FABRIC_TENANT_ID
-      default: ${env:ARM_TENANT_ID}
-
-    - name: FABRIC_CLIENT_ID
-      default: ${env:ARM_CLIENT_ID}
-
-    - name: FABRIC_CLIENT_SECRET
-      default: ${env:ARM_CLIENT_SECRET}
-
   credentials:
     azure:
       - name: ARM_CLIENT_ID
+        alias: FABRIC_CLIENT_ID
       - name: ARM_CLIENT_SECRET
+        alias: FABRIC_CLIENT_SECRET
       - name: ARM_SUBSCRIPTION_ID
       - name: ARM_TENANT_ID
+        alias: FABRIC_TENANT_ID
 
 stages:
   - name: infra
