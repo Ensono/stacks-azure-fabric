@@ -162,7 +162,7 @@ stages:
           - name: FABRIC_CLIENT_SECRET
             value: $(ARM_CLIENT_SECRET)
           - name: TF_FILE_LOCATION
-            value: deploy/terraform
+            value: deploy/terraform/infra
           - name: ENV_NAME
             value: ${{ env.name }}
 
