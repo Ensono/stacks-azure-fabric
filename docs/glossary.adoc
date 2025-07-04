@@ -1,0 +1,8 @@
+== Glossary
+
+|===
+| Term | Expansion | Description
+| EIR | Ensono Independent Runner | A cross-platform tool that allows developers to run tasks in a containerized environment, facilitating builds and deployments.
+| IDE | Integrated Development Environment | A software application that provides comprehensive facilities to programmers for software development. It typically includes a code editor, debugger, and build automation tools.
+|
+|===

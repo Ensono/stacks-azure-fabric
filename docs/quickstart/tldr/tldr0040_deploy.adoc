@@ -1,0 +1,7 @@
+ifndef::imagesdir[:imagesdir: ../../]
+
+==== TLDR{paddedcounter:tldr[]} - Plan and Apply the Terraform files
+
+Plan and apply the Terraform deployment:
+
+image::images/tldr_code_terraform_deploy.png[width=400]

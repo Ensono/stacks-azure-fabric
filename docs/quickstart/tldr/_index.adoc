@@ -2,8 +2,12 @@
 
 The Tool Long; Didn't Read (TL;DR) section is a list of all the steps that are required with just the commands to run. Any description or comments will be linked in the relevant section.
 
-include::tldr005.adoc[]
+NOTE: This quickstart assumes that ancillary resource for the project, such as the Azure Storage Account for the Terarform State has already been created. The information about this is required when setting up the local workstation.
 
-include::tldr0010.adoc[]
+include::tldr0010_tools.adoc[]
 
-include::tldr0020.adoc[]
+include::tldr0020_clone_repo.adoc[]
+
+include::tldr0030_setup_local_workstation.adoc[]
+
+include::tldr0040_deploy.adoc[]

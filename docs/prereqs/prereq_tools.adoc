@@ -1,4 +1,14 @@
 [#tools]
 === Tools
 
-Ensure that the https://github.com/ensono/eirctl[Ensono Independent Runner Control Tool, `eirctl`] is installed.
+The following tools are required to deploy the resource for Azure Fabric. Due to the deployment and pipelines using the Ensono Independent Runner, a much smaller subset of tools are required. This is because the tools are included in the container images that are used to run the tasks.
+
+include::../snippets/toollist.adoc[]
+
+include::tools/git.adoc[]
+
+include::tools/docker_engine.adoc[]
+
+include::tools/eirctl.adoc[]
+
+include::tools/ide.adoc[]
