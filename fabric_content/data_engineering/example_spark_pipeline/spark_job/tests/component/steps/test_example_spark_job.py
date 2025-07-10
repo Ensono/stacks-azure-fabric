@@ -11,7 +11,7 @@ from chispa.dataframe_comparer import assert_df_equality
 
 from data_engineering.example_spark_pipeline.spark_job import example_spark_job
 
-scenarios("../features/transform_and_save.feature")
+scenarios("../features/example_spark_job.feature")
 
 
 @pytest.fixture(scope="session")
