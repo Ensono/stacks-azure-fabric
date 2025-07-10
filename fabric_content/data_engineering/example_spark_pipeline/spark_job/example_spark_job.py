@@ -37,15 +37,6 @@ def create_delta_table(spark: SparkSession, delta_table_path: str) -> None:
     logger.info(f"Delta table saved at {delta_table_path}")
 
 
-def transform_and_save(spark: SparkSession, source_table_path: str, target_table_path: str) -> None:
-    """Transforms the data from the source Delta table and saves it to the target Delta table."""
-    logger.info(f"Transforming data from {source_table_path} and saving to {target_table_path}...")
-    df = spark.read.format("delta").load(source_table_path)
-    df = df.groupBy(F.col("name")).agg(F.max(F.col("age")).alias("max_age"))
-    df.write.format("delta").mode("overwrite").save(target_table_path)
-    logger.info(f"Transformed data saved at {target_table_path}")
-
-
 def transform(df: DataFrame) -> DataFrame:
     """Transforms the input DataFrame by grouping by 'name' and calculating the maximum 'age'."""
     return df.groupBy(F.col("name")).agg(F.max(F.col("age")).alias("max_age"))
