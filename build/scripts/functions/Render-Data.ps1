@@ -4,20 +4,20 @@ function Render-Data($data) {
     foreach ($key in $data.keys) {
 
         $prepend = ""
-        if (!$item.required) {
+        if (!$data[$key].required) {
             $prepend = "# "
         }
 
         # get the description of the item
-        if (![string]::isNullOrEmpty($item.description)) {
-            $description = $item.description -split "`n"
+        if (![string]::isNullOrEmpty($data[$key].description)) {
+            $description = $data[$key].description -split "`n"
             foreach ($d in $description) {
                 $output += "# {0}" -f $d
             }
         }
 
         # ensure that True and False are correctly cased
-        $value = $item.value
+        $value = $data[$key].value
         if ($value.tostring() -eq "True" -or $value.tostring() -eq "False") {
             $value = $value.tostring().tolower()
         }

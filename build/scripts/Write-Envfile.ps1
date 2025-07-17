@@ -129,9 +129,9 @@ foreach ($param in $data.default.credentials.$Cloud) {
 # Create a file for the credentials so that they only need to be set once and then
 # sourced in each file
 $rendered = Render-Data($credentials)
-$rendered
+
 $credfile = "$PSScriptRoot/../../{1}/credentials.{0}" -f $config[$Shell].extension, $Target
-exit
+
 # Ensure that the parent path exists
 $parent_dir = Split-Path -Path $credfile -Parent
 if (!(Test-Path -Path $parent_dir)) {
@@ -187,8 +187,6 @@ foreach ($itm in $data.stages) {
             $data.description = $var.description
         }
 
-
-
         # set some default values
         $data.value = ""
 
@@ -201,7 +199,6 @@ foreach ($itm in $data.stages) {
         if (Test-Path -Path ("env:\{0}" -f $var.name)) {
             $data.value = (Get-Item -Path ("env:\{0}" -f $var.name)).Value
         }
-
 
         # Based on the shell, render the template for the variable
         $stage_vars[$var.name] = $data
@@ -220,10 +217,10 @@ foreach ($itm in $data.stages) {
     # Add in the sourcing of the credentials file in the script
     switch ($shell) {
         "powershell" {
-            $source_creds = '. (Split-Path -Parent -Path $PSScriptRoot)/credentials.ps1'
+            $source_creds = '. (Split-Path -Parent -Path $PSScriptRoot)/local/credentials.ps1'
         }
         "bash" {
-            $source_creds = '. $(dirname $0)/credentials.bash'
+            $source_creds = '. $(dirname $0)/local/credentials.bash'
         }
     }
 
