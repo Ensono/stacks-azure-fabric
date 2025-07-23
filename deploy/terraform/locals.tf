@@ -138,4 +138,37 @@ locals {
 
   # Determine the short name of the company
   company_short_name = lower(substr(var.company_name, 0, 3))
+
+  # Determine the time now
+  timenow       = timestamp()
+  timenow_year  = formatdate("YYYY", local.timenow)
+  timenow_month = formatdate("MM", local.timenow)
+  timenow_day   = formatdate("DD", local.timenow)
+
+  # For the schedule in the automation account, determine the time and the days of the week that
+  # the capacity should be suspended
+  suspend_schedule = split(";", var.automation_suspend_schedule)
+
+  # Due to the way in which the automation works we need to ensure that the start time is after the
+  # current time, thus if it is already after the suspend start time then this needs to be set for tomorrow
+  suspend_time_start    = format("%s-%s-%sT%s:00Z", local.timenow_year, local.timenow_month, local.timenow_day, local.suspend_schedule[0])
+  suspend_adjusted_time = timecmp(local.timenow, local.suspend_time_start) == -1 ? local.suspend_time_start : timeadd(local.suspend_time_start, "24h")
+
+  suspend_schedule_details = {
+    time = local.suspend_adjusted_time
+    days = split(",", local.suspend_schedule[1])
+  }
+
+  # Determine the resume schedule
+  resume_schedule = split(";", var.automation_resume_schedule)
+
+  # Due to the way in which the automation works we need to ensure that the start time is after the
+  # current time, thus if it is already after the resume start time then this needs to be set for tomorrow
+  resume_time_start    = format("%s-%s-%sT%s:00Z", local.timenow_year, local.timenow_month, local.timenow_day, local.resume_schedule[0])
+  resume_adjusted_time = timecmp(local.timenow, local.resume_time_start) == -1 ? local.resume_time_start : timeadd(local.resume_time_start, "24h")
+
+  resume_schedule_details = {
+    time = local.resume_adjusted_time
+    days = split(",", local.resume_schedule[1])
+  }
 }
