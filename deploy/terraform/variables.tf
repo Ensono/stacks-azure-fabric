@@ -84,6 +84,40 @@ variable "permissions" {
   default     = ""
 }
 
+variable "enable_suspend" {
+  description = "Flag to indicate if the suspend functionality should be enabled for the Fabric capacity"
+  type        = bool
+  default     = true
+}
+
+#######################################################
+# Azure Automation Settings
+#######################################################
+
+variable "automation_sku" {
+  description = "The SKU of the Azure Automation account. Possible values are 'Basic' or 'Free'."
+  type        = string
+  default     = "Basic"
+}
+
+variable "automation_suspend_schedule" {
+  description = "The schedule for suspending the Fabric capacity. This is in the format of <TIME>:<DAYS_OF_WEEK>"
+  type        = string
+  default     = "17:00;Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"
+}
+
+variable "automation_resume_schedule" {
+  description = "The schedule for resuming the Fabric capacity. This is in the format of <TIME>:<DAYS_OF_WEEK>"
+  type        = string
+  default     = "07:00;Monday,Tuesday,Wednesday,Thursday,Friday"
+}
+
+variable "automation_timezone" {
+  description = "The timezone to use for the automation schedules. This is in the format of 'Europe/London'."
+  type        = string
+  default     = "Europe/London"
+}
+
 #######################################################
 # Key Vault Settings
 #######################################################
