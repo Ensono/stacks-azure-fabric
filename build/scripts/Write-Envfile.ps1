@@ -217,7 +217,13 @@ foreach ($itm in $data.stages) {
     # Add in the sourcing of the credentials file in the script
     switch ($shell) {
         "powershell" {
-            $source_creds = '. (Split-Path -Parent -Path $PSScriptRoot)/local/credentials.ps1'
+            $source_creds = @"
+# Get the path to the credentials file and source it
+`$scriptFolder = Split-Path -Parent -Path `$PSScriptRoot
+`$credentialsFile = [IO.Path]::Combine(`$scriptFolder, "local", "credentials.ps1")
+. `$credentialsFile
+
+"@
         }
         "bash" {
             $source_creds = '. $(dirname $0)/local/credentials.bash'
