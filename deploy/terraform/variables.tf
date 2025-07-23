@@ -84,15 +84,15 @@ variable "permissions" {
   default     = ""
 }
 
-variable "enable_suspend" {
-  description = "Flag to indicate if the suspend functionality should be enabled for the Fabric capacity"
-  type        = bool
-  default     = true
-}
-
 #######################################################
 # Azure Automation Settings
 #######################################################
+
+variable "enable_suspend" {
+  description = "Flag to indicate if the suspend functionality should be enabled for the Fabric capacity"
+  type        = bool
+  default     = false
+}
 
 variable "automation_sku" {
   description = "The SKU of the Azure Automation account. Possible values are 'Basic' or 'Free'."
