@@ -4,6 +4,8 @@ This section provides solutions to issues that may arise when using the template
 
 include::ts_capacity_admins.adoc[]
 
+include::ts_fabric_admin_email.adoc[]
+
 include::ts_capacity_guid.adoc[]
 
 include::ts_create_operation.adoc[]

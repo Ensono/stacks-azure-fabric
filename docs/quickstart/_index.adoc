@@ -3,3 +3,11 @@
 This section details how to quickly deploy the resources to setup a Fabric environment.
 
 include::tldr/_index.adoc[]
+
+<<<
+
+include::clone_repo.adoc[]
+
+include::setting_env_vars.adoc[]
+
+include::deployment.adoc[]

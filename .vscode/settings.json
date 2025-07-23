@@ -11,6 +11,10 @@
 			"**/build/taskctl/contexts.{yml,yaml}",
 			"taskctl.{yml,yaml}"
 		],
-		"https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json": "file:///c%3A/Users/rseymour/workspaces/ensono/stacks/stacks-azure-fabric/build/ado/pipeline.yml"
+		"https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json": [
+			"file:///c%3A/Users/rseymour/workspaces/ensono/stacks/stacks-azure-fabric/build/ado/pipeline.yml",
+			"file:///c%3A/Users/rseymour/workspaces/ensono/stacks/stacks-azure-fabric/fabric_content/data_engineering/example_copy_pipeline/ado/pipeline.yml",
+			"file:///c%3A/Users/rseymour/workspaces/ensono/stacks/stacks-azure-fabric/fabric_content/data_engineering/example_spark_pipeline/ado/pipeline.yml"
+		]
 	}
 }

@@ -1,0 +1,3 @@
+== Data Extraction
+
+include::data_gateway.adoc[]

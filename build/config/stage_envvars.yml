@@ -1,0 +1,126 @@
+default:
+  variables:
+    - name: STAGE
+      description: The stage of Terraform that is being deployed by this pipeline
+      default: infra
+    - name: TF_FILE_LOCATION
+      description: Path to the Terraform files, from the perspective of the executing container
+      default: /eirctl/deploy/terraform/TF_STAGE
+    - name: TF_BACKEND_INIT
+      description: |
+        This is a string stating how the backend configurtation will be handled.
+        If it is just be set to work on a local workstation, then it should be set to false, e.g.
+
+          "false" <- make sure it is in quotes
+
+        However if using remote storage, such as Azure blob storage, then it shuld be in the following format:
+
+          key=,container_name=,storage_account_name=,resource_group_name=
+
+    - name: ENV_NAME
+      description: This is the name of the environment being deployed to. It is used by Terarform to set the workspace in the state
+      default: test
+
+  credentials:
+    azure:
+      - name: ARM_CLIENT_ID
+        alias: FABRIC_CLIENT_ID
+      - name: ARM_CLIENT_SECRET
+        alias: FABRIC_CLIENT_SECRET
+      - name: ARM_SUBSCRIPTION_ID
+      - name: ARM_TENANT_ID
+        alias: FABRIC_TENANT_ID
+
+stages:
+  - name: infra
+    variables:
+      - description: The URL of the Azure DevOps organization service
+        required: true
+        name: TF_VAR_ado_org_service_url
+      - description: The name of the Azure DevOps project
+        required: true
+        name: TF_VAR_ado_project_name
+      - description: Name of the existing Fabric Capacity to look up
+        required: true
+        name: TF_VAR_fabric_capacity_name
+      - description: |
+          Comma separated list of users to be added as administrators to the fabric capacity
+
+          This uses a specific format to define who has access to the capacity and what their role ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:1.2.17
+
+          <email_address>:<entraid_object_id>:<role>
+
+          * The email address should match the case that is in EntraID. It is not a destructive problem as email
+            addresses are case insensitive, but Terraform will pick the change in case and reconfigure with the same
+            name. For example in EntraID an email is stored thus Joe.Bloggs@example.com and if the email is set
+            all lowercase it will be constantly set
+          * The entraid object id is the UUID of the user with the specified email address. At the moment the Terraform
+            cannot look this up, so it has to be provided manually. This is due to the level of access that Terraform would
+            require to read user details from EntraID
+          * The role to be applied to the capacity, this is based on the Classic Azure roles.
+        required: true
+        name: TF_VAR_permissions
+      - description: "The name of the company, used for naming resources (Default: ensono)"
+        required: false
+        name: TF_VAR_company_name
+      - description: "Flag to indicate if a variable group should be created in Azure DevOps (Default: True)"
+        required: false
+        name: TF_VAR_create_ado_variable_group
+      - description: "Flag to indicate if environment files should be created for local development (Default: False)"
+        required: false
+        name: TF_VAR_create_env_files
+      - description: "Whether to create the Azure Fabric Capacity resource (Default: False)"
+        required: false
+        name: TF_VAR_create_fabric_capacity
+      - description: "If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod (Default: False)"
+        required: false
+        name: TF_VAR_deploy_all_environments
+      - description: |
+          List of environments that need to be created (Default: test:false,uat:false,prod:true)
+
+          The format of the list is as follows:
+
+            <env_name>:<is_prod?>
+
+          This states the name of the environment and whether it is a production environment or not. This is used to determine
+          if the env should be deployed to the current subscription or not. It can be overridden so that all envs are deployed
+          by using the "TF_VAR_deploy_all_environments" variable.
+
+        required: false
+        name: TF_VAR_environments
+      - description: "The SKU of the fabric capacity to be created (Default: F2)"
+        required: false
+        name: TF_VAR_fabric_sku
+      - description: "Flag to state if the subscription being deployed to is the production subscription or not. This so that the environments are created properly. (Default: False)"
+        required: false
+        name: TF_VAR_is_prod_subscription
+      - description: "Boolean flag to specify whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault. (Default: False)"
+        required: false
+        name: TF_VAR_key_vault_enabled_for_deployment
+      - description: "Boolean flag to specify whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys. (Default: False)"
+        required: false
+        name: TF_VAR_key_vault_enabled_for_disk_encryption
+      - description: "Boolean flag to specify whether Azure Resource Manager is permitted to retrieve secrets from the key vault. (Default: False)"
+        required: false
+        name: TF_VAR_key_vault_enabled_for_template_deployment
+      - description: "The SKU of the Key Vault. Possible values are 'standard' or 'premium'. (Default: False)"
+        required: false
+        name: TF_VAR_key_vault_public_network_enabled
+      - description: "Boolean flag to specify whether purge protection is enabled for the key vault. (Default: True)"
+        required: false
+        name: TF_VAR_key_vault_purge_protection_enabled
+      - description: "The SKU of the Key Vault. Possible values are 'standard' or 'premium'. (Default: standard)"
+        required: false
+        name: TF_VAR_key_vault_sku
+      - description: "Retention days for soft delete. (Default: 7)"
+        required: false
+        name: TF_VAR_key_vault_soft_delete_retention_days
+      - description: "Location that the resources should be deployed to (Default: westeurope)"
+        required: false
+        name: TF_VAR_location
+      - description: "Name of the project being worked on (Default: fabric)"
+        required: false
+        name: TF_VAR_project
+      - description: "List of environment types that need to be created (Default: engineering,storage-bronze,storage-silver,storage-goldexample,analytics-example)"
+        required: false
+        name: TF_VAR_ws_types

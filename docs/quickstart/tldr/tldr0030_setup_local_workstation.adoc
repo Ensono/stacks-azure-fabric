@@ -1,0 +1,30 @@
+==== TLDR{paddedcounter:tldr[]} - Configure the environment variables
+
+Run the following task to create a script file that will configure all the of the environment variables that are required for deployment.
+
+[cols="1a,1a",options="header"]
+|===
+| PowerShell | Bash
+|
+
+[source,powershell]
+----
+# Generate the powershell script file
+eirctl local:envfile:powershell
+
+# Source the file
+. ./local/envfile_infra.ps1
+----
+
+|
+[source,bash]
+----
+# Generate the bash script file
+eirctl local:envfile:bash
+
+# Source the file
+. ./local/envfile_infra.bash
+----
+|===
+
+NOTE: Before sourcing the script, ensure that the values have been configured correctly for the environment.
