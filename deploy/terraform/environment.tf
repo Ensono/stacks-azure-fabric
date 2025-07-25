@@ -5,7 +5,7 @@ resource "fabric_environment" "ws_envs" {
     if !contains(split("-", ws), "storage")
   ])
 
-  display_name = "${module.naming.extended_names[var.project].fabric_workspace.name}-${each.key}"
+  display_name = "${module.naming.extended_names[var.project].fabric_environment.name}-${each.key}"
 
   workspace_id = fabric_workspace.ws[each.key].id
 }
