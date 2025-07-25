@@ -55,9 +55,9 @@ parameters:
     default: false
 
 trigger:
-  # branches:
-  #   include:
-  #     - main
+  branches:
+    include:
+      - main
   paths:
     include:
       - "build/*"
