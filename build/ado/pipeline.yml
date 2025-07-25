@@ -31,14 +31,14 @@ parameters:
         condition: succeeded()
         credentials_group: azure_sp_creds
         definition: test:false
-        is_prod_subscription: 'false'
+        is_prod_subscription: "false"
       - name: uat
         type: nonprod
         dependsOn: prelim
         condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
         credentials_group: azure_sp_creds
         definition: uat:false
-        is_prod_subscription: 'false'
+        is_prod_subscription: "false"
       - name: prod
         type: prod
         dependsOn:
@@ -47,7 +47,7 @@ parameters:
         condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables.deploy_all_environments, true)))
         credentials_group: azure_sp_creds
         definition: prod:true
-        is_prod_subscription: 'true'
+        is_prod_subscription: "true"
 
   - name: debug
     displayName: Enable Debugging
