@@ -27,10 +27,11 @@ resource "fabric_data_pipeline" "example_spark_pipeline" {
     "pipeline-content.json" = {
       source = "${path.module}/../definition/example_spark_pipeline.json.tmpl"
       tokens = {
-        sparkJobDefinitionId   = fabric_spark_job_definition.example_spark_job.id
-        engineeringWorkspaceId = var.engineering_workspace_id
-        environment            = var.environment
-        data_team_email        = var.data_team_email
+        sparkJobDefinitionId     = fabric_spark_job_definition.example_spark_job.id
+        engineeringWorkspaceId   = var.engineering_workspace_id
+        engineeringEnvironmentId = var.engineering_environment_id
+        environment              = var.environment
+        data_team_email          = var.data_team_email
       }
     }
   }

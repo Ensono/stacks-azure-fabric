@@ -80,8 +80,9 @@ locals {
   # to be collected
   fabric_resources = {
     for envname, detail in local.environment_workspaces : envname => {
-      workspaces = { for ws in detail : "${ws}_workspace_id" => fabric_workspace.ws["${envname}-${ws}"].id }
-      lakehouses = { for lh in detail : "${lh}_lakehouse_id" => fabric_lakehouse.afl["${envname}-${lh}"].id }
+      workspaces   = { for ws in detail : "${ws}_workspace_id" => fabric_workspace.ws["${envname}-${ws}"].id }
+      lakehouses   = { for lh in detail : "${lh}_lakehouse_id" => fabric_lakehouse.afl["${envname}-${lh}"].id }
+      environments = { for env in detail : "${env}_environment_id" => fabric_environment.ws_envs["${envname}-${env}"].id if !contains(split("-", env), "storage") }
     }
   }
 
@@ -94,7 +95,7 @@ locals {
     }
   }
 
-  outputs = { for envname in local.environments : envname => merge(local.resource_outputs[envname], local.fabric_resources[envname].lakehouses, local.fabric_resources[envname].workspaces) }
+  outputs = { for envname in local.environments : envname => merge(local.resource_outputs[envname], local.fabric_resources[envname].lakehouses, local.fabric_resources[envname].workspaces, local.fabric_resources[envname].environments) }
 
   # Create an object that contains all of the required permissions that have been defined
   perms = flatten([
