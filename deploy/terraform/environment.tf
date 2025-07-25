@@ -24,3 +24,16 @@ resource "fabric_spark_environment_settings" "env_spark_settings" {
 
   depends_on = [fabric_environment.ws_envs]
 }
+
+resource "fabric_spark_workspace_settings" "env_spark_workspace_settings" {
+  # create Spark workspace settings for each environment
+  for_each = toset([
+    for ws in local.workspaces : ws
+    if !contains(split("-", ws), "storage")
+  ])
+  workspace_id = fabric_workspace.ws[each.key].id
+
+  environment = {
+    name = fabric_environment.ws_envs[each.key].display_name
+  }
+}
