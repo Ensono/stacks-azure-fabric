@@ -4,6 +4,7 @@ It creates a Delta table with sample data, saves it to a Silver lakehouse,
 and then transforms the data and saves it to a Gold lakehouse.
 
 """
+
 import argparse
 
 import pyspark.sql.functions as F
