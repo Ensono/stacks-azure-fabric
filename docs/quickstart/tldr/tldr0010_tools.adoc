@@ -1,0 +1,7 @@
+==== TLDR{paddedcounter:tldr[]} - Ensure all required tools are installed
+
+Please ensure that all the required tools are installed before proceeding with the deployment of Azure Fabric.
+
+include::../../snippets/toollist.adoc[]
+
+Please refer to the <<tools>> section for more information about the tools that are required.

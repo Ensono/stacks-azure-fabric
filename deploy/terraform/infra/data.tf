@@ -6,8 +6,11 @@ data "azurerm_client_config" "current" {}
 # This is used to determine if there are any tags to denote if the subscription
 # is a prod or nonprod sub or it should be overridden
 data "azurerm_subscription" "current" {}
+
 data "fabric_capacity" "afc" {
   display_name = local.fabric_capacity_name
+
+  depends_on = [azurerm_fabric_capacity.afc[0]]
 }
 
 # Get details about the ADO project, this is required so that Terraform
