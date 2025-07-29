@@ -1,0 +1,70 @@
+==== Runbook Script
+
+A single script is used for both the suspending and resuming of the Fabric capacity, however due to the way that it is deployed, it is copied between these two runbooks.
+
+The following flowchart details the process that the script follows to perform the relevant action on the Fabric.
+
+.Suspend and resume script flowchart
+[mermaid]
+....
+flowchart LR
+    start(Start)
+    spnorid{Has Identity<br /> or SPN been<br />selected?}
+    spnandid{Has Identity<br /> and SPN been<br />selected?}
+    missing{Are there<br />missing<br />parameters?}
+    suspendandresume{Has Suspend<br />and Resume been<br />selected?}
+    gettoken[Retrieve Bearer token]
+    determinestate{Is Fabric in <br /> known state<br />'paused' or <br/>'active'?}
+    whatstate{What state is<br />Fabric in?}
+    suspend[Suspend Fabric]
+    resume[Resume Fabric]
+    finish(Finish)
+
+    start --> spnorid
+    spnorid --> |No| finish
+    spnorid --> |Yes| spnandid
+    spnandid --> |Yes| finish
+    spnandid --> |No| missing
+    missing --> |Yes| finish
+    missing --> |No| suspendandresume
+    suspendandresume --> |Yes| finish
+    suspendandresume --> gettoken
+    gettoken --> determinestate
+    determinestate -->|No| finish
+    determinestate -->|Yes| whatstate
+    whatstate -->|Running| suspend
+    whatstate -->|Paused| resume
+    suspend --> finish
+    resume --> finish
+....
+
+The following parameters are available on the script.
+
+.Script parameters
+[cols="1,2,1,1,1"]
+|===
+| Name | Description | Mandatory | Type | Default Value
+| ResourceGroupName | Name of the resource group into which the automation resources need to be deployed into | icon:check[] | string | `$env:RESOURCE_GROUP_NAME`
+| CapacityName | Name of the capacity that should be suspended or resumed | icon:check[] | string | `$env:FABRIC_CAPACITY_NAME`
+| Identity | States if a User Managed Identity is being used.
+
+If this switch is specified then the Identity will be retrieved from the environment. .2+| icon:check[]
+
+One of these switches must be specified .2+|
+
+switch |
+| SPN | States that a Service Principal is to be used to authenticate against Azure.
+
+These details are passed into the script via the command line or environment variables, as shown below |
+| SubscriptionId | The subscription ID for which the Service Principal has access to, e.g. a scope has been assigned .4+| icon:check[]
+
+(if SPN has been specified)| string | `$env:SUBSCRIPTION_ID`
+| ClientId | The client ID of the service principal being used to auithenticate againsr Azure | string | `$env:CLIENT_ID`
+| ClientSecret | The client secret associated with the specified client ID | string | `$env:CLIENT_SECRET`
+| TenantId | The IS of the tenant that the Service Principal has been created under | string | `$env:TENANT_ID`
+| Suspend | State if the Fabric capacity should be suspended, if it is running .2+| icon:check[]
+
+One of these switches must be specified .2+| switch |
+| Resume | State of the Fabric capacity should be resumed, if it is paused |
+| ApiVersion | Version of the Azure Management API to use | icon:times[] | string | 2023-11-01
+|===

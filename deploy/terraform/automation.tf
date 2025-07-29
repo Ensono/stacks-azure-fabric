@@ -58,7 +58,7 @@ resource "azurerm_automation_account" "fabric" {
 
   sku_name = var.automation_sku
 
-  # Ensuere the account runs as the user assigned identity
+  # Ensure the account runs as the user assigned identity
   identity {
     type = "UserAssigned"
     identity_ids = [
@@ -87,9 +87,9 @@ resource "azurerm_automation_runbook" "suspend" {
   automation_account_name = azurerm_automation_account.fabric[0].name
   log_verbose             = true
   log_progress            = true
-  runbook_type            = "PowerShell"
+  runbook_type            = "PowerShell72"
 
-  content = file("../../build/scripts/Set-FabricState.ps1")
+ content = file("../../build/scripts/Set-FabricState.ps1")
 
 }
 
@@ -102,7 +102,7 @@ resource "azurerm_automation_runbook" "resume" {
   automation_account_name = azurerm_automation_account.fabric[0].name
   log_verbose             = true
   log_progress            = true
-  runbook_type            = "PowerShell"
+  runbook_type            = "PowerShell72"
 
   content = file("../../build/scripts/Set-FabricState.ps1")
 }

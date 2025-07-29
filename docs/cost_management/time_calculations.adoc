@@ -1,0 +1,38 @@
+==== Time Calculations
+
+There is a quirk when using Terraform with Azure Automation, and that is to do with the way in which it handles the start time for the automation.
+
+When the scheduled is declared and passed to the Azure API, the start time is checked and it _must_ be at least 5 minutes in the future. This causes two issues:
+
+1. When the Terraform plan is run, it will fail if the time is not in thr future, even if the scheduled is already running. This means that the `time_static` resource cannot be used here and we need to use the `timestamp()` function.
+2. If Terraform is run after the start time, for example, the default time of 0800 that day will not work.
+
+To get around these issues Terraform performs some checks in the locals file.
+
+.Terraform time calculations
+[mermaid]
+....
+flowchart LR
+    start(Start)
+    determineTriggerTime[Determine the trigger time <br />based on today]
+    checkTriggerTime{Is <br />TriggerTime <br />before <br />or after now?}
+    setNoAdjust[Set AdjustedTime to TriggerTime]
+    setAdjust[Set AdjustedTime by adding 24hrs to TriggerTime]
+    setSchedule[Add AdjustedTime to schedule]
+    finish(Finish)
+
+    start --> determineTriggerTime
+    determineTriggerTime --> checkTriggerTime
+    checkTriggerTime -->|Before| setNoAdjust
+    checkTriggerTime -->|After| setAdjust
+    setNoAdjust --> setSchedule
+    setAdjust --> setSchedule
+    setSchedule --> finish
+....
+
+The following snippet from the `locals.tf` file shows how the `resume_time` of the schedule is calculated.
+
+[source,terraform]
+----
+include::../../deploy/terraform/locals.tf[lines=162..173]
+----
