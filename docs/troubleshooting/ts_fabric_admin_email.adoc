@@ -1,0 +1,36 @@
+
+=== Fabric Capacity Administrator Email Address
+
+THe format that is used to pass the permissions that are required to the Fabric capacity contains an email address. If this email address is incorrect the following error maybe thrown:
+
+[source,plaintext]
+----
+PS /Users/josecarrera/dev/ensono/stacks-azure-fabric> eirctl infra:apply
+Tool found: /usr/local/tenv/bin/terraform
+Working directory: /eirctl/deploy/terraform/infra
+DEBUG: terraform apply deploy.tfplan
+terraform apply deploy.tfplan
+azurerm_fabric_capacity.afc[0]: Creating...
+╷
+│ Error: creating Capacity (Subscription: "b02451e2-f92a-4946-b5dd-edc7c5d9aad9"
+│ Resource Group Name: "rg-jos-fabric-we-jctest"
+│ Capacity Name: "fcjosfabricwejctefcxpec"): performing CreateOrUpdate: unexpected status 400 (400 Bad Request) with error: BadRequest: All provided principals must be existing, user or service principals
+│
+│   with azurerm_fabric_capacity.afc[0],
+│   on capacity.tf line 2, in resource "azurerm_fabric_capacity" "afc":
+│    2: resource "azurerm_fabric_capacity" "afc" {
+│
+│ creating Capacity (Subscription: "b02451e2-f92a-4946-b5dd-edc7c5d9aad9"
+│ Resource Group Name: "rg-jos-fabric-we-jctest"
+│ Capacity Name: "fcjosfabricwejctefcxpec"): performing CreateOrUpdate:
+│ unexpected status 400 (400 Bad Request) with error: BadRequest: All
+│ provided principals must be existing, user or service principals
+╵
+Permitted exit codes: 0
+Exit code: 1
+OperationStopped: Task failed due to error
+----
+
+The Azure CLI _can_ be used to check if the email address is correct. However the command uses the email address of the user to find the entity in Entra ID, thus if the email address is incorrect then nothing will be returned.
+
+The command to run is, `az ad user show --id <email address>`.

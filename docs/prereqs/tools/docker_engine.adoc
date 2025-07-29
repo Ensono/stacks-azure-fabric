@@ -1,0 +1,6 @@
+==== Docker Engine
+
+Due to the way in which the Ensono Independent Runner works with containers, a container engine is required. Any container engine can be used:
+
+- https://rancherdesktop.io/[Rancher Desktop]
+- https://www.docker.com/products/docker-desktop/[Docker Desktop]

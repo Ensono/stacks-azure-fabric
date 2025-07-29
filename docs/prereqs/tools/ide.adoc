@@ -1,0 +1,5 @@
+==== IDE
+
+URL: https://code.visualstudio.com/
+
+An Integrated Development Environment (IDE) is a tool that allows for the management of code, debugging, and other development tasks. The recommended IDE for this project is Visual Studio Code (VS Code), which is a free and open-source code editor developed by Microsoft.
