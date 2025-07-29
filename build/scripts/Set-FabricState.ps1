@@ -9,7 +9,7 @@
 .DESCRIPTION
     This script is used to suspend or resume the Azure Fabric capacity.
 
-    It uses direct API access rather than any PowerSHell modules or CLI commands so that it
+    It uses direct API access rather than any PowerShell modules or CLI commands so that it
     can be used in a CI/CD pipeline or other automated environments, without the least
     amount of dependencies.
 
