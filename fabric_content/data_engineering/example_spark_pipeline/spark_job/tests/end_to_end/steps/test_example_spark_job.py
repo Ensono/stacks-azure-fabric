@@ -11,9 +11,9 @@ import sys
 import pytest
 from typing import Any, Generator
 
-from ..fabric_helper import FabricHelper
+from stacks.data.platforms.fabric.data_pipeline import DataPipeline
 
-scenarios("../features/transform_and_save.feature")
+scenarios("../features/example_spark_job.feature")
 
 
 def require_env(var: str) -> str:
@@ -65,9 +65,9 @@ def spark() -> Generator[SparkSession, None, None]:
 
 
 @pytest.fixture
-def fabric_helper() -> FabricHelper:
-    """Fixture to provide a FabricHelper instance for the test."""
-    return FabricHelper(tenant_id=FABRIC_TENANT_ID, client_id=FABRIC_CLIENT_ID, client_secret=FABRIC_CLIENT_SECRET)
+def data_pipeline() -> DataPipeline:
+    """Fixture to provide a DataPipeline instance for the test."""
+    return DataPipeline(tenant_id=FABRIC_TENANT_ID, client_id=FABRIC_CLIENT_ID, client_secret=FABRIC_CLIENT_SECRET)
 
 
 def get_workspace_id_by_name(workspace_name: str) -> str:
@@ -101,7 +101,7 @@ def get_pipeline_id_by_name(items: list[dict], pipeline_name: str) -> str:
     parsers.parse("the Fabric pipeline is triggered to run the {pipeline_name} job from the {workspace_name} workspace")
 )
 def trigger_fabric_pipeline(
-    test_context: dict[str, Any], pipeline_name: str, workspace_name: str, fabric_helper: FabricHelper
+    test_context: dict[str, Any], pipeline_name: str, workspace_name: str, data_pipeline: DataPipeline
 ) -> None:
     """
     Trigger the Fabric pipeline from the workspace by dynamically resolving the pipeline_id from the items API.
@@ -110,28 +110,28 @@ def trigger_fabric_pipeline(
     workspace_id = get_workspace_id_by_name(workspace_name)
     # Get all items in the specified workspace
     url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items"
-    headers = fabric_helper.get_auth_header()
+    headers = data_pipeline.get_auth_header()
     response = requests.get(url, headers=headers)
     response.raise_for_status()
     items = response.json().get("value", [])
     # Find the pipeline with the given name
     pipeline_id = get_pipeline_id_by_name(items, pipeline_name)
     payload = {}  # Customize if you need to pass parameters
-    fabric_helper.trigger_pipeline(workspace_id, pipeline_id, payload)
+    data_pipeline.trigger_pipeline(workspace_id, pipeline_id, payload)
     print(f"✅ Pipeline {pipeline_name} triggered successfully from {workspace_name} workspace")
     test_context["pipeline_id"] = pipeline_id
     test_context["workspace_id"] = workspace_id
 
 
 @when(parsers.parse("I poll the pipeline every {interval:d} seconds until it has completed"))
-def poll_pipeline_until_complete(test_context: dict[str, Any], interval: int, fabric_helper: FabricHelper) -> None:
+def poll_pipeline_until_complete(test_context: dict[str, Any], interval: int, data_pipeline: DataPipeline) -> None:
     """
     Poll the Fabric pipeline run status every `interval` seconds until it completes.
     Store the final status and duration in the test_context.
     """
     workspace_id = test_context["workspace_id"]
     pipeline_id = test_context["pipeline_id"]
-    status, duration = fabric_helper.poll_pipeline_until_complete(workspace_id, pipeline_id, interval=interval)
+    status, duration = data_pipeline.poll_pipeline_until_complete(workspace_id, pipeline_id, interval=interval)
     test_context["pipeline_status"] = status
     test_context["pipeline_duration"] = duration
 
