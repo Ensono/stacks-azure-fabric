@@ -29,6 +29,7 @@ provider "azurerm" {
 }
 
 provider "fabric" {
+  preview = true
 }
 
 provider "azuredevops" {

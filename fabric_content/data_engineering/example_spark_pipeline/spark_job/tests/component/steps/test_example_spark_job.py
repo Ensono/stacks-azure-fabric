@@ -3,6 +3,7 @@ import shutil
 import sys
 import tempfile
 from typing import Generator, Tuple
+from unittest.mock import patch
 
 import pytest
 from pyspark.sql import SparkSession
@@ -11,7 +12,7 @@ from chispa.dataframe_comparer import assert_df_equality
 
 from data_engineering.example_spark_pipeline.spark_job import example_spark_job
 
-scenarios("../features/transform_and_save.feature")
+scenarios("../features/example_spark_job.feature")
 
 
 @pytest.fixture(scope="session")
@@ -72,14 +73,14 @@ def run_main(monkeypatch, temp_delta_dirs: Tuple[str, str]) -> None:
         ],
     )
 
-    def fake_get_delta_table_path(workspace_id: str, lakehouse_id: str, table_name: str) -> str:
+    def fake_get_table_url(self, table_name: str, schema: str = "dbo") -> str:
         if table_name == "sample_table":
             return source_dir
         else:
             return target_dir
 
-    monkeypatch.setattr(example_spark_job, "get_delta_table_path", fake_get_delta_table_path)
-    example_spark_job.main()
+    with patch.object(example_spark_job.LakehouseClient, "get_table_url", new=fake_get_table_url):
+        example_spark_job.main()
 
 
 @then(parsers.parse("the target table contains expected aggregated data matching '{expected_data_path}'"))

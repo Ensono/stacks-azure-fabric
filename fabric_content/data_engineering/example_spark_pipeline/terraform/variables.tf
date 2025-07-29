@@ -10,6 +10,12 @@ variable "engineering_lakehouse_id" {
   description = "The engineering lakehouse ID."
 }
 
+variable "engineering_environment_id" {
+  type        = string
+  default     = ""
+  description = "The engineering Fabric environment ID."
+}
+
 variable "silver_workspace_id" {
   type        = string
   default     = ""
