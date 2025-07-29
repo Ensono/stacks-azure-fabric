@@ -1,3 +1,14 @@
 import:
   - ./build/taskctl/contexts.yml
   - ./build/taskctl/tasks.yml
+
+pipelines:
+  docs:
+    - task: build:number
+    - task: _docs
+      dependsOn:
+        - build:number
+
+  lint:
+    - task: lint:yaml
+    - task: lint:terraform:format
