@@ -1,0 +1,39 @@
+ifndef::imagesdir[:imagesdir: ../]
+=== Setting Environment Variables
+
+One of the more complicated things to setup are all of the settings that Terraform requires to get things up and running. To make this easier, two tasks have been defined that will generate either a PowerShell or Bash script which will allow the values to be set.
+
+Run the appropriate task for the output that is required:
+
+[cols="1a,1a",options="header"]
+|===
+| PowerShell | Bash
+|
+
+[source,powershell]
+----
+# Generate the powershell script file
+eirctl local:envfile:powershell
+
+----
+
+|
+
+[source,bash]
+----
+# Generate the bash script file
+eirctl local:envfile:bash
+
+----
+|===
+
+Once the file has been created, the values need to be modified. Do this by opening the file in the IDE and add the values as required. The description of each value contains the default value as set in Terraform.
+
+One of the more complicated values to set is the `TF_VAR_permissions`. Please refer to the <<permissions>> section for more information on how to set this value correctly.
+
+An example environment variable script file will be similar to the following:
+
+include::../snippets/env_var_script.adoc[]
+
+.Updating the environment variables script
+image::images/tldr_update_envfile.png[]

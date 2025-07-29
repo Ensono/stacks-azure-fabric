@@ -1,0 +1,8 @@
+
+* Git <<tools_git>>
+* Docker Engine
+** Docker Desktop
+** Rancher Desktop
+* Eirctl
+* IDE
+** Visual Studio Code

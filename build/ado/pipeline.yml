@@ -99,6 +99,20 @@ stages:
               script: |
                 eirctl build:number
 
+          - task: Bash@3
+            displayName: Perform YAML linting
+            inputs:
+              targetType: inline
+              script: |
+                eirctl lint:yaml
+
+          - task: Bash@3
+            displayName: Perform Terraform format check
+            inputs:
+              targetType: inline
+              script: |
+                eirctl lint:terraform:format
+
   - stage: docs
     displayName: Documentation
     condition: and(succeeded(), eq(${{ parameters.generate_docs }}, true))
@@ -148,7 +162,7 @@ stages:
           - name: FABRIC_CLIENT_SECRET
             value: $(ARM_CLIENT_SECRET)
           - name: TF_FILE_LOCATION
-            value: deploy/terraform
+            value: deploy/terraform/infra
           - name: ENV_NAME
             value: ${{ env.name }}
 

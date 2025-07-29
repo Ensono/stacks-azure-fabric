@@ -1,0 +1,5 @@
+==== Eirctl
+
+URL: https://github.com/ensono/eirctl
+
+The `eirctl` command stands for "Ensono Independent Runner Control" and is used to run the tasks that make up the build and deployment odf the application. It is a cross-platform tool that can be used on Windows, macOS, and Linux.

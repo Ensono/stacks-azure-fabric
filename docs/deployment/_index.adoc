@@ -4,4 +4,6 @@ include::architecture.adoc[]
 
 include::permissions.adoc[]
 
+include::terraform_variables.adoc[]
+
 include::outputs.adoc[]

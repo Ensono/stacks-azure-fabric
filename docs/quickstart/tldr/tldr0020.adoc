@@ -1,9 +1,0 @@
-=== TLDR0020 - Plan and Apply the Terraform files
-
-Plan and apply the Terraform deployment:
-
-[source,powershell]
-----
-eirctl infra:plan
-eirctl infra:apply
-----

@@ -375,3 +375,5 @@ coverage
 .taskctl
 
 outputs
+
+.vscode/settings.json
