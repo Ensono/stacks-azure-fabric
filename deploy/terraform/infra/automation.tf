@@ -89,7 +89,7 @@ resource "azurerm_automation_runbook" "suspend" {
   log_progress            = true
   runbook_type            = "PowerShell72"
 
- content = file("../../build/scripts/Set-FabricState.ps1")
+  content = file("../../../build/scripts/Set-FabricState.ps1")
 
 }
 
@@ -104,7 +104,7 @@ resource "azurerm_automation_runbook" "resume" {
   log_progress            = true
   runbook_type            = "PowerShell72"
 
-  content = file("../../build/scripts/Set-FabricState.ps1")
+  content = file("../../../build/scripts/Set-FabricState.ps1")
 }
 
 # Create the schedule for the runbooks
