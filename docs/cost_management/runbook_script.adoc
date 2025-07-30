@@ -41,7 +41,7 @@ flowchart LR
 The following parameters are available on the script.
 
 .Script parameters
-[cols="1,2,1,1,1"]
+[cols="1,2,1,1,1",options="header"]
 |===
 | Name | Description | Mandatory | Type | Default Value
 | ResourceGroupName | Name of the resource group into which the automation resources need to be deployed into | icon:check[] | string | `$env:RESOURCE_GROUP_NAME`

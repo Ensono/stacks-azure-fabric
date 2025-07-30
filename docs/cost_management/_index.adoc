@@ -3,7 +3,7 @@
 Azure Fabric Capacities are deployed with a SKU, which determines what can be used and the cost of that capacity. The following table details these SKUs.
 
 .Azure Fabric Capacity SKUs
-image::../images/fabric_capacity_costs.png[Cost of Fabric Capacities, width=450, align=center]
+image::images/fabric_capacity_costs.png[Cost of Fabric Capacities, width=450, align=center]
 Source: https://azure.microsoft.com/en-us/pricing/details/microsoft-fabric/
 
 As can be seen, the cost of Fabric can escalate quickly. This cost ios based on the capacity running 24x7x365.

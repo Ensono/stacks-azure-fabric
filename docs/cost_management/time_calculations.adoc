@@ -34,5 +34,5 @@ The following snippet from the `locals.tf` file shows how the `resume_time` of t
 
 [source,terraform]
 ----
-include::../../deploy/terraform/locals.tf[lines=162..173]
+include::../../deploy/terraform/infra/locals.tf[lines=162..173]
 ----

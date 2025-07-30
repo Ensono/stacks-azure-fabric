@@ -1,4 +1,4 @@
-==== TLDR{paddedcounter:tldr[]} - Configure the environment variables
+==== TLDRpaddedcounter:tldr[] - Configure the environment variables
 
 Run the following task to create a script file that will configure all the of the environment variables that are required for deployment.
 
