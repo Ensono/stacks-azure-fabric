@@ -54,6 +54,12 @@ variable "deploy_all_environments" {
   description = "If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod"
 }
 
+variable "create_lakehouses" {
+  description = "Flag to indicate if lakehouses should be created in the Fabric capacity"
+  type        = bool
+  default     = false
+}
+
 #######################################################
 # Azure DevOps Settings
 #######################################################

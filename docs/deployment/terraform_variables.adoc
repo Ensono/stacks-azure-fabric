@@ -31,6 +31,9 @@ The following table shows the variables that are supported in the Terraform file
 .2+| `create_fabric_capacity`  | icon:times[] | False
 2+| Whether to create the Azure Fabric Capacity resource (Default: False)
 
+.2+| `create_lakehouses`  | icon:times[] | False
+2+| Flag to indicate if lakehouses should be created in the Fabric capacity as part of the Terraform infrastructure deployment.
+
 .2+| `deploy_all_environments`  | icon:times[] | False
 2+| If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod (Default: False)
 

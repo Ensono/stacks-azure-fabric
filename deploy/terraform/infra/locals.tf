@@ -81,7 +81,7 @@ locals {
   fabric_resources = {
     for envname, detail in local.environment_workspaces : envname => {
       workspaces   = { for ws in detail : "${ws}_workspace_id" => fabric_workspace.ws["${envname}-${ws}"].id }
-      lakehouses   = { for lh in detail : "${lh}_lakehouse_id" => fabric_lakehouse.afl["${envname}-${lh}"].id }
+      lakehouses   = var.create_lakehouses ? { for lh in detail : "${lh}_lakehouse_id" => fabric_lakehouse.afl["${envname}-${lh}"].id } : {}
       environments = { for env in detail : "${env}_environment_id" => fabric_environment.ws_envs["${envname}-${env}"].id if !contains(split("-", env), "storage") }
     }
   }
