@@ -1,6 +1,6 @@
 import:
-  - ./build/taskctl/contexts.yml
-  - ./build/taskctl/tasks.yml
+  - ./build/eirctl/contexts.yml
+  - ./build/eirctl/tasks.yml
 
 pipelines:
   docs:

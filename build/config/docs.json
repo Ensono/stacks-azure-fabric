@@ -3,7 +3,7 @@
   "output": "{{ basepath }}/outputs/docs/{{ format }}",
   "trunkBranch": "main",
   "path": "{{ basepath }}/docs/index.adoc",
-  "formats": ["pdf", "docx", "md"],
+  "formats": ["pdf"],
   "libs": {
     "asciidoc": [
       "asciidoctor-diagram",
@@ -23,9 +23,13 @@
       "asciidoctor": [
         "pdf-theme={{ basepath }}/docs/conf/styles/theme.yml",
         "pdf-fontsdir=\"{{ basepath }}/docs/conf/styles/fonts;GEM_FONTS_DIR\"",
-        "skip-front-matter",
         "allow-uri-read",
-        "base_doc_dir=\"/eirctl/docs/\""
+        "java=/usr/bin/java",
+        "graphvizdot=/usr/bin/dot",
+        "convert=/usr/bin/convert",
+        "identify=/usr/bin/identify",
+        "mathematical-format=svg",
+        "mermaid-puppeteer-config=/etc/puppeteer.json"
       ]
     }
   },
@@ -43,6 +47,7 @@
   },
   "docx": {
     "attributes": {
+      "asciidoctor": ["mmdc=/usr/local/bin/mermaid"],
       "pandoc": ["--reference-doc={{ basepath }}/docs/conf/word/reference.docx"]
     }
   }
