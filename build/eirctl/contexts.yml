@@ -12,10 +12,11 @@ contexts:
 
   docs:
     container:
-      name: ensonostackseuweirdfmu.azurecr.io/ensono/eir-asciidoctor:1.2.17
+      name: ensono/eir-asciidoctor:latest
       shell: pwsh
       shell_args:
         - -Command
     envfile:
       exclude:
         - sourceversionmessage
+        - posh_azure_subscription
