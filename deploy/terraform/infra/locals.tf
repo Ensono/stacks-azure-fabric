@@ -1,5 +1,11 @@
 locals {
 
+  # Create an array of common tags that can be applied to resources
+  common_tags = {
+    LastDeployedBy     = module.naming.current_user
+    ServicePrincipalID = data.azurerm_client_config.current.client_id
+  }
+
   # Determine if this is a production subscription or the override is being used
   is_prod_subscription = contains(["prod"], data.azurerm_subscription.current.tags) || var.is_prod_subscription
   deploy_all_envs      = contains(["override"], data.azurerm_subscription.current.tags) || var.deploy_all_environments
