@@ -95,13 +95,69 @@ locals {
           "fenv"
         )
       },
+      "frontdoor_firewall_policy" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique),
+          "fdfwp"
+        )
+      },
+      "frontdoor_endpoint" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "resource_group", {}).name_unique,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "resource_group", {}).name_unique),
+          "fde"
+        )
+      },
+      "frontdoor_security_policy" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "resource_group", {}).name_unique,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "resource_group", {}).name_unique),
+          "fdsp"
+        )
+      },
+      "private_dns_zone_virtual_network_link" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "resource_group", {}).name,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "resource_group", {}).name),
+          "pdzvl"
+        )
+      },
+      "ai_services" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "resource_group", {}).name_unique,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "resource_group", {}).name_unique),
+          "ais"
+        )
+      },
+      "ai_foundry" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique),
+          "aif"
+        )
+      },
+      "ai_foundry_project" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique),
+          "aifp"
+        )
+      },
       "key_vault_v2" = {
         name = replace(
           lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique,
           regex("^.{2}", lookup(module.azure_naming[comp_k], "storage_account", {}).name_unique),
           "kv"
         )
-      }
+      },
+      "managed_identity" = {
+        name = replace(
+          lookup(module.azure_naming[comp_k], "resource_group", {}).name,
+          regex("^.{2}", lookup(module.azure_naming[comp_k], "resource_group", {}).name),
+          "mi"
+        )
+      },
     }
   }
 }
