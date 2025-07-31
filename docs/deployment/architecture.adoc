@@ -1,3 +1,12 @@
+ifndef::imagesdir[:imagesdir: ../]
+
 === Architecture
 
 The architecture of the Azure Fabric deployment is designed to be flexible and will allow multiple environments to be deployed. The following diagram shows an example deployment of the infrastructure.
+
+.Stacks Azure Fabric architecture diagram
+image::images/fabric-architecture.png[alt="Stacks Azure Fabric architecture diagram"]
+
+The green areas in the diagram show the optional components that can be deployed. These are set to false by default. It is expected that the lakehouses will be created as part of the data pipeline, but can be deployed as part of the infrastructure if required.
+
+The Azure Automation account can be deployed to manage the Fabric capacity state. Please see the <<cost_management>> section for more information about this.
