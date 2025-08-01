@@ -10,7 +10,7 @@ pipeline:
       - build/ado/*.yaml
     replacements:
       - pattern: ^\svalue:\sensono$
-        replacement: {{ .Input.Business.Company }}
+        value: {{ .Input.Business.Company }}
 
   - type: gha
 
