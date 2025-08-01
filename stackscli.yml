@@ -5,7 +5,12 @@ pipeline:
       - name: build
         path: build/ado/pipeline.yml
       - name: variable
-        path: build/ado/pipeline-vars.yml
+        path: build/ado/variables.yml
+    items:
+      - build/ado/*.yaml
+    replacements:
+      - pattern: ^\svalue:\sensono$
+        replacement: {{ .Inputs.Business.Company }}
 
   - type: gha
 
