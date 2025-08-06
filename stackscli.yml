@@ -6,11 +6,11 @@ pipeline:
         path: build/ado/pipeline.yml
       - name: variable
         path: build/ado/variables.yml
-    items:
-      - build/ado/*.yaml
+#    items:
+#      - build/ado/*.yaml
     replacements:
       - pattern: ^\svalue:\sensono$
-        value: {{ .Inputs.Business.Company }}
+        value: "Fred"
 
   - type: gha
 
