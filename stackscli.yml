@@ -6,11 +6,24 @@ pipeline:
         path: build/ado/pipeline.yml
       - name: variable
         path: build/ado/variables.yml
-#    items:
-#      - build/ado/*.yaml
+    items:
+      - build/ado/variables.yml
+      - deploy/terraform/infra/variables.tf
     replacements:
-      - pattern: ^\svalue:\sensono$
-        value: "Fred"
+      - pattern: ^(\s*-\s*name:\s*name_company\s*value:\s*).*
+        value: ${1}{{ .Input.Business.Company }}
+      - pattern: ^(\s*-\s*name:\s*name_project\s*value:\s*).*
+        value: ${1}{{ .Input.Business.Project }}
+      - pattern: ^(\s*-\s*name:\s*tf_state_rg\s*value:\s*).*
+        value: ${1}{{ .Input.Terraform.Backend.Group }}
+      - pattern: ^(\s*-\s*name:\s*tf_state_storage\s*value:\s*).*
+        value: ${1}{{ .Input.Terraform.Backend.Storage }}
+      - pattern: ^(\s*-\s*name:\s*tf_state_container\s*value:\s*).*
+        value: ${1}{{ .Input.Terraform.Backend.Container }}
+      - pattern: ^(variable\s*"company_name"[\s\S]*?default\s*=\s*).*
+        value: ${1}"{{ .Input.Business.Company | toLower }}"
+      - pattern: ^(variable\s*"project"[\s\S]*?default\s*=\s*).*
+        value: ${1}"{{ .Input.Business.Project | toLower }}"
 
   - type: gha
 
