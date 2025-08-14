@@ -6,7 +6,7 @@ pipelines:
   docs:
     - task: build:number
     - task: _docs
-      dependsOn:
+      depends_on:
         - build:number
 
   lint:
