@@ -29,6 +29,12 @@ else {
     return
 }
 
+# Ensure that the parent of the OutputPath exists
+$outputParentPath = Split-Path -Path $OutputPath -Parent
+if (-not (Test-Path -Path $outputParentPath)) {
+    New-Item -ItemType Directory -Path $outputParentPath -Force | Out-Null
+}
+
 # Find all the files in the specified directory so that each file
 # can be searched for the glossary terms. Doing this here prevents the system from looking
 # for the files on each iteration
