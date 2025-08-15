@@ -8,7 +8,7 @@ When run by the CI/CD pipeline the user will be the user of the agent. If no var
 
 In addition to the user being added as the `LastDeployedBy` tag, the `ServicePrincipalID` is also added to the tags. This is the ID of the service principal that is used to deploy the resources. This allows us to see which service principal was used to deploy the resources, which can be useful for auditing purposes.
 
-The following image shows what the tage look like on the resource group for the Fabric deployment.
+The following image shows what the tags look like on the resource group for the Fabric deployment.
 
 .Tags on the resource group
 image::images/resource_tags.png[Resource Group Tags, width=450, align=center]
