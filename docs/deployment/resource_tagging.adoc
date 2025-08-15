@@ -2,7 +2,7 @@
 
 The base module, that handled the naming of the resources, also retrieves information about the current user from the environment. This is passed as an output back to thr root module, which means it can be used to tag resources with the user that last ran the Teraform.
 
-The main reason for doing this is so that when we look at the resources in Azure, we can see who last deployed the resources and thus determine if a resource is still required. The downside to this approach is that the user is extracted from the environment, by checking for `USERNAME` or `USER` environment variables, which means it is not kept in the Terraform state. Resources that have the tage set will be updated in place, but it could mean that resources are updated more regularly if multiple people are working on the resources.
+The main reason for doing this is so that when we look at the resources in Azure, we can see who last deployed the resources and thus determine if a resource is still required. The downside to this approach is that the user is extracted from the environment, by checking for `USERNAME` or `USER` environment variables, which means it is not kept in the Terraform state. Resources that have the tag set will be updated in place, but it could mean that resources are updated more regularly if multiple people are working on the resources.
 
 When run by the CI/CD pipeline the user will be the user of the agent. If no variable can be found, or the external script fails, then the value will set as "unkown".
 
