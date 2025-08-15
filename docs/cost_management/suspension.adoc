@@ -5,7 +5,7 @@ A way that costs can be brought down is to suspend and resume the Azure Fabric. 
 The following variables are used to control the suspend and resume schedules.
 
 .Table detailing the variables to use to handle suspend and resume of the Azure Fabric
-[cols="1,2,1",1",options="header"]
+[cols="1,2,1",options="header"]
 |===
 | Name | Description | Default Value
 | `enable_suspend` | State whether to enable suspend and resume on the Fabric capacity | `false`
