@@ -1,6 +1,6 @@
 ifndef::imagesdir[:imagesdir: ../../]
 
-==== TLDRpaddedcounter:tldr[] - Plan and Apply the Terraform files
+==== TLDR{paddedcounter:tldr[]} - Plan and Apply the Terraform files
 
 Plan and apply the Terraform deployment:
 
