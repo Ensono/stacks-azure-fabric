@@ -1,6 +1,6 @@
 === Suspend and Resume
 
-A way that costs cen be brought down is to suspend and resume the Azure Fabric. The Terraform deployment includes a script and deploy this into an Azure Automation instance that has a schedule to suspend and resume the capacity at specified times.
+A way that costs can be brought down is to suspend and resume the Azure Fabric. The Terraform deployment includes a script and deploys this into an Azure Automation instance that has a schedule to suspend and resume the capacity at specified times.
 
 The following variables are used to control the suspend and resume schedules.
 
