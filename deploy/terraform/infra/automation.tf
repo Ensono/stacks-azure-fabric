@@ -177,6 +177,6 @@ resource "azurerm_automation_job_schedule" "resume" {
     resourcegroupname = azurerm_resource_group.rg.name
     capacityname      = azurerm_fabric_capacity.afc[0].name
     identity          = "true"
-    suspend           = "true"
+    resume            = "true"
   }
 }
