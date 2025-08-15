@@ -1,4 +1,4 @@
-==== TLDRpaddedcounter:tldr[] - Ensure all required tools are installed
+==== TLDR{paddedcounter:tldr[]} - Ensure all required tools are installed
 
 Please ensure that all the required tools are installed before proceeding with the deployment of Azure Fabric.
 
