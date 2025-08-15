@@ -4,7 +4,9 @@ There is a quirk when using Terraform with Azure Automation, and that is to do w
 
 When the scheduled is declared and passed to the Azure API, the start time is checked and it _must_ be at least 5 minutes in the future. This causes two issues:
 
-1. When the Terraform plan is run, it will fail if the time is not in thr future, even if the scheduled is already running. This means that the `time_static` resource cannot be used here and we need to use the `timestamp()` function.
+When the schedule is declared and passed to the Azure API, the start time is checked and it _must_ be at least 5 minutes in the future. This causes two issues:
+
+1. When the Terraform plan is run, it will fail if the time is not in the future, even if the schedule is already running. This means that the `time_static` resource cannot be used here and we need to use the `timestamp()` function.
 2. If Terraform is run after the start time, for example, the default time of 0800 that day will not work.
 
 To get around these issues Terraform performs some checks in the locals file.
