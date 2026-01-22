@@ -36,7 +36,7 @@ The Terraform deployment uses the `fabric_capacity` data resource from the Fabri
 In order to allow the SP to access Azure Fabric, the "Service principals can use Fabric APIs" needs to be enabled, this is done in the Fabric Admin Portal.
 
 .Fabric Admin portal Service Principal Settings
-image::images/fabric-admin-sp-api.png[]
+image::images/fabric-admin-sp-api.png[align="center",width=400]
 
 There are two options to enable the Service Principal to access Fabric APIs:
 

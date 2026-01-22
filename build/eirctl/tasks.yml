@@ -73,4 +73,5 @@ tasks:
     context: docs
     command: |
       gem install rqrcode:2.2.0
+      /eirctl/build/scripts/Build-Glossary.ps1
       Build-Documentation -Config /eirctl/build/config/docs.json

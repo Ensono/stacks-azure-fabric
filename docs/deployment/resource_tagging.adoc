@@ -1,0 +1,16 @@
+=== Resource Tagging
+
+The base module, that handled the naming of the resources, also retrieves information about the current user from the environment. This is passed as an output back to thr root module, which means it can be used to tag resources with the user that last ran the Teraform.
+
+The main reason for doing this is so that when we look at the resources in Azure, we can see who last deployed the resources and thus determine if a resource is still required. The downside to this approach is that the user is extracted from the environment, by checking for `USERNAME` or `USER` environment variables, which means it is not kept in the Terraform state. Resources that have the tag set will be updated in place, but it could mean that resources are updated more regularly if multiple people are working on the resources.
+
+When run by the CI/CD pipeline the user will be the user of the agent. If no variable can be found, or the external script fails, then the value will set as "unknown".
+
+In addition to the user being added as the `LastDeployedBy` tag, the `ServicePrincipalID` is also added to the tags. This is the ID of the service principal that is used to deploy the resources. This allows us to see which service principal was used to deploy the resources, which can be useful for auditing purposes.
+
+The following image shows what the tags look like on the resource group for the Fabric deployment.
+
+.Tags on the resource group
+image::images/resource_tags.png[Resource Group Tags, width=450, align=center]
+
+NOTE: In the deployment for Azure Fabric only the resource group is tagged with the values described above.

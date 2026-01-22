@@ -4,31 +4,77 @@ In order to deploy the Fabric resources from this repository a number of variabl
 
 The following table shows the variables that are supported in the Terraform files.
 
-[cols="1,3,1,1",options="header", stripes=true]
+[cols=".^2,^1a,2",options="header"]
 |===
-| Name | Description | Required | Default
-| `ado_org_service_url` | The URL of the Azure DevOps organization service | True |
-| `ado_project_name` | The name of the Azure DevOps project | True |
-| `fabric_capacity_name` | Name of the existing Fabric Capacity to look up | True |
-| `permissions` | Comma separated list of users to be added as administrators to the fabric capacity | True |
-| `company_name` | The name of the company, used for naming resources (Default: ensono) | False | ensono
-| `create_ado_variable_group` | Flag to indicate if a variable group should be created in Azure DevOps (Default: True) | False | True
-| `create_env_files` | Flag to indicate if environment files should be created for local development (Default: False) | False | False
-| `create_fabric_capacity` | Whether to create the Azure Fabric Capacity resource (Default: False) | False | False
-| `deploy_all_environments` | If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod (Default: False) | False | False
-| `environments` | List of environments that need to be created (Default: test:false,uat:false,prod:true) | False | test:false,uat:false,prod:true
-| `fabric_sku` | The SKU of the fabric capacity to be created (Default: F2) | False | F2
-| `is_prod_subscription` | Flag to state if the subscription being deployed to is the production subscription or not. This so that the environments are created properly. (Default: False) | False | False
-| `key_vault_enabled_for_deployment` | Boolean flag to specify whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault. (Default: False) | False | False
-| `key_vault_enabled_for_disk_encryption` | Boolean flag to specify whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys. (Default: False) | False | False
-| `key_vault_enabled_for_template_deployment` | Boolean flag to specify whether Azure Resource Manager is permitted to retrieve secrets from the key vault. (Default: False) | False | False
-| `key_vault_public_network_enabled` | The SKU of the Key Vault. Possible values are 'standard' or 'premium'. (Default: False) | False | False
-| `key_vault_purge_protection_enabled` | Boolean flag to specify whether purge protection is enabled for the key vault. (Default: True) | False | True
-| `key_vault_sku` | The SKU of the Key Vault. Possible values are 'standard' or 'premium'. (Default: standard) | False | standard
-| `key_vault_soft_delete_retention_days` | Retention days for soft delete. (Default: 7) | False | 7
-| `location` | Location that the resources should be deployed to (Default: westeurope) | False | westeurope
-| `project` | Name of the project being worked on (Default: fabric) | False | fabric
-| `ws_types` | List of environment types that need to be created (Default: engineering,storage-bronze,storage-silver,storage-goldexample,analytics-example) | False | engineering,storage-bronze,storage-silver,storage-goldexample,analytics-example
+| Name | Required | Default
+.2+| `ado_org_service_url` | icon:check[] |
+2+| The URL of the Azure DevOps organization service
+
+.2+| `ado_project_name` |  icon:check[] |
+2+| The name of the Azure DevOps project
+
+.2+| `fabric_capacity_name`  |  icon:check[] |
+2+| Name of the existing Fabric Capacity to look up
+
+.2+| `permissions` |  icon:check[] |
+2+| Comma separated list of users to be added as administrators to the fabric capacity
+
+.2+| `company_name`  |  icon:times[] | ensono
+2+| The name of the company, used for naming resources (Default: ensono)
+
+.2+| `create_ado_variable_group`  | icon:times[] | True
+2+| Flag to indicate if a variable group should be created in Azure DevOps (Default: True)
+
+.2+| `create_env_files`  | icon:times[] | False
+2+| Flag to indicate if environment files should be created for local development (Default: False)
+
+.2+| `create_fabric_capacity`  | icon:times[] | False
+2+| Whether to create the Azure Fabric Capacity resource (Default: False)
+
+.2+| `create_lakehouses`  | icon:times[] | False
+2+| Flag to indicate if lakehouses should be created in the Fabric capacity as part of the Terraform infrastructure deployment.
+
+.2+| `deploy_all_environments`  | icon:times[] | False
+2+| If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod (Default: False)
+
+.2+| `environments` | icon:times[] | test:false,uat:false,prod:true
+2+| List of environments that need to be created (Default: test:false,uat:false,prod:true)
+
+.2+| `fabric_sku`  | icon:times[] | F2
+2+| The SKU of the fabric capacity to be created (Default: F2)
+
+.2+| `is_prod_subscription`  | icon:times[] | False
+2+| Flag to state if the subscription being deployed to is the production subscription or not. This so that the environments are created properly. (Default: False)
+
+.2+| `key_vault_enabled_for_deployment`  | icon:times[] | False
+2+| Boolean flag to specify whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault. (Default: False)
+
+.2+| `key_vault_enabled_for_disk_encryption`  | icon:times[] | False
+2+| Boolean flag to specify whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys. (Default: False)
+
+.2+| `key_vault_enabled_for_template_deployment` | icon:times[] | False
+2+| Boolean flag to specify whether Azure Resource Manager is permitted to retrieve secrets from the key vault. (Default: False) 
+
+.2+| `key_vault_public_network_enabled`  | icon:times[] | False
+2+| The SKU of the Key Vault. Possible values are 'standard' or 'premium'. (Default: False)
+
+.2+| `key_vault_purge_protection_enabled`  | icon:times[] | True
+2+| Boolean flag to specify whether purge protection is enabled for the key vault. (Default: True)
+
+.2+| `key_vault_sku`  | icon:times[] | standard
+2+| The SKU of the Key Vault. Possible values are 'standard' or 'premium'. (Default: standard)
+
+.2+| `key_vault_soft_delete_retention_days`  | icon:times[] | 7
+2+| Retention days for soft delete. (Default: 7)
+
+.2+| `location`  | icon:times[] | westeurope
+2+| Location that the resources should be deployed to (Default: westeurope)
+
+.2+| `project`  | icon:times[] | fabric
+2+| Name of the project being worked on (Default: fabric)
+
+.2+| `ws_types`  | icon:times[] | engineering,storage-bronze,storage-silver,storage-goldexample,analytics-example
+2+| List of environment types that need to be created (Default: engineering,storage-bronze,storage-silver,storage-goldexample,analytics-example)
 |===
 
 All of the variables can be set using environment variables. The covention is to use `TF_VAR_` as a prefix to the variable name. For example, the `fabric_capacity_name` variable can be set using the environment variable `TF_VAR_fabric_capacity_name`.
