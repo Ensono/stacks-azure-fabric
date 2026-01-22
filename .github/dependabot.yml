@@ -1,0 +1,81 @@
+version: 2
+updates:
+  # Python dependencies managed by Poetry
+  - package-ecosystem: pip
+    directory: "/fabric_content"
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Europe/London
+    open-pull-requests-limit: 50
+    rebase-strategy: disabled
+    groups:
+      low-risk:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Main Terraform infrastructure
+  - package-ecosystem: terraform
+    directory: "/deploy/terraform/infra"
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Europe/London
+    open-pull-requests-limit: 50
+    rebase-strategy: disabled
+    groups:
+      low-risk:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Example copy pipeline Terraform
+  - package-ecosystem: terraform
+    directory: "/fabric_content/data_engineering/example_copy_pipeline/ado"
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Europe/London
+    open-pull-requests-limit: 50
+    rebase-strategy: disabled
+    groups:
+      low-risk:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Example Spark pipeline Terraform
+  - package-ecosystem: terraform
+    directory: "/fabric_content/data_engineering/example_spark_pipeline/deploy/terraform/workload"
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Europe/London
+    open-pull-requests-limit: 50
+    rebase-strategy: disabled
+    groups:
+      low-risk:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+
+  # GitHub Actions in pre-commit hooks
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Europe/London
+    open-pull-requests-limit: 50
+    rebase-strategy: disabled
+    groups:
+      low-risk:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
