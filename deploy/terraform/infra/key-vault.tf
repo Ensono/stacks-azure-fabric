@@ -1,6 +1,6 @@
 module "key-vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.10.0"
+  version = "0.10.2"
 
   name                = module.naming.extended_names[var.project].key_vault_v2.name
   resource_group_name = azurerm_resource_group.rg.name
