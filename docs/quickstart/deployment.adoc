@@ -10,7 +10,17 @@ The deployment of the infrastructure consists of three stages:
 
 As usual all of the commands are run using the `eirctl` command.
 
-image::images/tldr_code_terraform_deploy.png[width=400]
+[source,powershell,linenums]
+----
+# Initialise Terraform
+eirctl infra:init
+
+# Plan the deployment
+eirctl infra:plan
+
+# Apply the deployment
+eirctl infra:apply
+----
 
 The following shows example outputs for the three stages of the deployment
 

@@ -38,5 +38,5 @@ Learn how to install a gateway so you can connect to on-premises data.
 
 [IMPORTANT]
 ====
-As this software needs to be installed on a machine that is running in the on-premise environment, Ensono will not be be able to install or support this for you. We will assist in information that is required to set the service up, but all installation and configuration will need to be performed by your team.
+As this software needs to be installed on a machine that is running in the on-premise environment, we will not be be able to install or support this for you. We will assist in information that is required to set the service up, but all installation and configuration will need to be performed by your team.
 ====
