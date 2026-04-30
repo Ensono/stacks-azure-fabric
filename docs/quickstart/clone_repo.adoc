@@ -1,7 +1,44 @@
 ifndef::imagesdir[:imagesdir: ../]
 
 [#qs_clone_repo]
-=== Clone repository
+=== Create Project
+
+There are two ways in which the project for Fabric can be created.
+
+1. By using the Stacks CLI (recommended)
+2. By manually setting up the directory structure and files using Git
+
+The advantage using the Stacks CLI is that all of the information that is provided in the configuration file is used to patch the necessary files in the resultant project so you do not have to do it manually.
+
+Alternatively the project can be cloned using Git and then updated manually. This method is best if the main project is going to be worked on.
+
+==== Using Stacks CLI
+
+The Stacks CLI tool is a tool that is developed by Ensono to facilitate the creation of projects based on the Stacks components. The tool is able to take the inputs provided to it and patch the necessary files in a component that is downloaded.
+
+The following command is used to generate the configuration file needed to scaffold the project. It interactively asks the user for information that are taken as inputs.
+
+[source,bash]
+----
+stacks-cli interactive
+----
+
+.Example of running the Interactive mode within VSCode
+image::images/stacks-cli-interactive.png[Interactive mode within VSCode]
+
+This produces a file called `stacks.yml` that is then used in the next command to scaffold and patch the project.
+
+NOTE: It is possible to create this configuration file manually as it is just YAML.
+
+[source,bash]
+----
+stacks-cli scaffold -c ./stacks.yml
+----
+
+.Execution of scaffold and resultant project
+image::images/stacks-cli-scaffold.png[Scaffold and resultant project]
+
+==== Using Git
 
 In order to deploy the infrastructure for Azure Fabric, the repository containing the Terraform files needs to be cloned to the local workstation.
 
@@ -11,7 +48,7 @@ In order to deploy the infrastructure for Azure Fabric, the repository containin
 mkdir ~/working
 cd ~/working
 
-# Clone the respository
+# Clone the repository
 git clone https://github.com/ensono/stacks-azure-fabric.git
 ----
 
