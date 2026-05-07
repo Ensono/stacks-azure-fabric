@@ -15,6 +15,10 @@ terraform {
       version = ">=0.1.0"
     }
 
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.13"
+    }
   }
 
   backend "azurerm" {}
@@ -31,3 +35,5 @@ provider "fabric" {
 provider "azuredevops" {
   org_service_url = var.ado_org_service_url
 }
+
+provider "time" {}
