@@ -54,6 +54,12 @@ variable "deploy_all_environments" {
   description = "If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod"
 }
 
+variable "create_lakehouses" {
+  description = "Flag to indicate if lakehouses should be created in the Fabric capacity"
+  type        = bool
+  default     = false
+}
+
 #######################################################
 # Azure DevOps Settings
 #######################################################
@@ -82,6 +88,40 @@ variable "permissions" {
   description = "Comma separated list of users to be added as administrators to the fabric capacity"
   type        = string
   default     = ""
+}
+
+#######################################################
+# Azure Automation Settings
+#######################################################
+
+variable "enable_suspend" {
+  description = "Flag to indicate if the suspend functionality should be enabled for the Fabric capacity"
+  type        = bool
+  default     = false
+}
+
+variable "automation_sku" {
+  description = "The SKU of the Azure Automation account. Possible values are 'Basic' or 'Free'."
+  type        = string
+  default     = "Basic"
+}
+
+variable "automation_suspend_schedule" {
+  description = "The schedule for suspending the Fabric capacity. This is in the format of <TIME>:<DAYS_OF_WEEK>"
+  type        = string
+  default     = "17:00;Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"
+}
+
+variable "automation_resume_schedule" {
+  description = "The schedule for resuming the Fabric capacity. This is in the format of <TIME>:<DAYS_OF_WEEK>"
+  type        = string
+  default     = "07:00;Monday,Tuesday,Wednesday,Thursday,Friday"
+}
+
+variable "automation_timezone" {
+  description = "The timezone to use for the automation schedules. This is in the format of 'Europe/London'."
+  type        = string
+  default     = "Europe/London"
 }
 
 #######################################################

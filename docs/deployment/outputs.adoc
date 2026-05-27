@@ -4,7 +4,7 @@
 When Terraform runs it generates a number of outputs that can be used in other deployments. There are three output formats that can be generated:
 
 .Terraform output formats
-[cols="1,2,1", options="header", stripes=true]
+[cols="1,2,1", options="header"]
 |===
 | Format | Description | Generated
 | Terraform | Terraform standard outputs | Yes always
@@ -15,7 +15,7 @@ When Terraform runs it generates a number of outputs that can be used in other d
 The outputs that are generated for the environment files and the variable groups are listed in the following table.
 
 .Generated outputs
-[cols="1,2,1", options="header", stripes=true]
+[cols="1,2,1", options="header"]
 |===
 | Name | Description | Type
 | `analytics_example_lakehouse_id` | ID of the Fabric Lakehouse for the analytics example workload | string

@@ -42,7 +42,7 @@ table:
   caption:
     side: bottom
   head:
-    background-color: #08c1a7
+    background-color: #6941eb
     font-color: #ffffff
 
 role:

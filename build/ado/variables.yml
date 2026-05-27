@@ -21,7 +21,7 @@ variables:
 
   # Dependency versions
   - name: EirctlVersion
-    value: 0.5.7
+    value: 0.7.6
   - name: EnsonoBuildVersion
     value: 1.1.37
   - name: DockerPushRMVersion

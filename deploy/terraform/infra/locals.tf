@@ -1,5 +1,11 @@
 locals {
 
+  # Create an array of common tags that can be applied to resources
+  common_tags = {
+    LastDeployedBy     = module.naming.current_user
+    ServicePrincipalID = data.azurerm_client_config.current.client_id
+  }
+
   # Determine if this is a production subscription or the override is being used
   is_prod_subscription = contains(["prod"], data.azurerm_subscription.current.tags) || var.is_prod_subscription
   deploy_all_envs      = contains(["override"], data.azurerm_subscription.current.tags) || var.deploy_all_environments
@@ -81,7 +87,7 @@ locals {
   fabric_resources = {
     for envname, detail in local.environment_workspaces : envname => {
       workspaces   = { for ws in detail : "${ws}_workspace_id" => fabric_workspace.ws["${envname}-${ws}"].id }
-      lakehouses   = { for lh in detail : "${lh}_lakehouse_id" => fabric_lakehouse.afl["${envname}-${lh}"].id }
+      lakehouses   = var.create_lakehouses ? { for lh in detail : "${lh}_lakehouse_id" => fabric_lakehouse.afl["${envname}-${lh}"].id } : {}
       environments = { for env in detail : "${env}_environment_id" => fabric_environment.ws_envs["${envname}-${env}"].id if !contains(split("-", env), "storage") }
     }
   }
@@ -139,4 +145,37 @@ locals {
 
   # Determine the short name of the company
   company_short_name = lower(substr(var.company_name, 0, 3))
+
+  # Determine the time now
+  timenow       = timestamp()
+  timenow_year  = formatdate("YYYY", local.timenow)
+  timenow_month = formatdate("MM", local.timenow)
+  timenow_day   = formatdate("DD", local.timenow)
+
+  # For the schedule in the automation account, determine the time and the days of the week that
+  # the capacity should be suspended
+  suspend_schedule = split(";", var.automation_suspend_schedule)
+
+  # Due to the way in which the automation works we need to ensure that the start time is after the
+  # current time, thus if it is already after the suspend start time then this needs to be set for tomorrow
+  suspend_time_start    = format("%s-%s-%sT%s:00Z", local.timenow_year, local.timenow_month, local.timenow_day, local.suspend_schedule[0])
+  suspend_adjusted_time = timecmp(local.timenow, local.suspend_time_start) == -1 ? local.suspend_time_start : timeadd(local.suspend_time_start, "24h")
+
+  suspend_schedule_details = {
+    time = local.suspend_adjusted_time
+    days = split(",", local.suspend_schedule[1])
+  }
+
+  # Determine the resume schedule
+  resume_schedule = split(";", var.automation_resume_schedule)
+
+  # Due to the way in which the automation works we need to ensure that the start time is after the
+  # current time, thus if it is already after the resume start time then this needs to be set for tomorrow
+  resume_time_start    = format("%s-%s-%sT%s:00Z", local.timenow_year, local.timenow_month, local.timenow_day, local.resume_schedule[0])
+  resume_adjusted_time = timecmp(local.timenow, local.resume_time_start) == -1 ? local.resume_time_start : timeadd(local.resume_time_start, "24h")
+
+  resume_schedule_details = {
+    time = local.resume_adjusted_time
+    days = split(",", local.resume_schedule[1])
+  }
 }

@@ -4,5 +4,6 @@
 ** Docker Desktop
 ** Rancher Desktop
 * Eirctl
+* Stacks CLI
 * IDE
 ** Visual Studio Code

@@ -13,7 +13,7 @@ To make this is as simple as possible, a comma delimited string of definitions n
 
 This is required because the permissions for capacity admins and workspace members are defined differently. The following table shows examples of the different formats for users or service principals.
 
-[cols="1,3", options="header", stripes=true]
+[cols="1,3", options="header"]
 |===
 | Type | String
 .2+| User | `fred.bloggs@example.com:false:e9084ea1-de42-403f-ae10-8ea566c10313:Contributor`

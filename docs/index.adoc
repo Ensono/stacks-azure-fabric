@@ -1,8 +1,9 @@
 :icons: font
 :icon-set: font-awesome
 :source-highlighter: rouge
-:rouge-style: monokai
+:rouge-style: monokai.sublime
 :listing-caption: Listing
+:table-stripes: even
 
 # Stacks Azure Fabric
 :toc:
@@ -20,6 +21,10 @@ include::deployment/_index.adoc[]
 <<<
 
 include::data_extraction/_index.adoc[]
+
+<<<
+
+include::cost_management/_index.adoc[]
 
 <<<
 

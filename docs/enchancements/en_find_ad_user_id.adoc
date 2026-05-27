@@ -1,5 +1,5 @@
 [#get_id_of_ad_user]
-=== Find ID of AD User
+=== Find ID of EntraID User
 
 In order to be able to administer a Fabric capacity, the IDs of the users need to be provided. Currently this is done by passing in a comma separated list of the users IDs.
 
