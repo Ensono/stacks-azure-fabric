@@ -7,3 +7,5 @@ include::permissions.adoc[]
 include::terraform_variables.adoc[]
 
 include::outputs.adoc[]
+
+include::resource_tagging.adoc[]

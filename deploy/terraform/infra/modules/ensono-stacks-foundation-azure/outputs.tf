@@ -18,3 +18,8 @@ output "computed_outputs" {
 output "encoded_outputs" {
   value = local.encoded_outputs
 }
+
+# Set an output that has the current user from the environment
+output "current_user" {
+  value = try(data.external.current_user.result.username, "unknown")
+}

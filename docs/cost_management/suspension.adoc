@@ -1,0 +1,32 @@
+=== Suspend and Resume
+
+A way that costs can be brought down is to suspend and resume the Azure Fabric. The Terraform deployment includes a script and deploys this into an Azure Automation instance that has a schedule to suspend and resume the capacity at specified times.
+
+The following variables are used to control the suspend and resume schedules.
+
+.Table detailing the variables to use to handle suspend and resume of the Azure Fabric
+[cols="1,2,1",options="header"]
+|===
+| Name | Description | Default Value
+| `enable_suspend` | State whether to enable suspend and resume on the Fabric capacity | `false`
+| `automation_suspend_schedule` | The schedule for suspending the Fabric capacity. This is in the format of `<TIME>:<DAYS_OF_WEEK>` | `17:00;Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday`
+| `automation_resume_schedule` | The schedule for resuming the Fabric capacity. This is in the format of `<TIME>:<DAYS_OF_WEEK>` | `07:00;Monday,Tuesday,Wednesday,Thursday,Friday`
+|===
+
+When enabled, additional resources are deployed into the resource group in which the Fabric capacity has been deployed. The additional resources are detailed below.
+
+.Addition Azure resource deployed to support suspend and resume
+[cols="1,1,2,1",options="header"]
+|===
+| Type | Example Name | Description | Example Value
+| Automation Accounnt | `aa-tur-fabric-we-dev` | Automation account into which runbooks and schedules are deployed |
+| Runbook | `ResumeFabricCapacity` | Runbook to resume the Fabric capacity |
+| Runbook | `SuspendFabricCapacity` | Runbook to suspend the Fabric capacity |
+| Schedule | `PauseSchedule` | Schedule to suspend the Fabric capacity | `1800 each day`
+| Schedule | `ResumeSchedule` | Schedule to resume the Fabric capacity | `0700 each week day`
+| Managed Identity | `uai-tur-fabric-we-dev` | Managed identity under which the runbooks execute. This identity is granted access to the resources that the script will need access to, e.g. the fabric itself |
+|===
+
+include::runbook_script.adoc[]
+
+include::time_calculations.adoc[]

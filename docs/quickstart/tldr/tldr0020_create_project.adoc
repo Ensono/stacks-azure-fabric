@@ -1,0 +1,40 @@
+ifndef::imagesdir[:imagesdir: ../../]
+
+==== TLDR{paddedcounter:tldr[]} - Create Project
+
+For more information please refer to the <<qs_clone_repo>> section.
+
+There are two ways in which the project can be created:
+
+1. By using the Stacks CLI
+2. By manually setting up the directory structure and files using Git
+
+===== Using the Stacks CLI
+
+In order to use scaffold a project using the Stacks CLI, a configuration file needs to be created. This can be done manually or the tool can be used o generate the file interactively. The following commands show how to create the necessary configuration file and then use that to scaffold the project.
+
+[source,bash]
+----
+# Run the Stacks CLI in interactive mode to create the configuration file
+stacks-cli interactive
+
+# Run the scaffold command to create the project
+stacks-cli scaffold --config ./stacks.yml
+----
+
+===== Using Git
+
+In order to deploy the infrastructure for Azure Fabric, the repository containing the Terraform files needs to be cloned to the local workstation.
+
+[source,bash]
+----
+# Create working directory
+mkdir ~/working
+cd ~/working
+
+# Clone the respository
+git clone https://github.com/ensono/stacks-azure-fabric.git
+
+# Move into the cloned directory
+cd stacks-azure-fabric
+----
